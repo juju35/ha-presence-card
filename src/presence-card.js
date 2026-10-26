@@ -157,16 +157,13 @@ const avatarColor = (id) => {
   return AVATAR_COLORS[h % AVATAR_COLORS.length];
 };
 
-// Card logo: a house sheltering two people.
-const logo = () => `<svg class="logo" viewBox="0 0 48 48" role="img" aria-label="Presence">
-  <defs><linearGradient id="pr-logo" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#7b8cff"/><stop offset="1" stop-color="#3c4fd8"/>
-  </linearGradient></defs>
-  <rect width="48" height="48" rx="12" fill="url(#pr-logo)"/>
-  <path d="M24 9 8 22.5h4.5V38h23V22.5H40Z" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/>
-  <circle cx="19.5" cy="25" r="3.2" fill="#fff"/><path d="M13.5 37c0-4 2.7-6.6 6-6.6s6 2.6 6 6.6Z" fill="#fff"/>
-  <circle cx="29" cy="26.5" r="2.7" fill="#fff" opacity=".85"/><path d="M24.6 37c0-3.3 2-5.4 4.4-5.4s4.4 2.1 4.4 5.4Z" fill="#fff" opacity=".85"/>
-</svg>`;
+// Card logo: a house sheltering two people, drawn in the accent color on a round tinted badge like the other
+// ha-* cards.
+const logo = () => `<div class="logo"><svg class="icon" viewBox="6 6 36 36" role="img" aria-label="Presence">
+  <path d="M24 9 8 22.5h4.5V38h23V22.5H40Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
+  <circle cx="19.5" cy="25" r="3.2"/><path d="M13.5 37c0-4 2.7-6.6 6-6.6s6 2.6 6 6.6Z"/>
+  <circle cx="29" cy="26.5" r="2.7" opacity=".85"/><path d="M24.6 37c0-3.3 2-5.4 4.4-5.4s4.4 2.1 4.4 5.4Z" opacity=".85"/>
+</svg></div>`;
 
 // ---------------------------------------------------------------------------
 // People
@@ -336,7 +333,9 @@ const BASE_STYLE = `
   .chip .icon { width: 12px; height: 12px; }
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 4px; }
   .titles { flex: 1; min-width: 0; }
-  .logo { height: 40px; width: 40px; flex: none; align-self: flex-start; }
+  .logo { --c: var(--pr-accent); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; align-self: flex-start;
+          background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
+  .logo .icon { width: 24px; height: 24px; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header > .chip { align-self: flex-start; margin-top: 2px; }
@@ -592,6 +591,8 @@ const FACE_GAP = 8;
 const MINI_STYLE = `
   .mini .header { padding: 12px; flex-wrap: wrap; row-gap: 10px; }
   .mini .header > .logo, .mini .zoom { align-self: center; }
+  .mini .header > .logo { width: 32px; height: 32px; }
+  .mini .header > .logo .icon { width: 20px; height: 20px; }
   .mini .zoom { margin: -4px -4px -4px 0; }
   .sub .st { color: var(--c); font-weight: 500; }
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
@@ -649,7 +650,7 @@ class PresenceMiniCard extends PresenceCard {
     const titles = Math.max(...[...root.querySelectorAll(".mini .titles > div")].map((n) => n.scrollWidth));
     const n = root.querySelectorAll(".mini .face").length;
     const zoom = root.querySelector(".mini .zoom") ? 20 + 10 : 0;
-    const row = 40 + 10 + titles + 10 + n * FACE + (n - 1) * FACE_GAP + zoom <= width;
+    const row = 32 + 10 + titles + 10 + n * FACE + (n - 1) * FACE_GAP + zoom <= width;
     if (row === this._inline) return;
     this._inline = row;
     this._update(this._sig);

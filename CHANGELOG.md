@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Header logo on a round tinted badge (40 px, 32 px on the mini card) in the card's accent color, like the other ha-* cards.
+
+### Maintenance
+- Screenshots: English everywhere (no more French dark shots), on the shared 16 px frame and theme tokens.
+
 ## 1.2.1
 
 ### Changed
