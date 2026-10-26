@@ -103,6 +103,11 @@ const STRINGS = {
 const esc = (v) =>
   String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
+// A URL for a CSS url('…') inside a style attribute: esc() alone is not enough, as the browser decodes the
+// attribute's HTML entities before parsing the CSS, so an escaped quote would come back and close the string.
+// Keep it a plain CSS string: drop the quotes, backslashes and parentheses that could break out of url('…').
+const cssUrl = (v) => esc(String(v ?? "").replace(/["'()\\\s]/g, ""));
+
 const lang = (hass, config) => {
   const l = config?.language || (hass && (hass.locale?.language || hass.language)) || "en";
   return STRINGS[l] ? l : STRINGS[l.split("-")[0]] ? l.split("-")[0] : "en";
@@ -481,7 +486,7 @@ class PresenceBase extends HTMLElement {
   }
 
   _avatar(p, size) {
-    const bg = p.picture ? `--bg:url('${esc(p.picture)}');` : `--bg:${avatarColor(p.id)};`;
+    const bg = p.picture ? `--bg:url('${cssUrl(p.picture)}');` : `--bg:${avatarColor(p.id)};`;
     return `<div class="avatar ${p.kind}" style="--size:${size}px">
       <div class="pic" style="${bg}">${p.picture ? "" : esc(initials(p.name))}</div>
       <span class="badge">${svgIcon(BADGE[p.kind])}</span>
