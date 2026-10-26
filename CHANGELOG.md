@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- **Presence Mini Card**: the avatars move up onto the header line when the card is wide enough for them (a wide card no longer leaves its header line half empty); on a narrow card they stay under the header.
+
 ## 1.0.0
 
 First release of the Presence cards for Home Assistant.

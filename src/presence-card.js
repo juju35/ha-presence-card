@@ -464,7 +464,8 @@ class PresenceBase extends HTMLElement {
     return { n, text: this._t("at_home").replace("{n}", n).replace("{total}", people.length) };
   }
 
-  _header(people) {
+  // `inner`: extra content between the titles and the chip (the mini card's faces).
+  _header(people, inner = "") {
     const { n, text } = this._summary(people);
     return `
       <div class="header">
@@ -473,6 +474,7 @@ class PresenceBase extends HTMLElement {
           <div class="name">${esc(this._config.title || this._t("title"))}</div>
           <div class="sub">${esc(text)}</div>
         </div>
+        ${inner}
         <span class="chip ${n ? "home" : "away"}">${svgIcon(ICONS.home)}${n}/${people.length}</span>
         ${this._zoomButton()}
       </div>`;
@@ -584,9 +586,20 @@ class PresenceCard extends PresenceBase {
 // Mini card
 // ---------------------------------------------------------------------------
 
+// The faces sit in the header, between the titles and the chip, when the card is wide enough for them
+// (a container query whose width depends on the number of faces, see `miniInlineWidth`); otherwise
+// they wrap onto their own line under the header.
+const FACE_W = 56;
+const FACE_GAP = 14;
+// Header: 12px padding on each side, the logo (40), the titles (at least 120), the chip (about 56),
+// the zoom button (16, its margins included) and the 10px gaps between them.
+const miniInlineWidth = (faces, zoom) => 24 + 40 + 120 + 56 + (zoom ? 16 + 10 : 0) + 30 + faces * FACE_W + (faces - 1) * FACE_GAP;
+
 const MINI_STYLE = `
-  .content { padding: 6px 12px 12px; display: flex; flex-wrap: wrap; gap: 10px 14px; }
-  .face { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 56px; }
+  .mini { container-type: inline-size; }
+  .mini .header { flex-wrap: wrap; row-gap: 10px; padding: 12px; }
+  .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: 10px ${FACE_GAP}px; }
+  .face { display: flex; flex-direction: column; align-items: center; gap: 4px; width: ${FACE_W}px; }
   .face .fname { font-size: 12px; font-weight: 500; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .face .fplace { font-size: 11px; color: var(--c); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: -3px; }
 `;
@@ -660,10 +673,13 @@ class PresenceMiniCard extends PresenceCard {
         ${c.show_names !== false ? `<span class="fname">${esc(p.name)}</span><span class="fplace">${esc(this._place(p))}</span>` : ""}
       </div>`
     );
-    return `<style>${BASE_STYLE}${MINI_STYLE}</style>
+    const inline = `@container (min-width: ${miniInlineWidth(shown.length, c.zoom !== false)}px) {
+      .faces { order: 0; flex: none; }
+      .mini .header > .logo { align-self: center; }
+    }`;
+    return `<style>${BASE_STYLE}${MINI_STYLE}${inline}</style>
       <ha-card>
-        ${this._header(people)}
-        <div class="content">${faces.join("")}</div>
+        <div class="mini">${this._header(people, `<div class="faces">${faces.join("")}</div>`)}</div>
       </ha-card>`;
   }
 }
