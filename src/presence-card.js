@@ -331,7 +331,7 @@ const BASE_STYLE = `
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;
           background: color-mix(in srgb, var(--c, var(--pr-home)) 15%, transparent); color: var(--c, var(--pr-home)); white-space: nowrap; }
   .chip .icon { width: 12px; height: 12px; }
-  .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 4px; }
+  .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
   .titles { flex: 1; min-width: 0; }
   .logo { --c: var(--pr-accent); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; align-self: flex-start;
           background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
@@ -504,7 +504,7 @@ class PresenceBase extends HTMLElement {
 // ---------------------------------------------------------------------------
 
 const FULL_STYLE = `
-  .content { padding: 4px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .content { padding: 8px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
   .person { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px;
             background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .person .who { flex: 1; min-width: 0; }
@@ -593,6 +593,7 @@ const MINI_STYLE = `
   .mini .header > .logo, .mini .zoom { align-self: center; }
   .mini .header > .logo { width: 32px; height: 32px; }
   .mini .header > .logo .icon { width: 20px; height: 20px; }
+  .mini .header > .titles { margin-block: -2px; }
   .mini .zoom { margin: -4px -4px -4px 0; }
   .sub .st { color: var(--c); font-weight: 500; }
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }

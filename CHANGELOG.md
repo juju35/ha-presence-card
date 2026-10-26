@@ -4,6 +4,7 @@
 
 ### Changed
 - Header logo on a round tinted badge (40 px, 32 px on the mini card) in the card's accent color, like the other ha-* cards.
+- Header spacing like the other cards: the mini card's icon sits 12 px from the top edge (was 13.5 px), and the people list starts 8 px under the header box (the header no longer carries a 4 px bottom padding; same spacing on screen).
 
 ### Maintenance
 - Screenshots: English everywhere (no more French dark shots), on the shared 16 px frame and theme tokens.
