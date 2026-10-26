@@ -46,11 +46,11 @@ const page_html = (theme, width) => `<!doctype html><html><head><meta charset="u
 
 const shots = [
   { file: "card", type: "presence-card", theme: "light", width: 460, config: {} },
-  { file: "card-dark", type: "presence-card", theme: "dark", width: 460, config: { language: "fr" } },
+  { file: "card-dark", type: "presence-card", theme: "dark", width: 460, config: {} },
   { file: "mini-card", type: "presence-mini-card", theme: "light", width: 380, config: {} },
-  { file: "mini-card-dark", type: "presence-mini-card", theme: "dark", width: 380, config: { language: "fr" } },
+  { file: "mini-card-dark", type: "presence-mini-card", theme: "dark", width: 380, config: {} },
   { file: "mini-card-zoom", type: "presence-mini-card", theme: "light", width: 460, config: {}, zoom: true },
-  { file: "mini-card-zoom-dark", type: "presence-mini-card", theme: "dark", width: 460, config: { language: "fr" }, zoom: true },
+  { file: "mini-card-zoom-dark", type: "presence-mini-card", theme: "dark", width: 460, config: {}, zoom: true },
 ];
 
 const browser = await chromium.launch(

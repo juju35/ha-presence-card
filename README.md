@@ -128,7 +128,7 @@ language: fr
 
 ## Screenshots
 
-| Light | Dark (French) |
+| Light | Dark |
 |---|---|
 | ![card](screenshots/card.png) | ![card dark](screenshots/card-dark.png) |
 | ![mini card](screenshots/mini-card.png) | ![mini card dark](screenshots/mini-card-dark.png) |
