@@ -19,7 +19,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 ## Features
 
 - Two cards: a full **Presence Card** and a compact **Presence Mini Card**
-- Mini card avatars on the header line when the card is wide enough, under it otherwise
+- Mini card on a single row, like the Alarm mini card: logo, title, summary in color and round avatars (name and place on hover); the avatars wrap under the title on a narrow card
 - Zoom button at the top right of the mini card: it switches to the full card and back; a click anywhere outside the card brings the compact view back
 - All `person` entities by default, or a chosen list, with an optional name or picture per person
 - Person picture, or colored initials when the person has none
@@ -105,7 +105,6 @@ entities:
   - person.sam
 title: Family
 sort: presence
-show_names: true
 show_away: true
 zoom: true
 language: fr
@@ -122,7 +121,6 @@ language: fr
 | `show_distance` | both | `true` | Distance from home for people away |
 | `show_battery` | both | `true` | Phone battery |
 | `show_away` | both | `true` | Show the people away (`false` keeps only people at home or in a zone) |
-| `show_names` | mini | `true` | Name and place under each avatar |
 | `zoom` | mini | `true` | Zoom button at the top right: switches to the full card and back (`false` removes it) |
 | `language` | both | Auto | Force language: `fr` or `en` (auto-detects from HA settings) |
 

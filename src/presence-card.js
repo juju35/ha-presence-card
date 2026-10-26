@@ -55,7 +55,6 @@ const STRINGS = {
     show_distance: "Show distance from home",
     show_battery: "Show phone battery",
     show_away: "Show people away",
-    show_names: "Show names",
     zoom: "Zoom button",
     zoom_helper: "Switches the mini card to the full card and back",
     language: "Language",
@@ -90,7 +89,6 @@ const STRINGS = {
     show_distance: "Afficher la distance de la maison",
     show_battery: "Afficher la batterie du téléphone",
     show_away: "Afficher les absents",
-    show_names: "Afficher les prénoms",
     zoom: "Bouton zoom",
     zoom_helper: "Bascule la mini-carte en carte complète, et inversement",
     language: "Langue",
@@ -464,8 +462,7 @@ class PresenceBase extends HTMLElement {
     return { n, text: this._t("at_home").replace("{n}", n).replace("{total}", people.length) };
   }
 
-  // `inner`: extra content between the titles and the chip (the mini card's faces).
-  _header(people, inner = "") {
+  _header(people) {
     const { n, text } = this._summary(people);
     return `
       <div class="header">
@@ -474,7 +471,6 @@ class PresenceBase extends HTMLElement {
           <div class="name">${esc(this._config.title || this._t("title"))}</div>
           <div class="sub">${esc(text)}</div>
         </div>
-        ${inner}
         <span class="chip ${n ? "home" : "away"}">${svgIcon(ICONS.home)}${n}/${people.length}</span>
         ${this._zoomButton()}
       </div>`;
@@ -586,22 +582,26 @@ class PresenceCard extends PresenceBase {
 // Mini card
 // ---------------------------------------------------------------------------
 
-// The faces sit in the header, between the titles and the chip, when the card is wide enough for them
-// (a container query whose width depends on the number of faces, see `miniInlineWidth`); otherwise
-// they wrap onto their own line under the header.
-const FACE_W = 56;
-const FACE_GAP = 14;
-// Header: 12px padding on each side, the logo (40), the titles (at least 120), the chip (about 56),
-// the zoom button (16, its margins included) and the 10px gaps between them.
-const miniInlineWidth = (faces, zoom) => 24 + 40 + 120 + 56 + (zoom ? 16 + 10 : 0) + 30 + faces * FACE_W + (faces - 1) * FACE_GAP;
+// Same layout as the alarm mini card: one row with the logo, the title, the summary in color under it,
+// the round avatars and the detail button, all centered vertically. When the card is too narrow for the
+// avatars (a container query whose width depends on their number, see `miniRowWidth`), they wrap onto
+// their own line under the title.
+const FACE = 32;
+const FACE_GAP = 8;
+// 12px padding on each side, the logo (40), the titles (at least 100), the detail button (24, its margins
+// included) and the 10px gaps between them.
+const miniRowWidth = (faces, zoom) => 24 + 40 + 100 + 20 + (zoom ? 24 + 10 : 0) + faces * FACE + (faces - 1) * FACE_GAP;
 
 const MINI_STYLE = `
   .mini { container-type: inline-size; }
-  .mini .header { flex-wrap: wrap; row-gap: 10px; padding: 12px; }
-  .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: 10px ${FACE_GAP}px; }
-  .face { display: flex; flex-direction: column; align-items: center; gap: 4px; width: ${FACE_W}px; }
-  .face .fname { font-size: 12px; font-weight: 500; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .face .fplace { font-size: 11px; color: var(--c); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: -3px; }
+  .mini .header { padding: 12px; flex-wrap: wrap; row-gap: 10px; }
+  .mini .header > .logo, .mini .zoom { align-self: center; }
+  .mini .zoom { margin: -4px -4px -4px 0; }
+  .sub .st { color: var(--c); font-weight: 500; }
+  .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
+  .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: ${FACE_GAP}px; }
+  .faces .avatar .badge { width: 14px; height: 14px; right: -2px; bottom: -2px; }
+  .faces .avatar .badge .icon { width: 10px; height: 10px; }
 `;
 
 // The mini card extends the full card: its zoom button (top right, `zoom: false` removes it) switches it to the
@@ -665,21 +665,26 @@ class PresenceMiniCard extends PresenceCard {
     if (!people.length || all.some((p) => p.missing)) return this._noPeople(all);
     const c = this._config;
     const shown = c.show_away === false ? people.filter((p) => p.kind === "home" || p.kind === "zone") : people;
+    const { n, text } = this._summary(people);
     const faces = shown.map(
-      (p) => `<div class="face clickable ${p.kind}" role="button" tabindex="0" data-key="${esc(p.id)}" data-entity="${esc(p.id)}" title="${esc(
+      (p) => `<div class="face clickable" role="button" tabindex="0" data-key="${esc(p.id)}" data-entity="${esc(p.id)}" title="${esc(
         `${p.name} · ${this._place(p)}`
-      )}">
-        ${this._avatar(p, 44)}
-        ${c.show_names !== false ? `<span class="fname">${esc(p.name)}</span><span class="fplace">${esc(this._place(p))}</span>` : ""}
-      </div>`
+      )}">${this._avatar(p, FACE)}</div>`
     );
-    const inline = `@container (min-width: ${miniInlineWidth(shown.length, c.zoom !== false)}px) {
-      .faces { order: 0; flex: none; }
-      .mini .header > .logo { align-self: center; }
-    }`;
-    return `<style>${BASE_STYLE}${MINI_STYLE}${inline}</style>
+    const row = `@container (min-width: ${miniRowWidth(shown.length, c.zoom !== false)}px) { .faces { order: 0; flex: none; } }`;
+    return `<style>${BASE_STYLE}${MINI_STYLE}${row}</style>
       <ha-card>
-        <div class="mini">${this._header(people, `<div class="faces">${faces.join("")}</div>`)}</div>
+        <div class="mini">
+          <div class="header">
+            ${logo()}
+            <div class="titles">
+              <div class="name">${esc(c.title || this._t("title"))}</div>
+              <div class="sub"><span class="st ${n ? "home" : "away"}"><span class="dot"></span>${esc(text)}</span></div>
+            </div>
+            <div class="faces">${faces.join("")}</div>
+            ${this._zoomButton()}
+          </div>
+        </div>
       </ha-card>`;
   }
 }
@@ -769,7 +774,7 @@ class PresenceCardEditor extends PresenceEditorBase {
 
 class PresenceMiniCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_names", "show_away", "show_since", "show_distance", "show_battery", "zoom"];
+    return ["show_away", "show_since", "show_distance", "show_battery", "zoom"];
   }
 }
 

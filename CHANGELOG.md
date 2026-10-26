@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0
+
+### Changed
+- **Presence Mini Card**: same layout as the Alarm mini card, on a single row centered vertically: the logo, the title with the summary in color under it ("● Everyone is home"), the round avatars with their badge (name and place on hover) and the detail button. On a narrow card the avatars wrap under the title.
+
+### Removed
+- `show_names` (mini card): the names are in the avatars' tooltip.
+
 ## 1.1.0
 
 ### Changed

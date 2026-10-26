@@ -125,9 +125,12 @@ test("mini card: one face per person, the zoom button switches to the full card"
   const mini = el._render();
   assert.equal(mini.match(/class="face /g).length, 2);
   assert.match(mini, /class="zoom"/);
-  // Faces in the header, on the header line when the card is wide enough for two faces.
-  assert.match(mini, /class="header">[\s\S]*class="faces"[\s\S]*class="chip/);
-  assert.match(mini, /@container \(min-width: 422px\)/);
+  // One row like the alarm mini card: the summary in color under the title, no chip, the faces before
+  // the zoom button, on the row when the card is wide enough for two faces.
+  assert.match(mini, /class="st home"><span class="dot"><\/span>1 of 2 at home/);
+  assert.doesNotMatch(mini, /class="chip/);
+  assert.match(mini, /class="faces">[\s\S]*class="zoom"/);
+  assert.match(mini, /@container \(min-width: 290px\)/);
   el._zoomed = true;
   assert.match(el._render(), /class="person /);
   el._config = { zoom: false };
