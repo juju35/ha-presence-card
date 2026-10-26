@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0
+### Security
+- Escape the photo URL for the CSS `url()` context. `_avatar()` injected a person's photo URL (`entity_picture`, or a configured `picture`) into `url('…')` inside a `style` attribute using HTML escaping only. The browser decodes HTML entities in a `style` attribute before parsing CSS, so an escaped quote reverted to `'` at CSS-parse time, closed the `url('…')` string and allowed extra CSS declarations to be injected (e.g. a `background-image` to a third-party server usable as a tracking beacon). A new `cssUrl()` helper strips quotes, parentheses, backslashes and spaces before HTML-escaping, keeping the `url('…')` string closed. Low practical impact (the URL comes from a trusted source in most installs), but a valid, no-cost defense in depth.
+
 ## 1.3.0
 ### Changed
 - Header logo on a round tinted badge (40 px, 32 px on the mini card) in the card's accent color, like the other ha-* cards.
