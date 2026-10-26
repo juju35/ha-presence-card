@@ -583,23 +583,20 @@ class PresenceCard extends PresenceBase {
 // ---------------------------------------------------------------------------
 
 // Same layout as the alarm mini card: one row with the logo, the title, the summary in color under it,
-// the round avatars and the detail button, all centered vertically. When the card is too narrow for the
-// avatars (a container query whose width depends on their number, see `miniRowWidth`), they wrap onto
-// their own line under the title.
+// the round avatars and the detail button, all centered vertically. The avatars stay on that row only while
+// the title and the summary fit there in full next to them (measured on every render and resize of the
+// card, see `_fit`); otherwise they wrap onto their own line under the title.
 const FACE = 32;
 const FACE_GAP = 8;
-// 12px padding on each side, the logo (40), the titles (at least 100), the detail button (24, its margins
-// included) and the 10px gaps between them.
-const miniRowWidth = (faces, zoom) => 24 + 40 + 100 + 20 + (zoom ? 24 + 10 : 0) + faces * FACE + (faces - 1) * FACE_GAP;
 
 const MINI_STYLE = `
-  .mini { container-type: inline-size; }
   .mini .header { padding: 12px; flex-wrap: wrap; row-gap: 10px; }
   .mini .header > .logo, .mini .zoom { align-self: center; }
   .mini .zoom { margin: -4px -4px -4px 0; }
   .sub .st { color: var(--c); font-weight: 500; }
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
   .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: ${FACE_GAP}px; }
+  .mini.row .faces { order: 0; flex: none; }
   .faces .avatar .badge { width: 14px; height: 14px; right: -2px; bottom: -2px; }
   .faces .avatar .badge .icon { width: 10px; height: 10px; }
 `;
@@ -614,6 +611,8 @@ class PresenceMiniCard extends PresenceCard {
   constructor() {
     super();
     this._zoomed = false;
+    this._inline = true;
+    this._resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => this._fit()) : null;
     this.shadowRoot.addEventListener("click", (ev) => this._zoomClick(ev));
     // A click outside the card, and not in a dialog opened from it, brings it back to the compact view.
     this._onOutside = (ev) => {
@@ -624,11 +623,36 @@ class PresenceMiniCard extends PresenceCard {
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener("click", this._onOutside, true);
+    this._resize?.observe(this);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener("click", this._onOutside, true);
+    this._resize?.disconnect();
+  }
+
+  _update(sig) {
+    super._update(sig);
+    this._fit();
+  }
+
+  // Avatars on the title row, or under it: on the row when the logo, the whole title or summary (the
+  // wider of the two, not cut), the avatars and the detail button fit in the card's width.
+  _fit() {
+    if (this._zoomed) return;
+    const root = this.shadowRoot;
+    const header = root.querySelector?.(".mini .header");
+    if (!header) return;
+    const width = header.clientWidth - 24;
+    if (width <= 0) return; // not laid out (hidden tab, card being created)
+    const titles = Math.max(...[...root.querySelectorAll(".mini .titles > div")].map((n) => n.scrollWidth));
+    const n = root.querySelectorAll(".mini .face").length;
+    const zoom = root.querySelector(".mini .zoom") ? 20 + 10 : 0;
+    const row = 40 + 10 + titles + 10 + n * FACE + (n - 1) * FACE_GAP + zoom <= width;
+    if (row === this._inline) return;
+    this._inline = row;
+    this._update(this._sig);
   }
 
   getCardSize() {
@@ -671,10 +695,9 @@ class PresenceMiniCard extends PresenceCard {
         `${p.name} · ${this._place(p)}`
       )}">${this._avatar(p, FACE)}</div>`
     );
-    const row = `@container (min-width: ${miniRowWidth(shown.length, c.zoom !== false)}px) { .faces { order: 0; flex: none; } }`;
-    return `<style>${BASE_STYLE}${MINI_STYLE}${row}</style>
+    return `<style>${BASE_STYLE}${MINI_STYLE}</style>
       <ha-card>
-        <div class="mini">
+        <div class="mini${this._inline ? " row" : ""}">
           <div class="header">
             ${logo()}
             <div class="titles">

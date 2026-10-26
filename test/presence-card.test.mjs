@@ -130,7 +130,11 @@ test("mini card: one face per person, the zoom button switches to the full card"
   assert.match(mini, /class="st home"><span class="dot"><\/span>1 of 2 at home/);
   assert.doesNotMatch(mini, /class="chip/);
   assert.match(mini, /class="faces">[\s\S]*class="zoom"/);
-  assert.match(mini, /@container \(min-width: 290px\)/);
+  // Faces on the title row until the card is measured too narrow for them.
+  assert.match(mini, /class="mini row"/);
+  el._inline = false;
+  assert.match(el._render(), /class="mini">/);
+  el._inline = true;
   el._zoomed = true;
   assert.match(el._render(), /class="person /);
   el._config = { zoom: false };

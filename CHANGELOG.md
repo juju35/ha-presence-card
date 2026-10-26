@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+
+### Changed
+- **Presence Mini Card**: the avatars leave the title row as soon as the title and the summary would no longer fit there in full, measured on the card's actual width (and again when it is resized), instead of an estimated width that could cut the summary.
+
 ## 1.2.0
 
 ### Changed

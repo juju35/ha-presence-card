@@ -19,7 +19,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 ## Features
 
 - Two cards: a full **Presence Card** and a compact **Presence Mini Card**
-- Mini card on a single row, like the Alarm mini card: logo, title, summary in color and round avatars (name and place on hover); the avatars wrap under the title on a narrow card
+- Mini card on a single row, like the Alarm mini card: logo, title, summary in color and round avatars (name and place on hover); the avatars go under the title as soon as the title and summary would no longer fit in full next to them
 - Zoom button at the top right of the mini card: it switches to the full card and back; a click anywhere outside the card brings the compact view back
 - All `person` entities by default, or a chosen list, with an optional name or picture per person
 - Person picture, or colored initials when the person has none
