@@ -77,7 +77,12 @@ for (const s of shots) {
     },
     { type: s.type, config: s.config, states, dark: s.theme === "dark", zoom: !!s.zoom }
   );
-  await page.waitForTimeout(800);
+  // Deterministic render signal instead of a fixed wait: fonts loaded, then two frame pairs so the
+  // mini card's ResizeObserver `_fit` pass (which can re-render once) has settled before the capture.
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    for (let i = 0; i < 2; i++) await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  });
   const box = await page.locator("#root").boundingBox();
   await page.screenshot({
     path: `${root}screenshots/${s.file}.png`,
