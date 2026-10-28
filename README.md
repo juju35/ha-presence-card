@@ -3,6 +3,7 @@
 [![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![HACS Validation](https://github.com/juju35/ha-presence-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/juju35/ha-presence-card/actions/workflows/hacs.yml)
 [![Validate](https://github.com/juju35/ha-presence-card/actions/workflows/validate.yml/badge.svg)](https://github.com/juju35/ha-presence-card/actions/workflows/validate.yml)
+[![Lint](https://github.com/juju35/ha-presence-card/actions/workflows/lint.yml/badge.svg)](https://github.com/juju35/ha-presence-card/actions/workflows/lint.yml)
 [![Release](https://img.shields.io/github/v/release/juju35/ha-presence-card)](https://github.com/juju35/ha-presence-card/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -125,6 +126,8 @@ language: fr
 | `language` | both | Auto | Force language: `fr` or `en` (auto-detects from HA settings) |
 
 `show_since`, `show_distance` and `show_battery` apply to the mini card once zoomed in.
+
+Note for the sections view: Lovelace sizes the cell when the dashboard loads and offers no way for a card to ask for a resize afterwards, so the zoomed-in mini card keeps the compact card's cell and simply grows taller inside it.
 
 ## Screenshots
 
