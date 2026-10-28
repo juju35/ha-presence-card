@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0
+### Added
+- German and Spanish translations (`de`, `es`), also selectable in the visual editor's language option.
+
 ## 1.4.1
 ### Fixed
 - Visual editor: editing a card no longer drops the per-person `name` / `picture` set in YAML (the entity list was flattened to plain ids on the first change).
