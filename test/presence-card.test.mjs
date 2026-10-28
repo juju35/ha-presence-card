@@ -169,6 +169,12 @@ test("editor keeps the YAML name/picture entity objects when the form re-emits p
   );
 });
 
-test("French strings cover every English key", () => {
-  assert.deepEqual(Object.keys(STRINGS.fr).sort(), Object.keys(STRINGS.en).sort());
-});
+for (const l of ["fr", "de", "es"]) {
+  test(`${l} strings cover exactly the English keys`, () => {
+    assert.deepEqual(Object.keys(STRINGS[l]).sort(), Object.keys(STRINGS.en).sort());
+    for (const [k, v] of Object.entries(STRINGS.en)) {
+      const ph = (x) => (x.match(/\{\w+\}/g) || []).sort();
+      assert.deepEqual(ph(STRINGS[l][k]), ph(v), `${l}.${k} placeholders`);
+    }
+  });
+}
