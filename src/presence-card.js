@@ -180,12 +180,20 @@ const normalize = (items) =>
     .map((e) => (typeof e === "string" ? { entity: e } : e))
     .filter((e) => e?.entity);
 
-const listPeople = (hass) =>
-  Object.keys(hass.states)
-    .filter((id) => id.startsWith("person."))
-    .sort((a, b) =>
-      String(hass.states[a].attributes?.friendly_name || a).localeCompare(String(hass.states[b].attributes?.friendly_name || b))
-    );
+// People found automatically, cached on the states object (replaced by Home Assistant on every state
+// change): `_signature()` and `_render()` both walk the list on every `set hass`, compute it once.
+let _people = { states: null, ids: [] };
+const listPeople = (hass) => {
+  if (_people.states !== hass.states) {
+    const ids = Object.keys(hass.states)
+      .filter((id) => id.startsWith("person."))
+      .sort((a, b) =>
+        String(hass.states[a].attributes?.friendly_name || a).localeCompare(String(hass.states[b].attributes?.friendly_name || b))
+      );
+    _people = { states: hass.states, ids };
+  }
+  return _people.ids;
+};
 
 // Battery sensors by device id, cached on the entity registry object (replaced only when it changes).
 let _batteries = { entities: null, byDevice: new Map() };
@@ -382,9 +390,15 @@ class PresenceBase extends HTMLElement {
     });
   }
 
-  // "Since" durations move on with the clock: a render check every minute, no state change needed.
   connectedCallback() {
+    this._startTimer();
+  }
+
+  // "Since" durations move on with the clock: a render check every minute, no state change needed.
+  // No timer when `show_since: false` — the signature then ignores the minute, the tick would do nothing.
+  _startTimer() {
     clearInterval(this._timer);
+    if (!this.isConnected || this._config?.show_since === false) return;
     this._timer = setInterval(() => {
       if (this._hass) this.hass = this._hass;
     }, 60000);
@@ -413,6 +427,7 @@ class PresenceBase extends HTMLElement {
     this._config = { ...config };
     this._html = "";
     this._update();
+    this._startTimer();
   }
 
   _t(key) {
@@ -559,7 +574,7 @@ class PresenceCard extends PresenceBase {
     const v = Math.max(0, Math.min(100, b.value));
     return `<span class="batt ${level(v, 40, 20)} clickable" role="button" tabindex="0" data-entity="${esc(b.entity)}" title="${esc(
       this._t("battery")
-    )}"><span class="cell"><i style="width:calc((100% - 2px) * ${(v / 100).toFixed(2)})"></i></span>${Math.round(v)}%</span>`;
+    )}" aria-label="${esc(this._t("battery"))} ${Math.round(v)}%"><span class="cell"><i style="width:calc((100% - 2px) * ${(v / 100).toFixed(2)})"></i></span>${Math.round(v)}%</span>`;
   }
 
   _row(p) {
@@ -655,8 +670,12 @@ class PresenceMiniCard extends PresenceCard {
     if (width <= 0) return; // not laid out (hidden tab, card being created)
     const titles = Math.max(...[...root.querySelectorAll(".mini .titles > div")].map((n) => n.scrollWidth));
     const n = root.querySelectorAll(".mini .face").length;
-    const zoom = root.querySelector(".mini .zoom") ? 20 + 10 : 0;
-    const row = 32 + 10 + titles + 10 + n * FACE + (n - 1) * FACE_GAP + zoom <= width;
+    const faces = n ? 10 + n * FACE + (n - 1) * FACE_GAP : 0; // header gap + avatars, nothing with zero faces
+    const zoomEl = root.querySelector(".mini .zoom");
+    // Header gap + the button's measured footprint (its width plus its negative margins).
+    const zs = zoomEl && getComputedStyle(zoomEl);
+    const zoom = zoomEl ? 10 + zoomEl.offsetWidth + (parseFloat(zs.marginLeft) || 0) + (parseFloat(zs.marginRight) || 0) : 0;
+    const row = 32 + 10 + titles + faces + zoom <= width;
     if (row === this._inline) return;
     this._inline = row;
     this._update(this._sig);
