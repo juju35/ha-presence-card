@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.4.1
+### Fixed
+- Visual editor: editing a card no longer drops the per-person `name` / `picture` set in YAML (the entity list was flattened to plain ids on the first change).
+- Mini card: the avatar fitting no longer goes negative with no one to show, and accounts for the zoom button's real footprint.
+- The battery button has an accessible label.
+
+### Changed
+- Performance: the list of people is computed once per state update instead of re-scanning and sorting all entities on every refresh, and the minute timer no longer runs when `show_since` is off.
+
+### Maintenance
+- README: Lint badge and a note on the zoomed card's size in sections views.
+- CI: release gated on tests, Screenshots workflow added, deterministic screenshot capture, unused ruff tooling removed.
+
 ## 1.4.0
 ### Security
 - Escape the photo URL for the CSS `url()` context. `_avatar()` injected a person's photo URL (`entity_picture`, or a configured `picture`) into `url('…')` inside a `style` attribute using HTML escaping only. The browser decodes HTML entities in a `style` attribute before parsing CSS, so an escaped quote reverted to `'` at CSS-parse time, closed the `url('…')` string and allowed extra CSS declarations to be injected (e.g. a `background-image` to a third-party server usable as a tracking beacon). A new `cssUrl()` helper strips quotes, parentheses, backslashes and spaces before HTML-escaping, keeping the `url('…')` string closed. Low practical impact (the URL comes from a trusted source in most installs), but a valid, no-cost defense in depth.
