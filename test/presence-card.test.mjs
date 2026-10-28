@@ -2,10 +2,19 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { load } from "./load.mjs";
 
-const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, PresenceCard, PresenceMiniCard, STRINGS } = load(
-  "presence-card.js",
-  ["personInfo", "sortPeople", "fmtDuration", "fmtDistance", "haversine", "batteryOf", "PresenceCard", "PresenceMiniCard", "STRINGS"]
-);
+const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS } =
+  load("presence-card.js", [
+    "personInfo",
+    "sortPeople",
+    "fmtDuration",
+    "fmtDistance",
+    "haversine",
+    "batteryOf",
+    "PresenceCard",
+    "PresenceMiniCard",
+    "PresenceCardEditor",
+    "STRINGS",
+  ]);
 
 const NOW = Date.parse("2026-10-25T12:00:00Z");
 const ago = (min) => new Date(NOW - min * 60000).toISOString();
@@ -140,6 +149,24 @@ test("mini card: one face per person, the zoom button switches to the full card"
   el._config = { zoom: false };
   el._zoomed = false;
   assert.doesNotMatch(el._render(), /class="zoom"/);
+});
+
+test("editor keeps the YAML name/picture entity objects when the form re-emits plain ids", () => {
+  const editor = new PresenceCardEditor();
+  const events = [];
+  editor.dispatchEvent = (ev) => events.push(ev);
+  editor.setConfig({ entities: [{ entity: "person.a", name: "Me", picture: "/local/me.png" }, "person.b"] });
+  editor.hass = { states: {}, language: "en" };
+  // The entity selector works on plain ids: person.b removed, person.c added.
+  editor._form.listeners["value-changed"]({
+    stopPropagation() {},
+    detail: { value: { entities: ["person.a", "person.c"], sort: "presence", show_since: true, show_distance: true, show_battery: true, show_away: true } },
+  });
+  // JSON comparison: the config objects were created in the card's realm, with its own Object prototype.
+  assert.equal(
+    JSON.stringify(events[0].detail.config),
+    JSON.stringify({ entities: [{ entity: "person.a", name: "Me", picture: "/local/me.png" }, "person.c"] })
+  );
 });
 
 test("French strings cover every English key", () => {

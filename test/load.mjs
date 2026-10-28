@@ -11,15 +11,31 @@ export const load = (file, names) => {
       return this.shadowRoot;
     }
     dispatchEvent() {}
+    appendChild() {}
   }
   const registry = new Map();
   const context = {
     HTMLElement,
     customElements: { get: (n) => registry.get(n), define: (n, c) => registry.set(n, c) },
     window: {},
-    document: { addEventListener() {}, removeEventListener() {} },
+    document: {
+      addEventListener() {},
+      removeEventListener() {},
+      createElement: (tag) => ({
+        tag,
+        listeners: {},
+        addEventListener(type, fn) {
+          this.listeners[type] = fn;
+        },
+      }),
+    },
     console: { info() {}, error() {}, log() {} },
-    CustomEvent: class {},
+    CustomEvent: class {
+      constructor(type, opts = {}) {
+        this.type = type;
+        this.detail = opts.detail;
+      }
+    },
     Intl,
     Date,
   };

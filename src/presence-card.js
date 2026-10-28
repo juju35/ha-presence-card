@@ -778,6 +778,14 @@ class PresenceEditorBase extends HTMLElement {
       this._form.addEventListener("value-changed", (ev) => {
         ev.stopPropagation();
         const config = { ...ev.detail.value };
+        // The entity selector works on plain ids: restore the original entries (objects carrying
+        // name/picture, configured in YAML) for the entities that were kept; new ones stay strings.
+        if (Array.isArray(config.entities)) {
+          const byId = new Map(
+            (Array.isArray(this._config.entities) ? this._config.entities : []).map((e) => [typeof e === "string" ? e : e?.entity, e])
+          );
+          config.entities = config.entities.map((id) => byId.get(id) ?? id);
+        }
         for (const [k, v] of Object.entries(config)) {
           // Keep the YAML minimal: drop empty values, defaults and toggles left on (their default).
           const empty = v === "" || v === undefined || v === null || (Array.isArray(v) && !v.length);
