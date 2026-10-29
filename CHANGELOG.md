@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.5.1
+### Fixed
+- A photo path with spaces, parentheses or an apostrophe (e.g. `/local/people/Jean Pierre.jpg`, `/local/photo (2).jpg`) now loads: these characters are percent-encoded instead of being stripped, which broke the image.
+- A numeric `name` in YAML (e.g. `name: 2024`) no longer breaks the card when sorting by name.
+- Visual editor: a Home Assistant state update no longer re-renders the whole form while editing.
+- German: the day unit reads "Tg." instead of "T"; Spanish: the distance tooltip reads "de casa".
+
+### Maintenance
+- CI: fork-safe Screenshots checkout, time-boxed and retried Chromium install in every workflow, Playwright range aligned with the tested version.
+
 ## 1.5.0
 ### Added
 - German and Spanish translations (`de`, `es`), also selectable in the visual editor's language option.
