@@ -104,7 +104,7 @@ const STRINGS = {
     nobody_home: "Niemand zu Hause",
     for: "seit",
     just_now: "gerade eben",
-    days: "T",
+    days: "Tg.",
     hours: "Std.",
     minutes: "Min.",
     battery: "Akku",
@@ -142,7 +142,7 @@ const STRINGS = {
     hours: "h",
     minutes: "min",
     battery: "Batería",
-    from_home: "desde casa",
+    from_home: "de casa",
     no_person: "No se encontró ninguna persona. Añade personas en Ajustes → Personas.",
     unknown_person: "Persona no encontrada",
     zoom_in: "Mostrar la tarjeta completa",
@@ -173,8 +173,15 @@ const esc = (v) =>
 
 // A URL for a CSS url('…') inside a style attribute: esc() alone is not enough, as the browser decodes the
 // attribute's HTML entities before parsing the CSS, so an escaped quote would come back and close the string.
-// Keep it a plain CSS string: drop the quotes, backslashes and parentheses that could break out of url('…').
-const cssUrl = (v) => esc(String(v ?? "").replace(/["'()\\\s]/g, ""));
+// Keep it a plain CSS string: percent-encode the quotes, backslashes, parentheses and whitespace that could break
+// out of url('…'), so the URL stays valid (a "/local/Jean Pierre.jpg" or "photo (2).jpg" still loads).
+const pct = (c) => `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, "0")}`;
+const cssUrl = (v) =>
+  esc(
+    String(v ?? "")
+      .replace(/["'()\\]/g, pct)
+      .replace(/\s/g, (c) => (c.charCodeAt(0) < 0x80 ? pct(c) : encodeURIComponent(c)))
+  );
 
 const lang = (hass, config) => {
   const l = config?.language || (hass && (hass.locale?.language || hass.language)) || "en";
@@ -313,7 +320,7 @@ const personInfo = (hass, item, now = Date.now()) => {
   const changed = Date.parse(st.last_changed);
   return {
     id: item.entity,
-    name: item.name || a.friendly_name || item.entity.split(".")[1],
+    name: String(item.name || a.friendly_name || item.entity.split(".")[1]),
     picture: item.picture || a.entity_picture || null,
     kind,
     zone: kind === "zone" ? state : null,
@@ -326,7 +333,7 @@ const personInfo = (hass, item, now = Date.now()) => {
 const sortPeople = (people, sort) => {
   const pos = new Map(people.map((p, i) => [p.id, i]));
   if (sort === "config") return people;
-  if (sort === "name") return [...people].sort((a, b) => a.name.localeCompare(b.name));
+  if (sort === "name") return [...people].sort((a, b) => String(a.name).localeCompare(String(b.name)));
   return [...people].sort((a, b) => ORDER[a.kind] - ORDER[b.kind] || pos.get(a.id) - pos.get(b.id));
 };
 
@@ -885,11 +892,19 @@ class PresenceEditorBase extends HTMLElement {
       });
       this.appendChild(this._form);
     }
+    this._form.hass = this._hass;
+    // A state update only needs the new hass: rebuilding data and a fresh schema (new option arrays) on every one
+    // would re-render the whole ha-form while editing. Reassign them only when the config or the language changed.
+    const l = lang(this._hass, this._config);
+    if (this._formConfig === this._config && this._formLang === l) return;
+    this._formConfig = this._config;
+    this._formLang = l;
     const data = { sort: "presence", ...this._config, entities: normalize(this._config.entities).map((e) => e.entity) };
     for (const name of this.constructor.toggles) if (data[name] === undefined) data[name] = true;
-    this._form.hass = this._hass;
+    this._schemas ??= {};
+    this._schemas[l] ??= this._schema();
     this._form.data = data;
-    this._form.schema = this._schema();
+    this._form.schema = this._schemas[l];
   }
 }
 

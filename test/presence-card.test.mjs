@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { load } from "./load.mjs";
 
-const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS } =
+const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS } =
   load("presence-card.js", [
     "personInfo",
     "sortPeople",
@@ -10,6 +10,7 @@ const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, 
     "fmtDistance",
     "haversine",
     "batteryOf",
+    "cssUrl",
     "PresenceCard",
     "PresenceMiniCard",
     "PresenceCardEditor",
@@ -80,6 +81,25 @@ test("presence order: home, then zones, then away, keeping the configured order 
   assert.deepEqual([...sortPeople(ps, undefined).map((p) => p.id)], ["2", "4", "3", "1"]);
   assert.deepEqual([...sortPeople(ps, "name").map((p) => p.id)], ["4", "3", "2", "1"]);
   assert.deepEqual([...sortPeople(ps, "config").map((p) => p.id)], ["1", "2", "3", "4"]);
+});
+
+test("name sort accepts a non-string YAML name", () => {
+  const states = { "person.a": person("a", "home"), "person.b": person("b", "home") };
+  const a = personInfo({ states }, { entity: "person.a", name: 2024 }, NOW);
+  const b = personInfo({ states }, { entity: "person.b" }, NOW);
+  assert.equal(a.name, "2024");
+  assert.deepEqual([...sortPeople([b, a], "name").map((p) => p.id)], ["person.a", "person.b"]);
+  // Even when a raw number reaches the sort.
+  assert.doesNotThrow(() => sortPeople([{ id: "x", name: 7 }, { id: "y", name: "Y" }], "name"));
+});
+
+test("photo URL for CSS url(): quotes, parentheses, backslashes and spaces are percent-encoded, not dropped", () => {
+  assert.equal(cssUrl("/local/people/Jean Pierre.jpg"), "/local/people/Jean%20Pierre.jpg");
+  assert.equal(cssUrl("/local/photo (2).jpg"), "/local/photo%20%282%29.jpg");
+  assert.equal(cssUrl("/local/Zoé's.jpg"), "/local/Zoé%27s.jpg");
+  assert.equal(cssUrl('a"b\\c\nd'), "a%22b%5Cc%0Ad");
+  // Nothing left that could close the url('…') string once the browser decodes the attribute's entities.
+  assert.doesNotMatch(cssUrl("x'); background:url(https://evil/"), /['"()\\\s]/);
 });
 
 test("durations", () => {
@@ -167,6 +187,22 @@ test("editor keeps the YAML name/picture entity objects when the form re-emits p
     JSON.stringify(events[0].detail.config),
     JSON.stringify({ entities: [{ entity: "person.a", name: "Me", picture: "/local/me.png" }, "person.c"] })
   );
+});
+
+test("editor: a state update alone does not rebuild the form's data and schema", () => {
+  const editor = new PresenceCardEditor();
+  editor.setConfig({ entities: ["person.a"] });
+  editor.hass = { states: {}, language: "en" };
+  const { data, schema } = editor._form;
+  editor.hass = { states: { "person.a": {} }, language: "en" };
+  assert.equal(editor._form.data, data);
+  assert.equal(editor._form.schema, schema);
+  editor.setConfig({ entities: ["person.a"], title: "T" });
+  assert.notEqual(editor._form.data, data);
+  assert.equal(editor._form.schema, schema);
+  editor.hass = { states: {}, language: "fr" };
+  assert.notEqual(editor._form.schema, schema);
+  assert.equal(editor._form.schema[2].selector.select.options[0].label, STRINGS.fr.sort_presence);
 });
 
 for (const l of ["fr", "de", "es"]) {
