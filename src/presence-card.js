@@ -406,7 +406,7 @@ const fireMoreInfo = (node, entityId) => {
 // ---------------------------------------------------------------------------
 
 const BASE_STYLE = `
-  :host { --pr-accent: #5b6cf0; --pr-home: var(--success-color, #43a047); --pr-zone: var(--info-color, #039be5);
+  :host { display: block; --pr-accent: #5b6cf0; --pr-home: var(--success-color, #43a047); --pr-zone: var(--info-color, #039be5);
           --pr-away: var(--disabled-text-color, #9e9e9e); --pr-unknown: var(--warning-color, #ffa600);
           --pr-ok: var(--success-color, #43a047); --pr-warn: var(--warning-color, #ffa600); --pr-crit: var(--error-color, #db4437); }
   ha-card { overflow: hidden; }
@@ -743,7 +743,11 @@ class PresenceMiniCard extends PresenceCard {
     if (!header) return;
     const width = header.clientWidth - 24;
     if (width <= 0) return; // not laid out (hidden tab, card being created)
-    const titles = Math.max(...[...root.querySelectorAll(".mini .titles > div")].map((n) => n.scrollWidth));
+    // The text's own width (the inline spans), not the title block's: that one stretches with the flex row
+    // and would make a card that has once wrapped its avatars never fit them back on the row.
+    const titles = Math.max(
+      ...[...root.querySelectorAll(".mini .titles > div > span")].map((n) => Math.ceil(n.getBoundingClientRect().width))
+    );
     const n = root.querySelectorAll(".mini .face").length;
     const faces = n ? 10 + n * FACE + (n - 1) * FACE_GAP : 0; // header gap + avatars, nothing with zero faces
     const zoomEl = root.querySelector(".mini .zoom");
@@ -802,7 +806,7 @@ class PresenceMiniCard extends PresenceCard {
           <div class="header">
             ${logo()}
             <div class="titles">
-              <div class="name">${esc(c.title || this._t("title"))}</div>
+              <div class="name"><span>${esc(c.title || this._t("title"))}</span></div>
               <div class="sub"><span class="st ${n ? "home" : "away"}"><span class="dot"></span>${esc(text)}</span></div>
             </div>
             <div class="faces">${faces.join("")}</div>
