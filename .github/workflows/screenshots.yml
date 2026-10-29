@@ -24,7 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
+          # Fork PR branches do not exist in this repository: only check out the
+          # head branch for same-repo PRs (where screenshots get pushed back).
+          # Everything else keeps the default ref — for a fork PR that is the merge
+          # ref, which github.ref_name ("N/merge") does not resolve to.
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref || '' }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
@@ -32,18 +36,12 @@ jobs:
       # Download the browser binary (no apt here) separately from its system libraries, so the apt work all sits in
       # the one time-boxed, retried step below and a hung mirror can never stall an unguarded install.
       - run: npx playwright install chromium
+        timeout-minutes: 5
       # Roboto + the browser's apt deps, each apt call time-boxed and retried so a flaky mirror is
       # abandoned and retried instead of hanging.
       - name: Install Roboto and browser deps
         timeout-minutes: 12
-        run: |
-          for i in 1 2 3; do
-            timeout 150 sudo apt-get update \
-              && timeout 300 sudo apt-get install -y fonts-roboto \
-              && timeout 300 npx playwright install-deps chromium \
-              && break
-            echo "apt attempt $i failed or timed out, retrying in 15s"; sleep 15
-          done
+        run: .github/scripts/install-chromium-deps.sh fonts-roboto
       - run: npm run build
       - name: Render screenshots
         run: |
@@ -52,6 +50,8 @@ jobs:
             echo "::error::screenshots failed: $(tail -c 1200 /tmp/screenshots.log | tr -d '\r' | tr '\n' ' ')"
             exit 1
           }
+      # Pushed with GITHUB_TOKEN, which starts no workflow: the new head commit gets no Validate/Lint/HACS
+      # runs. main requires no check today; if it ever does, push an empty commit to re-run them.
       - name: Commit refreshed screenshots
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         run: |
