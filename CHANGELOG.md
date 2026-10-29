@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.3
+### Fixed
+- Mini card: on a zoomed or scaled dashboard (theme or card-mod zoom, kiosk mode, the edit dialog opening), a long title is no longer left truncated next to the avatars: the avatars now move under it as they do at normal size.
+
 ## 1.5.2
 ### Fixed
 - Mini card: once the avatars had wrapped under the title (narrow column, portrait phone, sidebar open), they now move back onto the title row when the card gets wider again, instead of staying below until the page was reloaded.
