@@ -115,3 +115,51 @@ test("mini card: a title too long for the row still sends the avatars under it, 
   assert.deepEqual(errors, []);
   assert.deepEqual(r, { long: false, short: true });
 });
+
+// A zoomed or scaled ancestor (theme or card-mod zoom, kiosk, dialog opening animation): the title must be
+// measured in layout pixels like the header, or it is under-estimated and left truncated next to the avatars.
+const scaled = async (wrapCss) => {
+  const { page, errors } = await open("display:block");
+  const r = await page.evaluate(async (css) => {
+    const person = (id, state) => ({
+      entity_id: `person.${id}`,
+      state,
+      last_changed: new Date().toISOString(),
+      attributes: { friendly_name: id },
+    });
+    const wrap = document.getElementById("wrap");
+    wrap.style.cssText = `width:330px;${css}`;
+    card.setConfig({ title: "Family presence board" });
+    card.hass = {
+      states: {
+        "person.ann": person("ann", "home"),
+        "person.bob": person("bob", "not_home"),
+        "person.cid": person("cid", "home"),
+      },
+      language: "en",
+    };
+    for (let i = 0; i < 3; i++) await new Promise((res) => requestAnimationFrame(res));
+    card._fit();
+    for (let i = 0; i < 3; i++) await new Promise((res) => requestAnimationFrame(res));
+    const name = card.shadowRoot.querySelector(".mini .name");
+    return { inline: card._inline, truncated: name.scrollWidth > name.clientWidth };
+  }, wrapCss);
+  await page.close();
+  assert.deepEqual(errors, []);
+  return r;
+};
+
+test("mini card: a long title under a zoomed ancestor sends the avatars under it, not truncated", async (t) => {
+  if (skip) return t.skip(skip);
+  assert.deepEqual(await scaled("zoom:0.6"), { inline: false, truncated: false });
+});
+
+test("mini card: a long title under a scaled ancestor sends the avatars under it, not truncated", async (t) => {
+  if (skip) return t.skip(skip);
+  assert.deepEqual(await scaled("transform:scale(.5);transform-origin:0 0"), { inline: false, truncated: false });
+});
+
+test("mini card: the same long title with no zoom or scale also wraps the avatars", async (t) => {
+  if (skip) return t.skip(skip);
+  assert.deepEqual(await scaled(""), { inline: false, truncated: false });
+});
