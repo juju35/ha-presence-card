@@ -744,10 +744,10 @@ class PresenceMiniCard extends PresenceCard {
     const width = header.clientWidth - 24;
     if (width <= 0) return; // not laid out (hidden tab, card being created)
     // The text's own width (the inline spans), not the title block's: that one stretches with the flex row
-    // and would make a card that has once wrapped its avatars never fit them back on the row.
-    const titles = Math.max(
-      ...[...root.querySelectorAll(".mini .titles > div > span")].map((n) => Math.ceil(n.getBoundingClientRect().width))
-    );
+    // and would make a card that has once wrapped its avatars never fit them back on the row. Read as a
+    // layout width (offsetWidth), like clientWidth above: getBoundingClientRect() follows an ancestor's
+    // zoom or transform and would under-estimate the title under a scaled dashboard.
+    const titles = Math.max(...[...root.querySelectorAll(".mini .titles > div > span")].map((n) => n.offsetWidth));
     const n = root.querySelectorAll(".mini .face").length;
     const faces = n ? 10 + n * FACE + (n - 1) * FACE_GAP : 0; // header gap + avatars, nothing with zero faces
     const zoomEl = root.querySelector(".mini .zoom");
