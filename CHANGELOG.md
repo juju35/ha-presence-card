@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.2
+### Fixed
+- Mini card: once the avatars had wrapped under the title (narrow column, portrait phone, sidebar open), they now move back onto the title row when the card gets wider again, instead of staying below until the page was reloaded.
+- Mini card: the card now reacts to every width change in any dashboard layout (the card element is displayed as a block), so a title is no longer left truncated next to the avatars after the card shrinks.
+
 ## 1.5.1
 ### Fixed
 - A photo path with spaces, parentheses or an apostrophe (e.g. `/local/people/Jean Pierre.jpg`, `/local/photo (2).jpg`) now loads: these characters are percent-encoded instead of being stripped, which broke the image.
