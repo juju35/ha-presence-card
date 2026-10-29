@@ -8,7 +8,7 @@
 - German: the day unit reads "Tg." instead of "T"; Spanish: the distance tooltip reads "de casa".
 
 ### Maintenance
-- CI: fork-safe Screenshots checkout, time-boxed and retried Chromium install in every workflow, Playwright range aligned with the tested version.
+- CI: fork-safe Screenshots checkout, time-boxed and retried Chromium install in every workflow, Playwright range aligned with the tested version; the Screenshots workflow re-runs Lint, Validate and HACS on its own screenshot commit.
 
 ## 1.5.0
 ### Added
