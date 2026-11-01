@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.5 - 2026-11-01
+### Added
+- Serbian translations, in Cyrillic (`sr`) and Latin (`sr-Latn`) script, also offered in the visual editor's language list; a Home Assistant set to `sr-Latn` now picks the Latin script automatically. Serbian translations by @cpmarexel2f (#16).
+
 ## 1.5.4
 ### Fixed
 - Readability in light and dark themes: the state chips ("Home", "Work", "Away", "Unknown", the "2/4" counter), the mini card's summary and the "person not found" warning keep their state color but now reach the WCAG AA contrast (4.5:1) against their background; the state color stays on the chip background, the avatar ring and the badge.

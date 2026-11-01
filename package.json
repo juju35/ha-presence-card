@@ -1,6 +1,6 @@
 {
   "name": "ha-presence-card",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Lovelace cards for Home Assistant showing people (person entities) and their presence.",
   "private": true,
   "type": "module",
