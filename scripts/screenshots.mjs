@@ -3,7 +3,7 @@
 import { chromium } from "playwright";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { states } from "./mock-states.mjs";
+import { NOW, states } from "./mock-states.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const cardJs = readFileSync(`${root}dist/presence-card.js`, "utf8");
@@ -58,7 +58,14 @@ const browser = await chromium.launch(
 );
 for (const s of shots) {
   // A fresh page for each capture: the card script declares its classes and custom elements once per page.
-  const page = await browser.newPage({ deviceScaleFactor: 2, viewport: { width: 1000, height: 2000 } });
+  // Fixed clock, time zone and locale: the "for 3 h" durations and any date do not depend on when or where it runs.
+  const page = await browser.newPage({
+    deviceScaleFactor: 2,
+    viewport: { width: 1000, height: 2000 },
+    timezoneId: "Europe/Paris",
+    locale: "en-US",
+  });
+  await page.clock.setFixedTime(NOW);
   page.on("pageerror", (err) => console.error(`${s.file}: ${err.message}`));
   await page.setContent(page_html(s.theme, s.width));
   await page.addScriptTag({ content: HA_CARD });
