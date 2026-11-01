@@ -37,7 +37,7 @@ const longStates = () => {
 
 // One card of `type` at `width` px, rendered and measured in the page by `fn` (a function source, run with the
 // card element as `el`).
-const inPage = async ({ type, width, lang = "en", theme = "light", config = {}, states = MOCK }, fn) => {
+const inPage = async ({ type, width, lang = "en", theme = "light", config = {}, states = MOCK, rootStyle = "" }, fn) => {
   const page = await browser.newPage({ viewport: { width: 1000, height: 1200 } });
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -46,7 +46,7 @@ const inPage = async ({ type, width, lang = "en", theme = "light", config = {}, 
     .map(([k, v]) => `${k}:${v};`)
     .join("");
   await page.setContent(
-    `<!doctype html><meta charset="utf-8"><style>:root{${vars}} body{margin:0;padding:16px;font-family:Arial,sans-serif;font-size:14px;color:var(--primary-text-color)} #root{width:${width}px}</style><div id=root></div>`
+    `<!doctype html><meta charset="utf-8"><style>:root{${vars}} body{margin:0;padding:16px;font-family:Arial,sans-serif;font-size:14px;color:var(--primary-text-color)} #root{width:${width === "auto" ? "auto" : `${width}px`};${rootStyle}}</style><div id=root></div>`
   );
   await page.addScriptTag({
     content: `customElements.define("ha-card", class extends HTMLElement { constructor() { super();
@@ -61,7 +61,7 @@ const inPage = async ({ type, width, lang = "en", theme = "light", config = {}, 
       el.hass = { states, language: lang, locale: { language: lang }, config: { unit_system: { length: "km" } } };
       for (let i = 0; i < 3; i++) await new Promise((res) => requestAnimationFrame(res));
       // biome-ignore lint/security/noGlobalEval: test-only measuring function passed as source
-      return (0, eval)(`(${fn})`)(el);
+      return globalThis.eval(`(${fn})`)(el);
     },
     { type, lang, config, states, fn: fn.toString() }
   );
@@ -135,7 +135,8 @@ const header = (el) => {
     chipInside: chip ? chip.getBoundingClientRect().right <= card.right + 0.5 : true,
     zoom: zoom ? Math.round(zoom.getBoundingClientRect().width) : null,
     // The mini card's zoom button stays on the logo's row, it never wraps onto a line of its own.
-    zoomOnRow: zoom ? zoom.getBoundingClientRect().top < root.querySelector(".logo").getBoundingClientRect().bottom : true,
+    // (Measured against the title when a narrow mini card drops its logo.)
+    zoomOnRow: zoom ? zoom.getBoundingClientRect().top < (root.querySelector(".logo").offsetWidth ? root.querySelector(".logo") : name).getBoundingClientRect().bottom : true,
   };
 };
 
@@ -188,3 +189,101 @@ test("no interactive element nested in another (axe nested-interactive), each on
   assert.deepEqual(r.opened, ["person.sam", "device_tracker.sam_phone", "person.sam"]);
   assert.equal(r.battName, "Battery 34%");
 });
+
+// Phone widths of the Sections view (9 of 12 columns, the full card's minimum, is about 234-273 px; a normal
+// column is wider): the header chip has room for its "2/4" next to a readable title, it must show it whole.
+for (const lang of ["en", "pl", "sr-Latn"])
+  for (const width of [234, 245, 273, 320, 500]) {
+    test(`full card ${lang} at ${width}px: the header chip shows its whole count`, async (t) => {
+      if (skip) return t.skip(skip);
+      const r = await inPage({ type: "presence-card", width, lang }, (el) => {
+        const txt = el.shadowRoot.querySelector(".header > .chip .txt");
+        return { shown: txt.getBoundingClientRect().width > 0, cut: txt.scrollWidth > txt.clientWidth + 1 };
+      });
+      assert.deepEqual(r, { shown: true, cut: false });
+    });
+  }
+
+test("mini card: the focus given back to the zoom button after a keyboard zoom does not scroll the page", async (t) => {
+  if (skip) return t.skip(skip);
+  const r = await inPage({ type: "presence-mini-card", width: 300 }, (el) => {
+    const calls = [];
+    const focus = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function (opts) {
+      calls.push(opts ?? null);
+      return focus.call(this, opts);
+    };
+    // Enter / Space on a button: a click with no click count.
+    el.shadowRoot.querySelector(".zoom").dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 0 }));
+    HTMLElement.prototype.focus = focus;
+    return { calls, focused: el.shadowRoot.activeElement?.className ?? null };
+  });
+  assert.deepEqual(r, { calls: [{ preventScroll: true }], focused: "zoom" });
+});
+
+// A card in a box sized by its content (layout-card, button-card, a grid column `auto`, an inline-block) keeps
+// a usable width: no container query context on an element whose width would come from its content.
+for (const type of ["presence-card", "presence-mini-card"])
+  for (const wrap of ["display:inline-block", "display:grid;grid-template-columns:auto"]) {
+    test(`${type} in a content-sized box (${wrap}) keeps a usable width`, async (t) => {
+      if (skip) return t.skip(skip);
+      const r = await inPage({ type, width: "auto", rootStyle: wrap }, (el) => Math.round(el.getBoundingClientRect().width));
+      assert.ok(r >= 200, `${r}px`);
+    });
+  }
+
+// Phone widths at the declared minimum (Sections view, a ~320-364 px section): the full card asks for 9 of 12
+// columns (234-273 px), the mini card for 6 (156-178 px), and ~245 px. Nothing leaves the card, the title keeps
+// at least four characters, and no value is cut: the zone / state chips, distance and battery of the rows, the
+// header's summary. Normal and unavailable people, light and dark themes.
+const unavailable = () => {
+  const s = structuredClone(MOCK);
+  for (const k of Object.keys(s)) if (/^(person|device_tracker)\./.test(k)) s[k] = { ...s[k], state: "unavailable" };
+  return s;
+};
+const fit = (el) => {
+  const root = el.shadowRoot;
+  const card = root.querySelector("ha-card").getBoundingClientRect();
+  const visible = (n) => {
+    // A box clipped by an ancestor that cuts its text (overflow hidden) is not outside the card, it is cut:
+    // that case is reported by `cut` below.
+    for (let p = n.parentElement; p; p = p.parentElement) if (getComputedStyle(p).overflow === "hidden") return p.getBoundingClientRect();
+    return n.getBoundingClientRect();
+  };
+  const out = [];
+  for (const n of root.querySelectorAll("ha-card *")) {
+    const b = n.getBoundingClientRect();
+    const v = visible(n);
+    if (b.width && (Math.min(b.right, v.right) > card.right + 0.5 || Math.max(b.left, v.left) < card.left - 0.5))
+      out.push(n.getAttribute("class") || n.localName);
+  }
+  const isCut = (n) => n.scrollWidth > n.clientWidth + 1;
+  const name = root.querySelector(".header .name");
+  const tn = (name.querySelector("span") ?? name).firstChild;
+  const range = document.createRange();
+  range.setStart(tn, 0);
+  range.setEnd(tn, Math.min(4, tn.length));
+  const values = [
+    ...root.querySelectorAll(".person .where .chip .txt, .person .facts > span, .header .sub"),
+  ].filter((n) => n.textContent.trim());
+  return {
+    out,
+    title: name.clientWidth >= Math.ceil(range.getBoundingClientRect().width),
+    cut: values.filter(isCut).map((n) => n.textContent.trim()),
+  };
+};
+for (const [type, widths] of [
+  ["presence-card", [234, 245, 273]],
+  ["presence-mini-card", [156, 178, 245]],
+])
+  for (const width of widths)
+    for (const lang of ["en", "pl", "sr-Latn"])
+      for (const theme of ["light", "dark"])
+        for (const state of ["normal", "unavailable"]) {
+          test(`${type} ${lang} ${theme} ${state} at ${width}px: nothing out of the card, no value cut`, async (t) => {
+            if (skip) return t.skip(skip);
+            const states = state === "normal" ? MOCK : unavailable();
+            const r = await inPage({ type, width, lang, theme, states }, fit);
+            assert.deepEqual(r, { out: [], title: true, cut: [] });
+          });
+        }

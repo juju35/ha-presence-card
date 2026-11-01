@@ -833,10 +833,15 @@ class PresenceBase extends HTMLElement {
 const FULL_STYLE = `
   .content { padding: 8px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
   .content .warning { padding: 2px 10px; font-size: 12px; }
-  /* Narrow header: the count chip keeps only its icon, the count stays in its title and label. */
+  /* Narrow header (a card under about 205 px, narrower than its 9 columns on a phone): the count chip keeps
+     only its icon, the count stays in its title and label. At phone widths it shows its whole "2/4". */
   .header { container: pr-head / inline-size; }
-  @container pr-head (max-width: 260px) { .header > .chip .txt { display: none; } .header > .chip { padding: 1px 4px; } }
-  .person { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px;
+  /* The summary ("Nikogo nie ma w domu") wraps between words rather than being cut next to the chip. */
+  .header .sub { white-space: normal; }
+  @container pr-head (max-width: 180px) { .header > .chip .txt { display: none; } .header > .chip { padding: 1px 4px; } }
+  /* A small gap before the facts column: the name and place already stretch up to it, and at a phone's 9
+     columns (about 234 px) every pixel goes to the zone or state chip ("Poza domem"). */
+  .person { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 12px;
             background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   /* The person's button (avatar, name, place) and the battery's are side by side, never one inside the other. */
   .person .main { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; border-radius: 8px; }
@@ -874,7 +879,8 @@ class PresenceCard extends PresenceBase {
   }
 
   getGridOptions() {
-    // 9 columns: under that, the title, the summary and the rows' durations are cut or wrap on several lines.
+    // 9 columns: under that, the rows get too dense (names, zone chips and durations cut or wrapped on
+    // several lines); the header itself still fits narrower.
     return { columns: 12, min_columns: 9 };
   }
 
@@ -940,6 +946,10 @@ const MINI_STYLE = `
   .mini .header > .logo .icon { width: 20px; height: 20px; }
   .mini .header > .titles { margin-block: -2px; }
   .mini .zoom { margin: -4px -4px -4px 0; }
+  /* Too narrow for the logo next to the title (a phone's 6 columns, ~156-178 px): the logo goes, the summary
+     wraps between words instead of being cut. */
+  .mini.tight .header > .logo { display: none; }
+  .mini.tight .sub { white-space: normal; }
   .mini > .warning { padding: 0 12px 12px; font-size: 12px; }
   .sub .st { color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color, #212121)); font-weight: 500; }
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
@@ -960,6 +970,7 @@ class PresenceMiniCard extends PresenceCard {
     super();
     this._zoomed = false;
     this._inline = true;
+    this._tight = false;
     this._resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => this._fit()) : null;
     this.shadowRoot.addEventListener("click", (ev) => this._zoomClick(ev));
     // A click outside the card, and not in a dialog opened from it, brings it back to the compact view.
@@ -998,7 +1009,12 @@ class PresenceMiniCard extends PresenceCard {
     // and would make a card that has once wrapped its avatars never fit them back on the row. Read as a
     // layout width (offsetWidth), like clientWidth above: getBoundingClientRect() follows an ancestor's
     // zoom or transform and would under-estimate the title under a scaled dashboard.
+    // A summary wrapped by the tight layout is read unwrapped (its nowrap restored for the measure), so that
+    // its width does not depend on the layout it decides.
+    const sub = root.querySelector(".mini .sub");
+    if (sub) sub.style.whiteSpace = "nowrap";
     const titles = Math.max(...[...root.querySelectorAll(".mini .titles > div > span")].map((n) => n.offsetWidth));
+    if (sub) sub.style.whiteSpace = "";
     const n = root.querySelectorAll(".mini .face").length;
     const faces = n ? 10 + n * FACE + (n - 1) * FACE_GAP : 0; // header gap + avatars, nothing with zero faces
     const zoomEl = root.querySelector(".mini .zoom");
@@ -1006,8 +1022,13 @@ class PresenceMiniCard extends PresenceCard {
     const zs = zoomEl && getComputedStyle(zoomEl);
     const zoom = zoomEl ? 10 + zoomEl.offsetWidth + (parseFloat(zs.marginLeft) || 0) + (parseFloat(zs.marginRight) || 0) : 0;
     const row = 32 + 10 + titles + faces + zoom <= width;
-    if (row === this._inline) return;
+    // No room for the logo and the whole title and summary: the logo is dropped and the summary wraps.
+    // Measured on the unwrapped texts (the logo's presence changes none of these widths), so it never flips
+    // back and forth.
+    const tight = !row && 32 + 10 + titles + zoom > width;
+    if (row === this._inline && tight === this._tight) return;
     this._inline = row;
+    this._tight = tight;
     this._update(this._sig);
   }
 
@@ -1030,7 +1051,7 @@ class PresenceMiniCard extends PresenceCard {
     ev.stopPropagation();
     this._setZoom(!this._zoomed);
     // Keyboard use (Enter / Space: no click count) keeps the focus on the button.
-    if (ev.detail === 0) this.shadowRoot.querySelector(".zoom")?.focus();
+    if (ev.detail === 0) this.shadowRoot.querySelector(".zoom")?.focus({ preventScroll: true });
   }
 
   _zoomButton() {
@@ -1053,7 +1074,7 @@ class PresenceMiniCard extends PresenceCard {
     );
     return `<style>${BASE_STYLE}${MINI_STYLE}</style>
       <ha-card>
-        <div class="mini${this._inline ? " row" : ""}">
+        <div class="mini${this._inline ? " row" : ""}${this._tight ? " tight" : ""}">
           <div class="header">
             ${logo()}
             <div class="titles">
