@@ -232,6 +232,146 @@ const STRINGS = {
     language: "Jezik",
     lang_auto: "Automatski",
   },
+  it: {
+    title: "Presenza",
+    home: "A casa",
+    away: "Fuori",
+    unknown: "Sconosciuto",
+    at_home: "{n} su {total} a casa",
+    all_home: "Sono tutti a casa",
+    nobody_home: "Nessuno in casa",
+    for: "da",
+    just_now: "proprio ora",
+    days: "g",
+    hours: "h",
+    minutes: "min",
+    battery: "Batteria",
+    from_home: "da casa",
+    no_person: "Nessuna persona trovata. Aggiungi persone in Impostazioni → Persone.",
+    unknown_person: "Persona non trovata",
+    zoom_in: "Mostra la scheda completa",
+    zoom_out: "Torna alla vista compatta",
+    // Editor
+    entities: "Persone (tutte per impostazione predefinita)",
+    title_option: "Titolo (facoltativo)",
+    sort: "Ordine",
+    sort_presence: "Prima chi è a casa",
+    sort_name: "Per nome",
+    sort_config: "Come nell'elenco",
+    show_since: "Mostra da quando",
+    show_distance: "Mostra la distanza da casa",
+    show_battery: "Mostra la batteria del telefono",
+    show_away: "Mostra le persone fuori casa",
+    zoom: "Pulsante zoom",
+    zoom_helper: "Passa dalla mini scheda alla scheda completa e viceversa",
+    language: "Lingua",
+    lang_auto: "Automatica",
+  },
+  nl: {
+    title: "Aanwezigheid",
+    home: "Thuis",
+    away: "Afwezig",
+    unknown: "Onbekend",
+    at_home: "{n} van {total} thuis",
+    all_home: "Iedereen is thuis",
+    nobody_home: "Niemand thuis",
+    for: "al",
+    just_now: "zojuist",
+    days: "d",
+    hours: "u",
+    minutes: "min",
+    battery: "Batterij",
+    from_home: "vanaf huis",
+    no_person: "Geen personen gevonden. Voeg personen toe via Instellingen → Personen.",
+    unknown_person: "Persoon niet gevonden",
+    zoom_in: "Volledige kaart tonen",
+    zoom_out: "Terug naar de compacte weergave",
+    // Editor
+    entities: "Personen (standaard allemaal)",
+    title_option: "Titel (optioneel)",
+    sort: "Volgorde",
+    sort_presence: "Aanwezigen eerst",
+    sort_name: "Op naam",
+    sort_config: "Zoals opgegeven",
+    show_since: "Sinds wanneer tonen",
+    show_distance: "Afstand tot huis tonen",
+    show_battery: "Batterij van de telefoon tonen",
+    show_away: "Afwezige personen tonen",
+    zoom: "Zoomknop",
+    zoom_helper: "Schakelt tussen de minikaart en de volledige kaart",
+    language: "Taal",
+    lang_auto: "Automatisch",
+  },
+  pt: {
+    title: "Presença",
+    home: "Em casa",
+    away: "Fora",
+    unknown: "Desconhecido",
+    at_home: "{n} de {total} em casa",
+    all_home: "Estão todos em casa",
+    nobody_home: "Ninguém em casa",
+    for: "há",
+    just_now: "agora mesmo",
+    days: "d",
+    hours: "h",
+    minutes: "min",
+    battery: "Bateria",
+    from_home: "de casa",
+    no_person: "Nenhuma pessoa encontrada. Adicione pessoas em Definições → Pessoas.",
+    unknown_person: "Pessoa não encontrada",
+    zoom_in: "Mostrar o cartão completo",
+    zoom_out: "Voltar à vista compacta",
+    // Editor
+    entities: "Pessoas (todas por predefinição)",
+    title_option: "Título (opcional)",
+    sort: "Ordem",
+    sort_presence: "Primeiro quem está em casa",
+    sort_name: "Por nome",
+    sort_config: "Pela ordem da lista",
+    show_since: "Mostrar desde quando",
+    show_distance: "Mostrar a distância a casa",
+    show_battery: "Mostrar a bateria do telemóvel",
+    show_away: "Mostrar as pessoas ausentes",
+    zoom: "Botão de zoom",
+    zoom_helper: "Alterna entre o minicartão e o cartão completo",
+    language: "Idioma",
+    lang_auto: "Automático",
+  },
+  pl: {
+    title: "Obecność",
+    home: "W domu",
+    away: "Poza domem",
+    unknown: "Nieznany",
+    at_home: "W domu: {n} z {total}",
+    all_home: "Wszyscy są w domu",
+    nobody_home: "Nikogo nie ma w domu",
+    for: "od",
+    just_now: "przed chwilą",
+    days: "d",
+    hours: "h",
+    minutes: "min",
+    battery: "Bateria",
+    from_home: "od domu",
+    no_person: "Nie znaleziono żadnej osoby. Dodaj osoby w Ustawienia → Osoby.",
+    unknown_person: "Nie znaleziono osoby",
+    zoom_in: "Pokaż pełną kartę",
+    zoom_out: "Wróć do widoku kompaktowego",
+    // Editor
+    entities: "Osoby (domyślnie wszystkie)",
+    title_option: "Tytuł (opcjonalnie)",
+    sort: "Kolejność",
+    sort_presence: "Najpierw obecni w domu",
+    sort_name: "Według nazwy",
+    sort_config: "Jak na liście",
+    show_since: "Pokaż od kiedy",
+    show_distance: "Pokaż odległość od domu",
+    show_battery: "Pokaż baterię telefonu",
+    show_away: "Pokaż osoby poza domem",
+    zoom: "Przycisk powiększenia",
+    zoom_helper: "Przełącza minikartę na pełną kartę i z powrotem",
+    language: "Język",
+    lang_auto: "Automatycznie",
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -682,9 +822,10 @@ const FULL_STYLE = `
             background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .person .who { flex: 1; min-width: 0; }
   .person .pname { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .person .where { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
-  .person .where .chip { flex: none; }
-  .person .where .since { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .person .where { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
+  .person .where .chip { flex: none; max-width: 100%; box-sizing: border-box; }
+  /* The duration goes under the chip when it does not fit next to it, and wraps between words if still too long. */
+  .person .where .since { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
   .person .facts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 12px; flex: none; }
   .person .facts span { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
   .person .facts .icon { width: 14px; height: 14px; color: var(--secondary-text-color); }
@@ -738,7 +879,9 @@ class PresenceCard extends PresenceBase {
     if (c.show_distance !== false && p.km !== null)
       facts.push(`<span title="${esc(tr("from_home"))}">${svgIcon(ICONS.distance)}${fmtDistance(p.km, miles)}</span>`);
     if (c.show_battery !== false && p.battery) facts.push(this._battery(p.battery));
-    const since = c.show_since !== false && p.since !== null ? `<span class="since">${esc(p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr)}`)}</span>` : "";
+    // A number stays with its unit ("23 h") when the duration wraps.
+    const sinceText = p.since === null ? "" : p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr).replace(/(\d) /g, "$1\u00a0")}`;
+    const since = c.show_since !== false && p.since !== null ? `<span class="since">${esc(sinceText)}</span>` : "";
     return `<div class="person clickable ${p.kind}" role="button" tabindex="0" data-key="${esc(p.id)}" data-entity="${esc(p.id)}">
       ${this._avatar(p, 40)}
       <div class="who">
@@ -942,6 +1085,10 @@ class PresenceEditorBase extends HTMLElement {
               { value: "es", label: "Español" },
               { value: "sr", label: "Српски" },
               { value: "sr-Latn", label: "Srpski (latinica)" },
+              { value: "it", label: "Italiano" },
+              { value: "nl", label: "Nederlands" },
+              { value: "pt", label: "Português (Portugal)" },
+              { value: "pl", label: "Polski" },
             ],
           },
         },
