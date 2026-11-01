@@ -1,7 +1,7 @@
 // Renders the cards with mock people and saves the README screenshots.
 // Usage: npm run build && npm run screenshots
 import { chromium } from "playwright";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { NOW, states } from "./mock-states.mjs";
 
@@ -56,6 +56,36 @@ const shots = [
 const browser = await chromium.launch(
   process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}
 );
+
+// Same picture as the file already there? Compared on the decoded pixels (in the browser), not on the
+// PNG bytes, which can differ for an identical image (encoder, metadata): an unchanged screenshot is not
+// rewritten, so a refresh commits only the images whose rendering really changed.
+const samePixels = async (file, png) => {
+  if (!existsSync(file)) return false;
+  const page = await browser.newPage();
+  const same = await page.evaluate(
+    async ([a, b]) => {
+      const decode = async (b64) => {
+        const img = new Image();
+        img.src = `data:image/png;base64,${b64}`;
+        await img.decode();
+        const c = document.createElement("canvas");
+        c.width = img.naturalWidth;
+        c.height = img.naturalHeight;
+        const ctx = c.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        return { w: c.width, h: c.height, d: ctx.getImageData(0, 0, c.width, c.height).data };
+      };
+      const [x, y] = await Promise.all([decode(a), decode(b)]);
+      if (x.w !== y.w || x.h !== y.h) return false;
+      for (let i = 0; i < x.d.length; i++) if (x.d[i] !== y.d[i]) return false;
+      return true;
+    },
+    [readFileSync(file).toString("base64"), png.toString("base64")]
+  );
+  await page.close();
+  return same;
+};
 for (const s of shots) {
   // A fresh page for each capture: the card script declares its classes and custom elements once per page.
   // Fixed clock, time zone and locale: the "for 3 h" durations and any date do not depend on when or where it runs.
@@ -91,12 +121,17 @@ for (const s of shots) {
     for (let i = 0; i < 2; i++) await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   });
   const box = await page.locator("#root").boundingBox();
-  await page.screenshot({
-    path: `${root}screenshots/${s.file}.png`,
+  const png = await page.screenshot({
     clip: { x: 0, y: 0, width: s.width + 32, height: Math.ceil(box.height) + 32 },
     animations: "disabled",
   });
-  console.log(`screenshots/${s.file}.png`);
   await page.close();
+  const file = `${root}screenshots/${s.file}.png`;
+  if (await samePixels(file, png)) {
+    console.log(`screenshots/${s.file}.png unchanged`);
+    continue;
+  }
+  writeFileSync(file, png);
+  console.log(`screenshots/${s.file}.png`);
 }
 await browser.close();
