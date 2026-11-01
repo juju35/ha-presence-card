@@ -822,9 +822,10 @@ const FULL_STYLE = `
             background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .person .who { flex: 1; min-width: 0; }
   .person .pname { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .person .where { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
-  .person .where .chip { flex: none; }
-  .person .where .since { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .person .where { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
+  .person .where .chip { flex: none; max-width: 100%; box-sizing: border-box; }
+  /* The duration goes under the chip when it does not fit next to it, and wraps between words if still too long. */
+  .person .where .since { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
   .person .facts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 12px; flex: none; }
   .person .facts span { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
   .person .facts .icon { width: 14px; height: 14px; color: var(--secondary-text-color); }
@@ -878,7 +879,9 @@ class PresenceCard extends PresenceBase {
     if (c.show_distance !== false && p.km !== null)
       facts.push(`<span title="${esc(tr("from_home"))}">${svgIcon(ICONS.distance)}${fmtDistance(p.km, miles)}</span>`);
     if (c.show_battery !== false && p.battery) facts.push(this._battery(p.battery));
-    const since = c.show_since !== false && p.since !== null ? `<span class="since">${esc(p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr)}`)}</span>` : "";
+    // A number stays with its unit ("23 h") when the duration wraps.
+    const sinceText = p.since === null ? "" : p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr).replace(/(\d) /g, "$1\u00a0")}`;
+    const since = c.show_since !== false && p.since !== null ? `<span class="since">${esc(sinceText)}</span>` : "";
     return `<div class="person clickable ${p.kind}" role="button" tabindex="0" data-key="${esc(p.id)}" data-entity="${esc(p.id)}">
       ${this._avatar(p, 40)}
       <div class="who">
@@ -1084,7 +1087,7 @@ class PresenceEditorBase extends HTMLElement {
               { value: "sr-Latn", label: "Srpski (latinica)" },
               { value: "it", label: "Italiano" },
               { value: "nl", label: "Nederlands" },
-              { value: "pt", label: "Português" },
+              { value: "pt", label: "Português (Portugal)" },
               { value: "pl", label: "Polski" },
             ],
           },

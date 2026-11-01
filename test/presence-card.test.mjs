@@ -278,7 +278,7 @@ test("editor offers every language, after Serbian, with its native name", () => 
   assert.equal(options.map((o) => o.value).join(","), ",en,fr,de,es,sr,sr-Latn,it,nl,pt,pl");
   assert.equal(
     options.slice(-4).map((o) => o.label).join(", "),
-    "Italiano, Nederlands, Português, Polski"
+    "Italiano, Nederlands, Português (Portugal), Polski"
   );
   assert.equal(options[0].label, STRINGS.pl.lang_auto);
   for (const o of options.slice(1)) assert.ok(STRINGS[o.value], `no dictionary for ${o.value}`);
