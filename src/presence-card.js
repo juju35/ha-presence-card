@@ -863,6 +863,27 @@ const FULL_STYLE = `
   .batt .cell { position: relative; width: 18px; height: 9px; border: 1.5px solid var(--secondary-text-color); border-radius: 2.5px; box-sizing: border-box; }
   .batt .cell::after { content: ""; position: absolute; right: -4px; top: 1.5px; width: 2px; height: 3px; border-radius: 0 1px 1px 0; background: var(--secondary-text-color); }
   .batt .cell > i { position: absolute; left: 1px; top: 1px; bottom: 1px; border-radius: 1px; background: var(--b, var(--pr-ok)); }
+  /* Very narrow card (under 225 px: the mini card zoomed in keeps its 6-column cell, about 156-178 px on a
+     phone). The card is a size container for that; a size container has no width of its own content, so in a
+     parent sized by its content (an inline-block, a grid "auto" column) the card would fall to a few pixels.
+     The empty, zero-height grid before it gives a natural width (max-content 360 px) with no minimum
+     (min-content 0): in a "1fr 1fr" grid, wrapped in a div or not, the card still shrinks to its track. */
+  :host::before { content: ""; display: grid; grid-template-columns: minmax(0, 360px); height: 0; }
+  ha-card { container: pr-card / inline-size; }
+  /* There the header drops its logo, and each row puts its distance and battery on a line under the name,
+     with a smaller avatar: the name, the place chip and the duration keep their whole text. */
+  @container pr-card (max-width: 224px) {
+    .header > .logo { display: none; }
+    .content { padding: 8px 8px 8px; }
+    .person { flex-wrap: wrap; row-gap: 4px; padding: 6px 8px; }
+    .person .main { flex: 1 1 100%; gap: 8px; }
+    .person .main .avatar { width: 32px; height: 32px; }
+    .person .main .avatar .pic { font-size: 12px; }
+    .person .main .avatar .badge { width: 14px; height: 14px; right: -2px; bottom: -2px; }
+    .person .main .avatar .badge .icon { width: 10px; height: 10px; }
+    .person .facts { flex: 1 1 100%; min-width: 0; box-sizing: border-box; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 2px 10px; padding-left: 40px; }
+    .person .where .since { overflow-wrap: normal; }
+  }
 `;
 
 class PresenceCard extends PresenceBase {
