@@ -147,6 +147,29 @@ test("show_away: false hides people away, a missing person is reported", () => {
   assert.match(render(PresenceCard, {}, {}), /No person found/);
 });
 
+test("a configured person that no longer exists is reported on its own line, the others stay shown", () => {
+  const states = { ...HOME, "person.a": person("a", "home"), "person.b": person("b", "not_home") };
+  const config = { entities: ["person.a", "person.zz", "person.b"] };
+  const full = render(PresenceCard, config, states);
+  assert.match(full, /data-entity="person\.a"/);
+  assert.match(full, /data-entity="person\.b"/);
+  assert.match(full, /class="header"/);
+  assert.match(full, /1 of 2 at home/);
+  assert.equal(full.match(/class="warning[ "]/g).length, 1);
+  assert.match(full, /Person not found: person\.zz/);
+  const mini = render(PresenceMiniCard, config, states);
+  assert.equal(mini.match(/class="face /g).length, 2);
+  assert.match(mini, /Person not found: person\.zz/);
+  // Two missing: one line each; all missing: the warning alone, every missing one listed.
+  const two = render(PresenceCard, { entities: ["person.a", "person.x", "person.y"] }, states);
+  assert.match(two, /Person not found: person\.x[\s\S]*Person not found: person\.y/);
+  const none = render(PresenceCard, { entities: ["person.x", "person.y"] }, states);
+  assert.doesNotMatch(none, /class="header"/);
+  assert.match(none, /Person not found: person\.x[\s\S]*Person not found: person\.y/);
+  // show_away: false never hides the warning.
+  assert.match(render(PresenceCard, { ...config, show_away: false }, states), /Person not found: person\.zz/);
+});
+
 test("mini card: one face per person, the zoom button switches to the full card", () => {
   const states = { "person.a": person("a", "home"), "person.b": person("b", "Work") };
   const el = new PresenceMiniCard();

@@ -641,7 +641,8 @@ const BASE_STYLE = `
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header > .chip { align-self: flex-start; margin-top: 2px; }
-  .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); }
+  .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); overflow-wrap: anywhere; }
+  .warning + .warning { padding-top: 0; }
   .avatar { position: relative; flex: none; width: var(--size, 40px); height: var(--size, 40px); }
   .avatar .pic { width: 100%; height: 100%; border-radius: 50%; box-sizing: border-box; border: 2px solid var(--c);
                  background: var(--bg, var(--pr-accent)) center / cover no-repeat; display: grid; place-items: center;
@@ -805,10 +806,18 @@ class PresenceBase extends HTMLElement {
     return p.kind === "zone" ? p.zone : this._t(p.kind);
   }
 
+  // One warning line per configured person that does not exist (deleted or renamed), shown with the others.
+  _missing(all) {
+    return all
+      .filter((p) => p.missing)
+      .map((p) => `<div class="warning" data-key="missing:${esc(p.missing)}">${esc(`${this._t("unknown_person")}: ${p.missing}`)}</div>`)
+      .join("");
+  }
+
+  // Nobody to show: every configured person missing, or no person at all in Home Assistant.
   _noPeople(all) {
-    const missing = all.find((p) => p.missing);
-    const msg = missing ? `${this._t("unknown_person")}: ${missing.missing}` : this._t("no_person");
-    return `<style>${BASE_STYLE}</style><ha-card><div class="warning">${esc(msg)}</div></ha-card>`;
+    const body = this._missing(all) || `<div class="warning">${esc(this._t("no_person"))}</div>`;
+    return `<style>${BASE_STYLE}</style><ha-card>${body}</ha-card>`;
   }
 }
 
@@ -818,6 +827,7 @@ class PresenceBase extends HTMLElement {
 
 const FULL_STYLE = `
   .content { padding: 8px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .content .warning { padding: 2px 10px; font-size: 12px; }
   .person { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px;
             background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .person .who { flex: 1; min-width: 0; }
@@ -854,13 +864,13 @@ class PresenceCard extends PresenceBase {
 
   _render() {
     const { all, people } = this._people();
-    if (!people.length || all.some((p) => p.missing)) return this._noPeople(all);
+    if (!people.length) return this._noPeople(all);
     const c = this._config;
     const shown = c.show_away === false ? people.filter((p) => p.kind === "home" || p.kind === "zone") : people;
     return `<style>${BASE_STYLE}${FULL_STYLE}</style>
       <ha-card>
         ${this._header(people)}
-        <div class="content">${shown.map((p) => this._row(p)).join("")}</div>
+        <div class="content">${shown.map((p) => this._row(p)).join("")}${this._missing(all)}</div>
       </ha-card>`;
   }
 
@@ -911,6 +921,7 @@ const MINI_STYLE = `
   .mini .header > .logo .icon { width: 20px; height: 20px; }
   .mini .header > .titles { margin-block: -2px; }
   .mini .zoom { margin: -4px -4px -4px 0; }
+  .mini > .warning { padding: 0 12px 12px; font-size: 12px; }
   .sub .st { color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color, #212121)); font-weight: 500; }
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
   .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: ${FACE_GAP}px; }
@@ -1012,7 +1023,7 @@ class PresenceMiniCard extends PresenceCard {
   _render() {
     if (this._zoomed) return super._render();
     const { all, people } = this._people();
-    if (!people.length || all.some((p) => p.missing)) return this._noPeople(all);
+    if (!people.length) return this._noPeople(all);
     const c = this._config;
     const shown = c.show_away === false ? people.filter((p) => p.kind === "home" || p.kind === "zone") : people;
     const { n, text } = this._summary(people);
@@ -1033,6 +1044,7 @@ class PresenceMiniCard extends PresenceCard {
             <div class="faces">${faces.join("")}</div>
             ${this._zoomButton()}
           </div>
+          ${this._missing(all)}
         </div>
       </ha-card>`;
   }
