@@ -633,14 +633,19 @@ const BASE_STYLE = `
           background: color-mix(in srgb, var(--c, var(--pr-home)) 15%, transparent);
           color: color-mix(in srgb, var(--c, var(--pr-home)) 40%, var(--primary-text-color, #212121)); white-space: nowrap; }
   .chip .icon { width: 12px; height: 12px; }
+  .chip .txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
-  .titles { flex: 1; min-width: 0; }
+  /* The title block takes the room left and cuts its texts, but always keeps a few characters of the title.
+     A zero basis (not auto): in the mini card's wrapping header, a basis at the text's width would push the
+     zoom button onto a second line at narrow widths. */
+  .titles { flex: 1 1 0%; min-width: 6ch; }
   .logo { --c: var(--pr-accent); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; align-self: flex-start;
           background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
   .logo .icon { width: 24px; height: 24px; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .header > .chip { align-self: flex-start; margin-top: 2px; }
+  /* The count chip shrinks before the title (never past half the header) and cuts its text. */
+  .header > .chip { align-self: flex-start; margin-top: 2px; flex: 0 1 auto; min-width: 0; max-width: 50%; box-sizing: border-box; overflow: hidden; }
   .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); overflow-wrap: anywhere; }
   .warning + .warning { padding-top: 0; }
   .avatar { position: relative; flex: none; width: var(--size, 40px); height: var(--size, 40px); }
@@ -784,7 +789,7 @@ class PresenceBase extends HTMLElement {
           <div class="name">${esc(this._config.title || this._t("title"))}</div>
           <div class="sub">${esc(text)}</div>
         </div>
-        <span class="chip ${n ? "home" : "away"}">${svgIcon(ICONS.home)}${n}/${people.length}</span>
+        <span class="chip ${n ? "home" : "away"}" role="img" title="${esc(text)}" aria-label="${esc(text)}">${svgIcon(ICONS.home)}<span class="txt">${n}/${people.length}</span></span>
         ${this._zoomButton()}
       </div>`;
   }
@@ -796,7 +801,7 @@ class PresenceBase extends HTMLElement {
 
   _avatar(p, size) {
     const bg = p.picture ? `--bg:url('${cssUrl(p.picture)}');` : `--bg:${avatarColor(p.id)};`;
-    return `<div class="avatar ${p.kind}" style="--size:${size}px">
+    return `<div class="avatar ${p.kind}" style="--size:${size}px" aria-hidden="true">
       <div class="pic${p.picture ? " photo" : ""}" style="${bg}">${p.picture ? "" : esc(initials(p.name))}</div>
       <span class="badge">${svgIcon(BADGE[p.kind])}</span>
     </div>`;
@@ -828,12 +833,22 @@ class PresenceBase extends HTMLElement {
 const FULL_STYLE = `
   .content { padding: 8px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
   .content .warning { padding: 2px 10px; font-size: 12px; }
+  /* Narrow header: the count chip keeps only its icon, the count stays in its title and label. */
+  .header { container: pr-head / inline-size; }
+  @container pr-head (max-width: 260px) { .header > .chip .txt { display: none; } .header > .chip { padding: 1px 4px; } }
   .person { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px;
             background: var(--secondary-background-color, rgba(127,127,127,.08)); }
+  /* The person's button (avatar, name, place) and the battery's are side by side, never one inside the other. */
+  .person .main { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; border-radius: 8px; }
+  @supports selector(:has(*)) {
+    .person:has(> .main:focus-visible) { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
+    .person > .main:focus-visible { outline: none; }
+  }
   .person .who { flex: 1; min-width: 0; }
   .person .pname { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .person .where { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
-  .person .where .chip { flex: none; max-width: 100%; box-sizing: border-box; }
+  /* A long zone name is cut in its chip (full name in its title), never over the distance and battery. */
+  .person .where .chip { flex: 0 1 auto; min-width: 0; max-width: 100%; box-sizing: border-box; overflow: hidden; }
   /* The duration goes under the chip when it does not fit next to it, and wraps between words if still too long. */
   .person .where .since { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
   .person .facts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 12px; flex: none; }
@@ -859,7 +874,8 @@ class PresenceCard extends PresenceBase {
   }
 
   getGridOptions() {
-    return { columns: 12, min_columns: 6 };
+    // 9 columns: under that, the title, the summary and the rows' durations are cut or wrap on several lines.
+    return { columns: 12, min_columns: 9 };
   }
 
   _render() {
@@ -892,11 +908,14 @@ class PresenceCard extends PresenceBase {
     // A number stays with its unit ("23 h") when the duration wraps.
     const sinceText = p.since === null ? "" : p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr).replace(/(\d) /g, "$1\u00a0")}`;
     const since = c.show_since !== false && p.since !== null ? `<span class="since">${esc(sinceText)}</span>` : "";
-    return `<div class="person clickable ${p.kind}" role="button" tabindex="0" data-key="${esc(p.id)}" data-entity="${esc(p.id)}">
-      ${this._avatar(p, 40)}
-      <div class="who">
-        <div class="pname">${esc(p.name)}</div>
-        <div class="where"><span class="chip">${esc(this._place(p))}</span>${since}</div>
+    const place = this._place(p);
+    return `<div class="person clickable ${p.kind}" data-key="${esc(p.id)}" data-entity="${esc(p.id)}">
+      <div class="main" role="button" tabindex="0" data-entity="${esc(p.id)}">
+        ${this._avatar(p, 40)}
+        <div class="who">
+          <div class="pname">${esc(p.name)}</div>
+          <div class="where"><span class="chip" title="${esc(place)}"><span class="txt">${esc(place)}</span></span>${since}</div>
+        </div>
       </div>
       ${facts.length ? `<div class="facts">${facts.join("")}</div>` : ""}
     </div>`;
