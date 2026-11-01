@@ -32,7 +32,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 - People at home first, by name, or as listed
 - Click a person or a battery to open its more-info dialog
 - Visual editor in the dashboard UI for both cards (no YAML needed)
-- Light and dark mode, English, French, German, Spanish and Serbian (Cyrillic and Latin)
+- Light and dark mode, English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese and Polish
 - Single file, no external dependency
 
 ## Prerequisites
@@ -123,7 +123,7 @@ language: fr
 | `show_battery` | both | `true` | Phone battery |
 | `show_away` | both | `true` | Show the people away (`false` keeps only people at home or in a zone) |
 | `zoom` | mini | `true` | Zoom button at the top right: switches to the full card and back (`false` removes it) |
-| `language` | both | Auto | Force language: `en`, `fr`, `de`, `es`, `sr` or `sr-Latn` (auto-detects from HA settings) |
+| `language` | both | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt` or `pl` (auto-detects from HA settings; `pt-BR` uses `pt`) |
 
 `show_since`, `show_distance` and `show_battery` apply to the mini card once zoomed in.
 
@@ -174,6 +174,10 @@ The cards auto-detect the language from your Home Assistant settings. Currently 
 | Español | `es` |
 | Српски | `sr` |
 | Srpski (latinica) | `sr-Latn` |
+| Italiano | `it` |
+| Nederlands | `nl` |
+| Português (Portugal) | `pt` |
+| Polski | `pl` |
 
 Contributions for additional languages are welcome!
 
