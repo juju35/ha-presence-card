@@ -162,6 +162,216 @@ const STRINGS = {
     language: "Idioma",
     lang_auto: "Automático",
   },
+  sr: {
+    title: "Присутност",
+    home: "Код куће",
+    away: "Одсутан",
+    unknown: "Непознато",
+    at_home: "{n} од {total} код куће",
+    all_home: "Сви су код куће",
+    nobody_home: "Нико није код куће",
+    for: "већ",
+    just_now: "управо сада",
+    days: "d",
+    hours: "h",
+    minutes: "min",
+    battery: "Батерија",
+    from_home: "од куће",
+    no_person: "Није пронађена ниједна особа. Додајте особе у Подешавања → Особе.",
+    unknown_person: "Особа није пронађена",
+    zoom_in: "Прикажи целу картицу",
+    zoom_out: "Назад на компактни приказ",
+    // Editor
+    entities: "Особе (подразумевано све)",
+    title_option: "Наслов (опционо)",
+    sort: "Редослед",
+    sort_presence: "Прво они који су код куће",
+    sort_name: "По имену",
+    sort_config: "Како је наведено",
+    show_since: "Прикажи од када",
+    show_distance: "Прикажи удаљеност од куће",
+    show_battery: "Прикажи батерију телефона",
+    show_away: "Прикажи одсутне особе",
+    zoom: "Дугме за увећање",
+    zoom_helper: "Пребацује мини картицу на пун приказ и назад",
+    language: "Језик",
+    lang_auto: "Аутоматски",
+  },
+  "sr-Latn": {
+    title: "Prisutnost",
+    home: "Kod kuće",
+    away: "Odsutan",
+    unknown: "Nepoznato",
+    at_home: "{n} od {total} kod kuće",
+    all_home: "Svi su kod kuće",
+    nobody_home: "Niko nije kod kuće",
+    for: "već",
+    just_now: "upravo sada",
+    days: "d",
+    hours: "h",
+    minutes: "min",
+    battery: "Baterija",
+    from_home: "od kuće",
+    no_person: "Nije pronađena nijedna osoba. Dodajte osobe u Podešavanja → Osobe.",
+    unknown_person: "Osoba nije pronađena",
+    zoom_in: "Prikaži celu karticu",
+    zoom_out: "Nazad na kompaktni prikaz",
+    // Editor
+    entities: "Osobe (podrazumevano sve)",
+    title_option: "Naslov (opciono)",
+    sort: "Redosled",
+    sort_presence: "Prvo oni koji su kod kuće",
+    sort_name: "Po imenu",
+    sort_config: "Kako je navedeno",
+    show_since: "Prikaži od kada",
+    show_distance: "Prikaži udaljenost od kuće",
+    show_battery: "Prikaži bateriju telefona",
+    show_away: "Prikaži odsutne osobe",
+    zoom: "Dugme za uvećanje",
+    zoom_helper: "Prebacuje mini karticu na pun prikaz i nazad",
+    language: "Jezik",
+    lang_auto: "Automatski",
+  },
+  it: {
+    title: "Presenza",
+    home: "A casa",
+    away: "Fuori",
+    unknown: "Sconosciuto",
+    at_home: "{n} su {total} a casa",
+    all_home: "Sono tutti a casa",
+    nobody_home: "Nessuno in casa",
+    for: "da",
+    just_now: "proprio ora",
+    days: "g",
+    hours: "h",
+    minutes: "min",
+    battery: "Batteria",
+    from_home: "da casa",
+    no_person: "Nessuna persona trovata. Aggiungi persone in Impostazioni → Persone.",
+    unknown_person: "Persona non trovata",
+    zoom_in: "Mostra la scheda completa",
+    zoom_out: "Torna alla vista compatta",
+    // Editor
+    entities: "Persone (tutte per impostazione predefinita)",
+    title_option: "Titolo (facoltativo)",
+    sort: "Ordine",
+    sort_presence: "Prima chi è a casa",
+    sort_name: "Per nome",
+    sort_config: "Come nell'elenco",
+    show_since: "Mostra da quando",
+    show_distance: "Mostra la distanza da casa",
+    show_battery: "Mostra la batteria del telefono",
+    show_away: "Mostra le persone fuori casa",
+    zoom: "Pulsante zoom",
+    zoom_helper: "Passa dalla mini scheda alla scheda completa e viceversa",
+    language: "Lingua",
+    lang_auto: "Automatica",
+  },
+  nl: {
+    title: "Aanwezigheid",
+    home: "Thuis",
+    away: "Afwezig",
+    unknown: "Onbekend",
+    at_home: "{n} van {total} thuis",
+    all_home: "Iedereen is thuis",
+    nobody_home: "Niemand thuis",
+    for: "al",
+    just_now: "zojuist",
+    days: "d",
+    hours: "u",
+    minutes: "min",
+    battery: "Batterij",
+    from_home: "vanaf huis",
+    no_person: "Geen personen gevonden. Voeg personen toe via Instellingen → Personen.",
+    unknown_person: "Persoon niet gevonden",
+    zoom_in: "Volledige kaart tonen",
+    zoom_out: "Terug naar de compacte weergave",
+    // Editor
+    entities: "Personen (standaard allemaal)",
+    title_option: "Titel (optioneel)",
+    sort: "Volgorde",
+    sort_presence: "Aanwezigen eerst",
+    sort_name: "Op naam",
+    sort_config: "Zoals opgegeven",
+    show_since: "Sinds wanneer tonen",
+    show_distance: "Afstand tot huis tonen",
+    show_battery: "Batterij van de telefoon tonen",
+    show_away: "Afwezige personen tonen",
+    zoom: "Zoomknop",
+    zoom_helper: "Schakelt tussen de minikaart en de volledige kaart",
+    language: "Taal",
+    lang_auto: "Automatisch",
+  },
+  pt: {
+    title: "Presença",
+    home: "Em casa",
+    away: "Fora",
+    unknown: "Desconhecido",
+    at_home: "{n} de {total} em casa",
+    all_home: "Estão todos em casa",
+    nobody_home: "Ninguém em casa",
+    for: "há",
+    just_now: "agora mesmo",
+    days: "d",
+    hours: "h",
+    minutes: "min",
+    battery: "Bateria",
+    from_home: "de casa",
+    no_person: "Nenhuma pessoa encontrada. Adicione pessoas em Definições → Pessoas.",
+    unknown_person: "Pessoa não encontrada",
+    zoom_in: "Mostrar o cartão completo",
+    zoom_out: "Voltar à vista compacta",
+    // Editor
+    entities: "Pessoas (todas por predefinição)",
+    title_option: "Título (opcional)",
+    sort: "Ordem",
+    sort_presence: "Primeiro quem está em casa",
+    sort_name: "Por nome",
+    sort_config: "Pela ordem da lista",
+    show_since: "Mostrar desde quando",
+    show_distance: "Mostrar a distância a casa",
+    show_battery: "Mostrar a bateria do telemóvel",
+    show_away: "Mostrar as pessoas ausentes",
+    zoom: "Botão de zoom",
+    zoom_helper: "Alterna entre o minicartão e o cartão completo",
+    language: "Idioma",
+    lang_auto: "Automático",
+  },
+  pl: {
+    title: "Obecność",
+    home: "W domu",
+    away: "Poza domem",
+    unknown: "Nieznany",
+    at_home: "W domu: {n} z {total}",
+    all_home: "Wszyscy są w domu",
+    nobody_home: "Nikogo nie ma w domu",
+    for: "od",
+    just_now: "przed chwilą",
+    days: "d",
+    hours: "h",
+    minutes: "min",
+    battery: "Bateria",
+    from_home: "od domu",
+    no_person: "Nie znaleziono żadnej osoby. Dodaj osoby w Ustawienia → Osoby.",
+    unknown_person: "Nie znaleziono osoby",
+    zoom_in: "Pokaż pełną kartę",
+    zoom_out: "Wróć do widoku kompaktowego",
+    // Editor
+    entities: "Osoby (domyślnie wszystkie)",
+    title_option: "Tytuł (opcjonalnie)",
+    sort: "Kolejność",
+    sort_presence: "Najpierw obecni w domu",
+    sort_name: "Według nazwy",
+    sort_config: "Jak na liście",
+    show_since: "Pokaż od kiedy",
+    show_distance: "Pokaż odległość od domu",
+    show_battery: "Pokaż baterię telefonu",
+    show_away: "Pokaż osoby poza domem",
+    zoom: "Przycisk powiększenia",
+    zoom_helper: "Przełącza minikartę na pełną kartę i z powrotem",
+    language: "Język",
+    lang_auto: "Automatycznie",
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -230,7 +440,8 @@ const initials = (name) =>
     .join("");
 
 // A stable color per person, for the initials avatar.
-const AVATAR_COLORS = ["#5b6cf0", "#00a7a0", "#e8783c", "#c2459e", "#3d8fd6", "#7a8f2f", "#a05cd6", "#d64a4a"];
+// Dark enough for the white initials to reach the WCAG AA 4.5:1 contrast.
+const AVATAR_COLORS = ["#5768e6", "#00827d", "#b35c2e", "#c0449c", "#3378b4", "#6a7c29", "#9656c9", "#cb4646"];
 const avatarColor = (id) => {
   let h = 0;
   for (const c of String(id)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
@@ -407,17 +618,20 @@ const fireMoreInfo = (node, entityId) => {
 
 const BASE_STYLE = `
   :host { display: block; --pr-accent: #5b6cf0; --pr-home: var(--success-color, #43a047); --pr-zone: var(--info-color, #039be5);
-          --pr-away: var(--disabled-text-color, #9e9e9e); --pr-unknown: var(--warning-color, #ffa600);
+          --pr-away: var(--secondary-text-color, #727272); --pr-unknown: var(--warning-color, #ffa600);
           --pr-ok: var(--success-color, #43a047); --pr-warn: var(--warning-color, #ffa600); --pr-crit: var(--error-color, #db4437); }
   ha-card { overflow: hidden; }
   .icon { width: 18px; height: 18px; fill: currentColor; flex: none; }
   .muted { color: var(--secondary-text-color); }
   .clickable { cursor: pointer; }
   [role="button"]:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
+  /* A state color is kept for backgrounds, dots, borders and icons; a text in that color is mixed with the
+     primary text color (darker in a light theme, lighter in a dark one) to stay readable (WCAG AA 4.5:1). */
   .home { --c: var(--pr-home); } .zone { --c: var(--pr-zone); } .away { --c: var(--pr-away); } .unknown { --c: var(--pr-unknown); }
   .ok { --b: var(--pr-ok); } .warn { --b: var(--pr-warn); } .crit { --b: var(--pr-crit); }
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;
-          background: color-mix(in srgb, var(--c, var(--pr-home)) 15%, transparent); color: var(--c, var(--pr-home)); white-space: nowrap; }
+          background: color-mix(in srgb, var(--c, var(--pr-home)) 15%, transparent);
+          color: color-mix(in srgb, var(--c, var(--pr-home)) 40%, var(--primary-text-color, #212121)); white-space: nowrap; }
   .chip .icon { width: 12px; height: 12px; }
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
   .titles { flex: 1; min-width: 0; }
@@ -427,20 +641,24 @@ const BASE_STYLE = `
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header > .chip { align-self: flex-start; margin-top: 2px; }
-  .warning { padding: 16px; color: var(--pr-warn); }
+  .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); }
   .avatar { position: relative; flex: none; width: var(--size, 40px); height: var(--size, 40px); }
   .avatar .pic { width: 100%; height: 100%; border-radius: 50%; box-sizing: border-box; border: 2px solid var(--c);
                  background: var(--bg, var(--pr-accent)) center / cover no-repeat; display: grid; place-items: center;
                  color: #fff; font-weight: 600; font-size: calc(var(--size, 40px) * .36); transition: border-color .4s ease, filter .4s ease; }
-  .avatar.away .pic, .avatar.unknown .pic { filter: grayscale(.85) opacity(.75); }
+  /* Away or unknown: a faded photo; initials are only desaturated, so that they stay readable. */
+  .avatar.away .pic, .avatar.unknown .pic { filter: grayscale(.85); }
+  .avatar.away .pic.photo, .avatar.unknown .pic.photo { filter: grayscale(.85) opacity(.75); }
   .avatar .badge { position: absolute; right: -3px; bottom: -3px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
-                   background: var(--c); color: #fff; box-shadow: 0 0 0 2px var(--card-background-color, var(--ha-card-background, #fff)); }
+                   background: var(--c); color: #212121;
+                   box-shadow: 0 0 0 2px var(--ha-card-background, var(--card-background-color, #fff)); }
   .avatar .badge .icon { width: 12px; height: 12px; }
   .zoom { all: unset; flex: none; align-self: flex-start; cursor: pointer; width: 24px; height: 24px; margin: -4px -4px 0 -4px;
           border-radius: 50%; display: grid; place-items: center; color: var(--secondary-text-color); }
   .zoom .icon { width: 16px; height: 16px; }
   .zoom:hover { background: color-mix(in srgb, var(--secondary-text-color) 16%, transparent); color: var(--primary-text-color); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 1px; }
+  @media (prefers-reduced-motion: reduce) { .avatar .pic { transition: none; } }
 `;
 // A click inside a dialog (more-info opened from the card, say) is not a click outside the card.
 const inDialog = (ev) => ev.composedPath().some((n) => ["ha-more-info-dialog", "ha-dialog", "dialog"].includes(n.localName));
@@ -578,7 +796,7 @@ class PresenceBase extends HTMLElement {
   _avatar(p, size) {
     const bg = p.picture ? `--bg:url('${cssUrl(p.picture)}');` : `--bg:${avatarColor(p.id)};`;
     return `<div class="avatar ${p.kind}" style="--size:${size}px">
-      <div class="pic" style="${bg}">${p.picture ? "" : esc(initials(p.name))}</div>
+      <div class="pic${p.picture ? " photo" : ""}" style="${bg}">${p.picture ? "" : esc(initials(p.name))}</div>
       <span class="badge">${svgIcon(BADGE[p.kind])}</span>
     </div>`;
   }
@@ -604,9 +822,10 @@ const FULL_STYLE = `
             background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .person .who { flex: 1; min-width: 0; }
   .person .pname { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .person .where { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
-  .person .where .chip { flex: none; }
-  .person .where .since { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .person .where { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
+  .person .where .chip { flex: none; max-width: 100%; box-sizing: border-box; }
+  /* The duration goes under the chip when it does not fit next to it, and wraps between words if still too long. */
+  .person .where .since { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
   .person .facts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 12px; flex: none; }
   .person .facts span { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
   .person .facts .icon { width: 14px; height: 14px; color: var(--secondary-text-color); }
@@ -660,7 +879,9 @@ class PresenceCard extends PresenceBase {
     if (c.show_distance !== false && p.km !== null)
       facts.push(`<span title="${esc(tr("from_home"))}">${svgIcon(ICONS.distance)}${fmtDistance(p.km, miles)}</span>`);
     if (c.show_battery !== false && p.battery) facts.push(this._battery(p.battery));
-    const since = c.show_since !== false && p.since !== null ? `<span class="since">${esc(p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr)}`)}</span>` : "";
+    // A number stays with its unit ("23 h") when the duration wraps.
+    const sinceText = p.since === null ? "" : p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr).replace(/(\d) /g, "$1\u00a0")}`;
+    const since = c.show_since !== false && p.since !== null ? `<span class="since">${esc(sinceText)}</span>` : "";
     return `<div class="person clickable ${p.kind}" role="button" tabindex="0" data-key="${esc(p.id)}" data-entity="${esc(p.id)}">
       ${this._avatar(p, 40)}
       <div class="who">
@@ -690,7 +911,7 @@ const MINI_STYLE = `
   .mini .header > .logo .icon { width: 20px; height: 20px; }
   .mini .header > .titles { margin-block: -2px; }
   .mini .zoom { margin: -4px -4px -4px 0; }
-  .sub .st { color: var(--c); font-weight: 500; }
+  .sub .st { color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color, #212121)); font-weight: 500; }
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
   .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: ${FACE_GAP}px; }
   .mini.row .faces { order: 0; flex: none; }
@@ -862,6 +1083,12 @@ class PresenceEditorBase extends HTMLElement {
               { value: "fr", label: "Français" },
               { value: "de", label: "Deutsch" },
               { value: "es", label: "Español" },
+              { value: "sr", label: "Српски" },
+              { value: "sr-Latn", label: "Srpski (latinica)" },
+              { value: "it", label: "Italiano" },
+              { value: "nl", label: "Nederlands" },
+              { value: "pt", label: "Português (Portugal)" },
+              { value: "pl", label: "Polski" },
             ],
           },
         },
