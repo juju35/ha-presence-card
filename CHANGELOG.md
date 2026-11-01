@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.7 - 2026-11-01
+### Fixed
+- A configured person that no longer exists (deleted or renamed) no longer replaces the whole card with a warning: the other people stay shown, with the header and the count, and a "Person not found" line is added for each missing one. This applies to the mini card too.
+- A long zone name no longer spills out of its chip over the distance and battery: it is cut with an ellipsis, and the full name shows on hover. Long translated states ("Poza domem", "Odsutan", "Afwezig") at narrow widths are fixed the same way.
+- Narrow full card header: the title always keeps a few characters and the "2/4" chip shrinks first; in a narrow card the chip shows only its icon, the count staying in its tooltip and label. The full card now asks for at least 9 columns in the Sections view (it was 6, where the title, the summary and the durations were cut or wrapped on several lines); the mini card still fits in 6.
+- Accessibility: the battery button is no longer nested inside the person's row button, so screen readers announce them as two separate controls, and the row is no longer announced with the battery value and initials.
+- Serbian (Cyrillic): durations use Cyrillic units (д, ч, мин) instead of Latin ones.
+
 ## 1.5.6 - 2026-11-01
 ### Added
 - Added Italian, Dutch, European Portuguese and Polish translations (`it`, `nl`, `pt`, `pl`), also offered in the visual editor's language list. A Home Assistant set to Brazilian Portuguese (`pt-BR`) now uses the European Portuguese translation instead of English.
