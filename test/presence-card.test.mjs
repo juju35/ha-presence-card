@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { load } from "./load.mjs";
 
-const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS } =
+const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, lang, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS } =
   load("presence-card.js", [
     "personInfo",
     "sortPeople",
@@ -11,6 +11,7 @@ const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, 
     "haversine",
     "batteryOf",
     "cssUrl",
+    "lang",
     "PresenceCard",
     "PresenceMiniCard",
     "PresenceCardEditor",
@@ -214,3 +215,44 @@ for (const l of ["fr", "de", "es"]) {
     }
   });
 }
+
+test("language: full tag if translated, else the part before the dash, else English", () => {
+  const of = (language) => lang({ language }, {});
+  assert.equal(of("fr-FR"), "fr");
+  assert.equal(of("de-CH"), "de");
+  assert.equal(of("sr-Latn"), "sr-Latn");
+  assert.equal(of("sr"), "sr");
+  assert.equal(of("pt-BR"), "en");
+  // Priority unchanged: the card's language, then the user's locale, then the server language.
+  assert.equal(lang({ language: "fr", locale: { language: "sr-Latn" } }, {}), "sr-Latn");
+  assert.equal(lang({ language: "fr", locale: { language: "sr-Latn" } }, { language: "de" }), "de");
+});
+
+// Same key paths as English, arrays of the same length, same placeholders.
+const paths = (o, pre = "") =>
+  Object.entries(o).flatMap(([k, v]) =>
+    v && typeof v === "object" ? [`${pre}${k}${Array.isArray(v) ? `[${v.length}]` : ""}`, ...paths(v, `${pre}${k}.`)] : [`${pre}${k}`]
+  );
+for (const l of ["sr", "sr-Latn"]) {
+  test(`${l} strings cover exactly the English key paths`, () => {
+    assert.deepEqual(paths(STRINGS[l]).sort(), paths(STRINGS.en).sort());
+  });
+}
+
+test("Serbian scripts: no Latin letters in sr, no Cyrillic in sr-Latn (placeholders and units aside)", () => {
+  const units = new Set(["days", "hours", "minutes"]);
+  for (const [k, v] of Object.entries(STRINGS.sr)) {
+    if (!units.has(k)) assert.doesNotMatch(v.replace(/\{\w+\}/g, ""), /[A-Za-z]/, `sr.${k}`);
+  }
+  for (const [k, v] of Object.entries(STRINGS["sr-Latn"])) assert.doesNotMatch(v, /[\u0400-\u04FF]/, `sr-Latn.${k}`);
+});
+
+test("editor offers Serbian in Cyrillic and Latin script", () => {
+  const editor = new PresenceCardEditor();
+  editor.setConfig({});
+  editor.hass = { states: {}, language: "sr-Latn" };
+  const options = editor._form.schema.find((s) => s.name === "language").selector.select.options;
+  const serbian = options.filter((o) => o.value.startsWith("sr")).map((o) => `${o.value}=${o.label}`);
+  assert.equal(serbian.join(", "), "sr=Српски, sr-Latn=Srpski (latinica)");
+  assert.equal(editor._form.schema[2].selector.select.options[0].label, STRINGS["sr-Latn"].sort_presence);
+});
