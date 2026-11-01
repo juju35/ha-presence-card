@@ -287,3 +287,98 @@ for (const [type, widths] of [
             assert.deepEqual(r, { out: [], title: true, cut: [] });
           });
         }
+
+// The mini card zoomed in keeps the compact card's cell (6 of 12 columns on a phone, about 156-178 px): the
+// full card's rows must stay readable there too. Nothing leaves the card, the title keeps four characters, no
+// name, zone / state chip, distance, battery or summary is cut, and a duration is never broken inside a word
+// (at most two lines).
+const zoomedFit = async (el) => {
+  const raf = () => new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+  el.shadowRoot.querySelector(".zoom").click();
+  await raf();
+  const root = el.shadowRoot;
+  const r = globalThis.__fit(el);
+  const cut = (n) => n.scrollWidth > n.clientWidth + 1;
+  const names = [...root.querySelectorAll(".person .pname")].filter(cut).map((n) => n.textContent.trim());
+  const since = [...root.querySelectorAll(".person .since")]
+    .filter((n) => n.getBoundingClientRect().height > 2 * parseFloat(getComputedStyle(n).lineHeight || 16) + 1 || n.getBoundingClientRect().height > 34)
+    .map((n) => n.textContent.trim());
+  // The header's buttons and chip, which the card's overflow would hide rather than show outside it.
+  const card = root.querySelector("ha-card").getBoundingClientRect();
+  const header = [...root.querySelectorAll(".header > *")]
+    .filter((n) => n.getBoundingClientRect().width && n.getBoundingClientRect().right > card.right + 0.5)
+    .map((n) => n.getAttribute("class"));
+  // Each row's content stays in its row (the card's overflow would hide a battery past its edge).
+  const rows = [];
+  for (const row of root.querySelectorAll(".person")) {
+    const rb = row.getBoundingClientRect();
+    for (const n of row.querySelectorAll(".facts > span, .where > *, .pname"))
+      if (n.getBoundingClientRect().right > rb.right + 0.5) rows.push(n.textContent.trim());
+  }
+  return { ...r, zoomed: !!root.querySelector(".content"), names, since, header, rows };
+};
+for (const width of [156, 178, 245])
+  for (const lang of ["en", "pl", "sr-Latn"])
+    for (const theme of ["light", "dark"])
+      for (const state of ["normal", "unavailable"]) {
+        test(`presence-mini-card zoomed in, ${lang} ${theme} ${state} at ${width}px: rows readable, nothing out of the card`, async (t) => {
+          if (skip) return t.skip(skip);
+          const states = state === "normal" ? MOCK : unavailable();
+          const r = await inPage(
+            { type: "presence-mini-card", width, lang, theme, states },
+            `(el) => { globalThis.__fit = ${fit.toString()}; return (${zoomedFit.toString()})(el); }`
+          );
+          assert.deepEqual(r, { out: [], title: true, cut: [], zoomed: true, names: [], since: [], header: [], rows: [] });
+        });
+      }
+
+// Two cards in a grid of two equal columns (layout-card, grid or horizontal stack) at a phone's width, each
+// card directly in the grid or wrapped in a div: each card shrinks to its column, nothing overflows the grid.
+// And in a box sized by its content, wrapped in a div, the card keeps a usable width.
+for (const [type, zoom] of [
+  ["presence-card", false],
+  ["presence-mini-card", false],
+  ["presence-mini-card", true],
+])
+  for (const wrapped of [false, true]) {
+    for (const width of [320, 360, 500])
+      test(`${type}${zoom ? " zoomed in" : ""} in a 1fr 1fr grid of ${width}px${wrapped ? " (in a div)" : ""}: shrinks to its column`, async (t) => {
+        if (skip) return t.skip(skip);
+        const r = await inPage(
+          { type, width, rootStyle: "display:grid;grid-template-columns:1fr 1fr;gap:8px" },
+          `async (el) => {
+            const root = document.getElementById("root");
+            const second = document.createElement(el.localName);
+            second.setConfig(el._config);
+            root.append(second);
+            second.hass = el.hass;
+            if (${wrapped}) for (const c of [el, second]) { const d = document.createElement("div"); c.replaceWith(d); d.append(c); }
+            const raf = () => new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+            await raf();
+            if (${zoom}) for (const c of [el, second]) c.shadowRoot.querySelector(".zoom").click();
+            await raf();
+            const rb = root.getBoundingClientRect();
+            return { widths: [el, second].map((c) => Math.round(c.getBoundingClientRect().width)), over: Math.round(Math.max(0, ...[el, second].map((c) => c.getBoundingClientRect().right - rb.right))), scroll: root.scrollWidth - root.clientWidth };
+          }`
+        );
+        const col = Math.round((width - 8) / 2);
+        assert.deepEqual(r, { widths: [col, col], over: 0, scroll: 0 });
+      });
+    if (wrapped)
+      for (const wrap of ["display:inline-block", "display:grid;grid-template-columns:auto"])
+        test(`${type}${zoom ? " zoomed in" : ""} in a div in a content-sized box (${wrap}) keeps a usable width`, async (t) => {
+          if (skip) return t.skip(skip);
+          const r = await inPage(
+            { type, width: "auto", rootStyle: wrap },
+            `async (el) => {
+              const d = document.createElement("div"); el.replaceWith(d); d.append(el);
+              const raf = () => new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+              await raf();
+              if (${zoom}) el.shadowRoot.querySelector(".zoom").click();
+              await raf();
+              return Math.round(el.getBoundingClientRect().width);
+            }`
+          );
+          assert.ok(r >= 200, `${r}px`);
+        });
+  }
