@@ -230,7 +230,8 @@ const initials = (name) =>
     .join("");
 
 // A stable color per person, for the initials avatar.
-const AVATAR_COLORS = ["#5b6cf0", "#00a7a0", "#e8783c", "#c2459e", "#3d8fd6", "#7a8f2f", "#a05cd6", "#d64a4a"];
+// Dark enough for the white initials to reach the WCAG AA 4.5:1 contrast.
+const AVATAR_COLORS = ["#5768e6", "#00827d", "#b35c2e", "#c0449c", "#3378b4", "#6a7c29", "#9656c9", "#cb4646"];
 const avatarColor = (id) => {
   let h = 0;
   for (const c of String(id)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
@@ -407,17 +408,20 @@ const fireMoreInfo = (node, entityId) => {
 
 const BASE_STYLE = `
   :host { display: block; --pr-accent: #5b6cf0; --pr-home: var(--success-color, #43a047); --pr-zone: var(--info-color, #039be5);
-          --pr-away: var(--disabled-text-color, #9e9e9e); --pr-unknown: var(--warning-color, #ffa600);
+          --pr-away: var(--secondary-text-color, #727272); --pr-unknown: var(--warning-color, #ffa600);
           --pr-ok: var(--success-color, #43a047); --pr-warn: var(--warning-color, #ffa600); --pr-crit: var(--error-color, #db4437); }
   ha-card { overflow: hidden; }
   .icon { width: 18px; height: 18px; fill: currentColor; flex: none; }
   .muted { color: var(--secondary-text-color); }
   .clickable { cursor: pointer; }
   [role="button"]:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
+  /* A state color is kept for backgrounds, dots, borders and icons; a text in that color is mixed with the
+     primary text color (darker in a light theme, lighter in a dark one) to stay readable (WCAG AA 4.5:1). */
   .home { --c: var(--pr-home); } .zone { --c: var(--pr-zone); } .away { --c: var(--pr-away); } .unknown { --c: var(--pr-unknown); }
   .ok { --b: var(--pr-ok); } .warn { --b: var(--pr-warn); } .crit { --b: var(--pr-crit); }
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;
-          background: color-mix(in srgb, var(--c, var(--pr-home)) 15%, transparent); color: var(--c, var(--pr-home)); white-space: nowrap; }
+          background: color-mix(in srgb, var(--c, var(--pr-home)) 15%, transparent);
+          color: color-mix(in srgb, var(--c, var(--pr-home)) 40%, var(--primary-text-color, #212121)); white-space: nowrap; }
   .chip .icon { width: 12px; height: 12px; }
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
   .titles { flex: 1; min-width: 0; }
@@ -427,20 +431,24 @@ const BASE_STYLE = `
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header > .chip { align-self: flex-start; margin-top: 2px; }
-  .warning { padding: 16px; color: var(--pr-warn); }
+  .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); }
   .avatar { position: relative; flex: none; width: var(--size, 40px); height: var(--size, 40px); }
   .avatar .pic { width: 100%; height: 100%; border-radius: 50%; box-sizing: border-box; border: 2px solid var(--c);
                  background: var(--bg, var(--pr-accent)) center / cover no-repeat; display: grid; place-items: center;
                  color: #fff; font-weight: 600; font-size: calc(var(--size, 40px) * .36); transition: border-color .4s ease, filter .4s ease; }
-  .avatar.away .pic, .avatar.unknown .pic { filter: grayscale(.85) opacity(.75); }
+  /* Away or unknown: a faded photo; initials are only desaturated, so that they stay readable. */
+  .avatar.away .pic, .avatar.unknown .pic { filter: grayscale(.85); }
+  .avatar.away .pic.photo, .avatar.unknown .pic.photo { filter: grayscale(.85) opacity(.75); }
   .avatar .badge { position: absolute; right: -3px; bottom: -3px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
-                   background: var(--c); color: #fff; box-shadow: 0 0 0 2px var(--card-background-color, var(--ha-card-background, #fff)); }
+                   background: var(--c); color: #212121;
+                   box-shadow: 0 0 0 2px var(--ha-card-background, var(--card-background-color, #fff)); }
   .avatar .badge .icon { width: 12px; height: 12px; }
   .zoom { all: unset; flex: none; align-self: flex-start; cursor: pointer; width: 24px; height: 24px; margin: -4px -4px 0 -4px;
           border-radius: 50%; display: grid; place-items: center; color: var(--secondary-text-color); }
   .zoom .icon { width: 16px; height: 16px; }
   .zoom:hover { background: color-mix(in srgb, var(--secondary-text-color) 16%, transparent); color: var(--primary-text-color); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 1px; }
+  @media (prefers-reduced-motion: reduce) { .avatar .pic { transition: none; } }
 `;
 // A click inside a dialog (more-info opened from the card, say) is not a click outside the card.
 const inDialog = (ev) => ev.composedPath().some((n) => ["ha-more-info-dialog", "ha-dialog", "dialog"].includes(n.localName));
@@ -578,7 +586,7 @@ class PresenceBase extends HTMLElement {
   _avatar(p, size) {
     const bg = p.picture ? `--bg:url('${cssUrl(p.picture)}');` : `--bg:${avatarColor(p.id)};`;
     return `<div class="avatar ${p.kind}" style="--size:${size}px">
-      <div class="pic" style="${bg}">${p.picture ? "" : esc(initials(p.name))}</div>
+      <div class="pic${p.picture ? " photo" : ""}" style="${bg}">${p.picture ? "" : esc(initials(p.name))}</div>
       <span class="badge">${svgIcon(BADGE[p.kind])}</span>
     </div>`;
   }
@@ -690,7 +698,7 @@ const MINI_STYLE = `
   .mini .header > .logo .icon { width: 20px; height: 20px; }
   .mini .header > .titles { margin-block: -2px; }
   .mini .zoom { margin: -4px -4px -4px 0; }
-  .sub .st { color: var(--c); font-weight: 500; }
+  .sub .st { color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color, #212121)); font-weight: 500; }
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
   .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: ${FACE_GAP}px; }
   .mini.row .faces { order: 0; flex: none; }

@@ -1,6 +1,8 @@
 // Mock Home Assistant states (people, trackers, zones), used to render the screenshots.
 // Neutral names and drawn avatars only: no real people in the published screenshots.
-const ago = (min) => new Date(Date.now() - min * 60000).toISOString();
+// A fixed "now", also set as the page clock by the screenshot script: the same images on every run.
+export const NOW = Date.parse("2026-10-25T12:00:00Z");
+const ago = (min) => new Date(NOW - min * 60000).toISOString();
 
 // A drawn avatar (head and shoulders on a colored disc), as a data URL like an uploaded picture.
 const avatar = (bg, skin, hair) =>

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.4
+### Fixed
+- Readability in light and dark themes: the state chips ("Home", "Work", "Away", "Unknown", the "2/4" counter), the mini card's summary and the "person not found" warning keep their state color but now reach the WCAG AA contrast (4.5:1) against their background; the state color stays on the chip background, the avatar ring and the badge.
+- The "Away" chip, ring and badge now use the secondary text color instead of the disabled one, which made an away person look unavailable.
+- Initials avatars use slightly darker colors so the white initials are readable, and stay unfaded (only desaturated) when the person is away or unknown; the avatar badge icon is drawn in dark so it stands out on every state color.
+- With a theme that sets `--ha-card-background`, the ring around the avatar badge now matches the card background.
+- With "reduce motion" enabled in the system settings, avatars change state without a transition.
+
 ## 1.5.3
 ### Fixed
 - Mini card: on a zoomed or scaled dashboard (theme or card-mod zoom, kiosk mode, the edit dialog opening), a long title is no longer left truncated next to the avatars: the avatars now move under it as they do at normal size.
