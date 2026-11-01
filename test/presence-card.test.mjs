@@ -252,11 +252,8 @@ for (const l of LANGS) {
   });
 }
 
-test("Serbian scripts: no Latin letters in sr, no Cyrillic in sr-Latn (placeholders and units aside)", () => {
-  const units = new Set(["days", "hours", "minutes"]);
-  for (const [k, v] of Object.entries(STRINGS.sr)) {
-    if (!units.has(k)) assert.doesNotMatch(v.replace(/\{\w+\}/g, ""), /[A-Za-z]/, `sr.${k}`);
-  }
+test("Serbian scripts: no Latin letters in sr, units included, no Cyrillic in sr-Latn (placeholders aside)", () => {
+  for (const [k, v] of Object.entries(STRINGS.sr)) assert.doesNotMatch(v.replace(/\{\w+\}/g, ""), /[A-Za-z]/, `sr.${k}`);
   for (const [k, v] of Object.entries(STRINGS["sr-Latn"])) assert.doesNotMatch(v, /[\u0400-\u04FF]/, `sr-Latn.${k}`);
 });
 
