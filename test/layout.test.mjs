@@ -134,6 +134,8 @@ const header = (el) => {
     summary: root.querySelector(".header .sub").textContent.trim(),
     chipInside: chip ? chip.getBoundingClientRect().right <= card.right + 0.5 : true,
     zoom: zoom ? Math.round(zoom.getBoundingClientRect().width) : null,
+    // The header logo keeps the full card's size in the mini card too (0 when a narrow mini card drops it).
+    logo: Math.round(root.querySelector(".header > .logo").getBoundingClientRect().width),
     // The mini card's zoom button stays on the logo's row, it never wraps onto a line of its own.
     // (Measured against the title when a narrow mini card drops its logo.)
     zoomOnRow: zoom ? zoom.getBoundingClientRect().top < (root.querySelector(".logo").offsetWidth ? root.querySelector(".logo") : name).getBoundingClientRect().bottom : true,
@@ -152,6 +154,7 @@ for (const type of ["presence-card", "presence-mini-card"])
           assert.ok(r.chipInside);
           if (type === "presence-card") assert.equal(r.chipLabel, r.summary); // "2 of 4 at home", translated
           if (type === "presence-mini-card") assert.equal(r.zoom, 24);
+          if (r.logo) assert.equal(r.logo, 40, "header logo resized");
           assert.ok(r.zoomOnRow, "zoom button wrapped under the title row");
         });
       }

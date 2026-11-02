@@ -959,12 +959,12 @@ class PresenceCard extends PresenceBase {
 // card, see `_fit`); otherwise they wrap onto their own line under the title.
 const FACE = 32;
 const FACE_GAP = 8;
+// The header logo, the same size as the full card's.
+const LOGO = 40;
 
 const MINI_STYLE = `
   .mini .header { padding: 12px; flex-wrap: wrap; row-gap: 10px; }
   .mini .header > .logo, .mini .zoom { align-self: center; }
-  .mini .header > .logo { width: 32px; height: 32px; }
-  .mini .header > .logo .icon { width: 20px; height: 20px; }
   .mini .header > .titles { margin-block: -2px; }
   .mini .zoom { margin: -4px -4px -4px 0; }
   /* Too narrow for the logo next to the title (a phone's 6 columns, ~156-178 px): the logo goes, the summary
@@ -1042,11 +1042,11 @@ class PresenceMiniCard extends PresenceCard {
     // Header gap + the button's measured footprint (its width plus its negative margins).
     const zs = zoomEl && getComputedStyle(zoomEl);
     const zoom = zoomEl ? 10 + zoomEl.offsetWidth + (parseFloat(zs.marginLeft) || 0) + (parseFloat(zs.marginRight) || 0) : 0;
-    const row = 32 + 10 + titles + faces + zoom <= width;
+    const row = LOGO + 10 + titles + faces + zoom <= width;
     // No room for the logo and the whole title and summary: the logo is dropped and the summary wraps.
     // Measured on the unwrapped texts (the logo's presence changes none of these widths), so it never flips
     // back and forth.
-    const tight = !row && 32 + 10 + titles + zoom > width;
+    const tight = !row && LOGO + 10 + titles + zoom > width;
     if (row === this._inline && tight === this._tight) return;
     this._inline = row;
     this._tight = tight;
