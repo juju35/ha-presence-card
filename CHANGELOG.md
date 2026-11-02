@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Mini cards: the header icon keeps its full size (40 px) in the compact view, like the full card.
+
 ## 1.5.7 - 2026-11-01
 ### Fixed
 - A configured person that no longer exists (deleted or renamed) no longer replaces the whole card with a warning: the other people stay shown, with the header and the count, and a "Person not found" line is added for each missing one. This applies to the mini card too.
