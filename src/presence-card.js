@@ -172,9 +172,9 @@ const STRINGS = {
     nobody_home: "Нико није код куће",
     for: "већ",
     just_now: "управо сада",
-    days: "d",
-    hours: "h",
-    minutes: "min",
+    days: "д",
+    hours: "ч",
+    minutes: "мин",
     battery: "Батерија",
     from_home: "од куће",
     no_person: "Није пронађена ниједна особа. Додајте особе у Подешавања → Особе.",
@@ -633,15 +633,21 @@ const BASE_STYLE = `
           background: color-mix(in srgb, var(--c, var(--pr-home)) 15%, transparent);
           color: color-mix(in srgb, var(--c, var(--pr-home)) 40%, var(--primary-text-color, #212121)); white-space: nowrap; }
   .chip .icon { width: 12px; height: 12px; }
+  .chip .txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
-  .titles { flex: 1; min-width: 0; }
+  /* The title block takes the room left and cuts its texts, but always keeps a few characters of the title.
+     A zero basis (not auto): in the mini card's wrapping header, a basis at the text's width would push the
+     zoom button onto a second line at narrow widths. */
+  .titles { flex: 1 1 0%; min-width: 6ch; }
   .logo { --c: var(--pr-accent); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; align-self: flex-start;
           background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
   .logo .icon { width: 24px; height: 24px; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .header > .chip { align-self: flex-start; margin-top: 2px; }
-  .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); }
+  /* The count chip shrinks before the title (never past half the header) and cuts its text. */
+  .header > .chip { align-self: flex-start; margin-top: 2px; flex: 0 1 auto; min-width: 0; max-width: 50%; box-sizing: border-box; overflow: hidden; }
+  .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); overflow-wrap: anywhere; }
+  .warning + .warning { padding-top: 0; }
   .avatar { position: relative; flex: none; width: var(--size, 40px); height: var(--size, 40px); }
   .avatar .pic { width: 100%; height: 100%; border-radius: 50%; box-sizing: border-box; border: 2px solid var(--c);
                  background: var(--bg, var(--pr-accent)) center / cover no-repeat; display: grid; place-items: center;
@@ -783,7 +789,7 @@ class PresenceBase extends HTMLElement {
           <div class="name">${esc(this._config.title || this._t("title"))}</div>
           <div class="sub">${esc(text)}</div>
         </div>
-        <span class="chip ${n ? "home" : "away"}">${svgIcon(ICONS.home)}${n}/${people.length}</span>
+        <span class="chip ${n ? "home" : "away"}" role="img" title="${esc(text)}" aria-label="${esc(text)}">${svgIcon(ICONS.home)}<span class="txt">${n}/${people.length}</span></span>
         ${this._zoomButton()}
       </div>`;
   }
@@ -795,7 +801,7 @@ class PresenceBase extends HTMLElement {
 
   _avatar(p, size) {
     const bg = p.picture ? `--bg:url('${cssUrl(p.picture)}');` : `--bg:${avatarColor(p.id)};`;
-    return `<div class="avatar ${p.kind}" style="--size:${size}px">
+    return `<div class="avatar ${p.kind}" style="--size:${size}px" aria-hidden="true">
       <div class="pic${p.picture ? " photo" : ""}" style="${bg}">${p.picture ? "" : esc(initials(p.name))}</div>
       <span class="badge">${svgIcon(BADGE[p.kind])}</span>
     </div>`;
@@ -805,10 +811,18 @@ class PresenceBase extends HTMLElement {
     return p.kind === "zone" ? p.zone : this._t(p.kind);
   }
 
+  // One warning line per configured person that does not exist (deleted or renamed), shown with the others.
+  _missing(all) {
+    return all
+      .filter((p) => p.missing)
+      .map((p) => `<div class="warning" data-key="missing:${esc(p.missing)}">${esc(`${this._t("unknown_person")}: ${p.missing}`)}</div>`)
+      .join("");
+  }
+
+  // Nobody to show: every configured person missing, or no person at all in Home Assistant.
   _noPeople(all) {
-    const missing = all.find((p) => p.missing);
-    const msg = missing ? `${this._t("unknown_person")}: ${missing.missing}` : this._t("no_person");
-    return `<style>${BASE_STYLE}</style><ha-card><div class="warning">${esc(msg)}</div></ha-card>`;
+    const body = this._missing(all) || `<div class="warning">${esc(this._t("no_person"))}</div>`;
+    return `<style>${BASE_STYLE}</style><ha-card>${body}</ha-card>`;
   }
 }
 
@@ -818,12 +832,28 @@ class PresenceBase extends HTMLElement {
 
 const FULL_STYLE = `
   .content { padding: 8px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
-  .person { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px;
+  .content .warning { padding: 2px 10px; font-size: 12px; }
+  /* Narrow header (a card under about 205 px, narrower than its 9 columns on a phone): the count chip keeps
+     only its icon, the count stays in its title and label. At phone widths it shows its whole "2/4". */
+  .header { container: pr-head / inline-size; }
+  /* The summary ("Nikogo nie ma w domu") wraps between words rather than being cut next to the chip. */
+  .header .sub { white-space: normal; }
+  @container pr-head (max-width: 180px) { .header > .chip .txt { display: none; } .header > .chip { padding: 1px 4px; } }
+  /* A small gap before the facts column: the name and place already stretch up to it, and at a phone's 9
+     columns (about 234 px) every pixel goes to the zone or state chip ("Poza domem"). */
+  .person { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 12px;
             background: var(--secondary-background-color, rgba(127,127,127,.08)); }
+  /* The person's button (avatar, name, place) and the battery's are side by side, never one inside the other. */
+  .person .main { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; border-radius: 8px; }
+  @supports selector(:has(*)) {
+    .person:has(> .main:focus-visible) { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
+    .person > .main:focus-visible { outline: none; }
+  }
   .person .who { flex: 1; min-width: 0; }
   .person .pname { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .person .where { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
-  .person .where .chip { flex: none; max-width: 100%; box-sizing: border-box; }
+  /* A long zone name is cut in its chip (full name in its title), never over the distance and battery. */
+  .person .where .chip { flex: 0 1 auto; min-width: 0; max-width: 100%; box-sizing: border-box; overflow: hidden; }
   /* The duration goes under the chip when it does not fit next to it, and wraps between words if still too long. */
   .person .where .since { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
   .person .facts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 12px; flex: none; }
@@ -833,6 +863,27 @@ const FULL_STYLE = `
   .batt .cell { position: relative; width: 18px; height: 9px; border: 1.5px solid var(--secondary-text-color); border-radius: 2.5px; box-sizing: border-box; }
   .batt .cell::after { content: ""; position: absolute; right: -4px; top: 1.5px; width: 2px; height: 3px; border-radius: 0 1px 1px 0; background: var(--secondary-text-color); }
   .batt .cell > i { position: absolute; left: 1px; top: 1px; bottom: 1px; border-radius: 1px; background: var(--b, var(--pr-ok)); }
+  /* Very narrow card (under 225 px: the mini card zoomed in keeps its 6-column cell, about 156-178 px on a
+     phone). The card is a size container for that; a size container has no width of its own content, so in a
+     parent sized by its content (an inline-block, a grid "auto" column) the card would fall to a few pixels.
+     The empty, zero-height grid before it gives a natural width (max-content 360 px) with no minimum
+     (min-content 0): in a "1fr 1fr" grid, wrapped in a div or not, the card still shrinks to its track. */
+  :host::before { content: ""; display: grid; grid-template-columns: minmax(0, 360px); height: 0; }
+  ha-card { container: pr-card / inline-size; }
+  /* There the header drops its logo, and each row puts its distance and battery on a line under the name,
+     with a smaller avatar: the name, the place chip and the duration keep their whole text. */
+  @container pr-card (max-width: 224px) {
+    .header > .logo { display: none; }
+    .content { padding: 8px 8px 8px; }
+    .person { flex-wrap: wrap; row-gap: 4px; padding: 6px 8px; }
+    .person .main { flex: 1 1 100%; gap: 8px; }
+    .person .main .avatar { width: 32px; height: 32px; }
+    .person .main .avatar .pic { font-size: 12px; }
+    .person .main .avatar .badge { width: 14px; height: 14px; right: -2px; bottom: -2px; }
+    .person .main .avatar .badge .icon { width: 10px; height: 10px; }
+    .person .facts { flex: 1 1 100%; min-width: 0; box-sizing: border-box; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 2px 10px; padding-left: 40px; }
+    .person .where .since { overflow-wrap: normal; }
+  }
 `;
 
 class PresenceCard extends PresenceBase {
@@ -849,18 +900,20 @@ class PresenceCard extends PresenceBase {
   }
 
   getGridOptions() {
-    return { columns: 12, min_columns: 6 };
+    // 9 columns: under that, the rows get too dense (names, zone chips and durations cut or wrapped on
+    // several lines); the header itself still fits narrower.
+    return { columns: 12, min_columns: 9 };
   }
 
   _render() {
     const { all, people } = this._people();
-    if (!people.length || all.some((p) => p.missing)) return this._noPeople(all);
+    if (!people.length) return this._noPeople(all);
     const c = this._config;
     const shown = c.show_away === false ? people.filter((p) => p.kind === "home" || p.kind === "zone") : people;
     return `<style>${BASE_STYLE}${FULL_STYLE}</style>
       <ha-card>
         ${this._header(people)}
-        <div class="content">${shown.map((p) => this._row(p)).join("")}</div>
+        <div class="content">${shown.map((p) => this._row(p)).join("")}${this._missing(all)}</div>
       </ha-card>`;
   }
 
@@ -882,11 +935,14 @@ class PresenceCard extends PresenceBase {
     // A number stays with its unit ("23 h") when the duration wraps.
     const sinceText = p.since === null ? "" : p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr).replace(/(\d) /g, "$1\u00a0")}`;
     const since = c.show_since !== false && p.since !== null ? `<span class="since">${esc(sinceText)}</span>` : "";
-    return `<div class="person clickable ${p.kind}" role="button" tabindex="0" data-key="${esc(p.id)}" data-entity="${esc(p.id)}">
-      ${this._avatar(p, 40)}
-      <div class="who">
-        <div class="pname">${esc(p.name)}</div>
-        <div class="where"><span class="chip">${esc(this._place(p))}</span>${since}</div>
+    const place = this._place(p);
+    return `<div class="person clickable ${p.kind}" data-key="${esc(p.id)}" data-entity="${esc(p.id)}">
+      <div class="main" role="button" tabindex="0" data-entity="${esc(p.id)}">
+        ${this._avatar(p, 40)}
+        <div class="who">
+          <div class="pname">${esc(p.name)}</div>
+          <div class="where"><span class="chip" title="${esc(place)}"><span class="txt">${esc(place)}</span></span>${since}</div>
+        </div>
       </div>
       ${facts.length ? `<div class="facts">${facts.join("")}</div>` : ""}
     </div>`;
@@ -911,6 +967,11 @@ const MINI_STYLE = `
   .mini .header > .logo .icon { width: 20px; height: 20px; }
   .mini .header > .titles { margin-block: -2px; }
   .mini .zoom { margin: -4px -4px -4px 0; }
+  /* Too narrow for the logo next to the title (a phone's 6 columns, ~156-178 px): the logo goes, the summary
+     wraps between words instead of being cut. */
+  .mini.tight .header > .logo { display: none; }
+  .mini.tight .sub { white-space: normal; }
+  .mini > .warning { padding: 0 12px 12px; font-size: 12px; }
   .sub .st { color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color, #212121)); font-weight: 500; }
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
   .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: ${FACE_GAP}px; }
@@ -930,6 +991,7 @@ class PresenceMiniCard extends PresenceCard {
     super();
     this._zoomed = false;
     this._inline = true;
+    this._tight = false;
     this._resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => this._fit()) : null;
     this.shadowRoot.addEventListener("click", (ev) => this._zoomClick(ev));
     // A click outside the card, and not in a dialog opened from it, brings it back to the compact view.
@@ -968,7 +1030,12 @@ class PresenceMiniCard extends PresenceCard {
     // and would make a card that has once wrapped its avatars never fit them back on the row. Read as a
     // layout width (offsetWidth), like clientWidth above: getBoundingClientRect() follows an ancestor's
     // zoom or transform and would under-estimate the title under a scaled dashboard.
+    // A summary wrapped by the tight layout is read unwrapped (its nowrap restored for the measure), so that
+    // its width does not depend on the layout it decides.
+    const sub = root.querySelector(".mini .sub");
+    if (sub) sub.style.whiteSpace = "nowrap";
     const titles = Math.max(...[...root.querySelectorAll(".mini .titles > div > span")].map((n) => n.offsetWidth));
+    if (sub) sub.style.whiteSpace = "";
     const n = root.querySelectorAll(".mini .face").length;
     const faces = n ? 10 + n * FACE + (n - 1) * FACE_GAP : 0; // header gap + avatars, nothing with zero faces
     const zoomEl = root.querySelector(".mini .zoom");
@@ -976,8 +1043,13 @@ class PresenceMiniCard extends PresenceCard {
     const zs = zoomEl && getComputedStyle(zoomEl);
     const zoom = zoomEl ? 10 + zoomEl.offsetWidth + (parseFloat(zs.marginLeft) || 0) + (parseFloat(zs.marginRight) || 0) : 0;
     const row = 32 + 10 + titles + faces + zoom <= width;
-    if (row === this._inline) return;
+    // No room for the logo and the whole title and summary: the logo is dropped and the summary wraps.
+    // Measured on the unwrapped texts (the logo's presence changes none of these widths), so it never flips
+    // back and forth.
+    const tight = !row && 32 + 10 + titles + zoom > width;
+    if (row === this._inline && tight === this._tight) return;
     this._inline = row;
+    this._tight = tight;
     this._update(this._sig);
   }
 
@@ -1000,7 +1072,7 @@ class PresenceMiniCard extends PresenceCard {
     ev.stopPropagation();
     this._setZoom(!this._zoomed);
     // Keyboard use (Enter / Space: no click count) keeps the focus on the button.
-    if (ev.detail === 0) this.shadowRoot.querySelector(".zoom")?.focus();
+    if (ev.detail === 0) this.shadowRoot.querySelector(".zoom")?.focus({ preventScroll: true });
   }
 
   _zoomButton() {
@@ -1012,7 +1084,7 @@ class PresenceMiniCard extends PresenceCard {
   _render() {
     if (this._zoomed) return super._render();
     const { all, people } = this._people();
-    if (!people.length || all.some((p) => p.missing)) return this._noPeople(all);
+    if (!people.length) return this._noPeople(all);
     const c = this._config;
     const shown = c.show_away === false ? people.filter((p) => p.kind === "home" || p.kind === "zone") : people;
     const { n, text } = this._summary(people);
@@ -1023,7 +1095,7 @@ class PresenceMiniCard extends PresenceCard {
     );
     return `<style>${BASE_STYLE}${MINI_STYLE}</style>
       <ha-card>
-        <div class="mini${this._inline ? " row" : ""}">
+        <div class="mini${this._inline ? " row" : ""}${this._tight ? " tight" : ""}">
           <div class="header">
             ${logo()}
             <div class="titles">
@@ -1033,6 +1105,7 @@ class PresenceMiniCard extends PresenceCard {
             <div class="faces">${faces.join("")}</div>
             ${this._zoomButton()}
           </div>
+          ${this._missing(all)}
         </div>
       </ha-card>`;
   }
