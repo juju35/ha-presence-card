@@ -143,7 +143,7 @@ const header = (el) => {
 };
 
 for (const type of ["presence-card", "presence-mini-card"])
-  for (const lang of ["en", "pl", "sr-Latn"])
+  for (const lang of ["en", "pl", "sr-Latn", "uk", "hu", "el"])
     for (const theme of ["light", "dark"])
       for (const width of [160, 200, 250]) {
         test(`${type} ${lang} ${theme} at ${width}px: the header keeps its title readable and its buttons inside`, async (t) => {
@@ -195,7 +195,7 @@ test("no interactive element nested in another (axe nested-interactive), each on
 
 // Phone widths of the Sections view (9 of 12 columns, the full card's minimum, is about 234-273 px; a normal
 // column is wider): the header chip has room for its "2/4" next to a readable title, it must show it whole.
-for (const lang of ["en", "pl", "sr-Latn"])
+for (const lang of ["en", "pl", "sr-Latn", "uk", "hu", "el"])
   for (const width of [234, 245, 273, 320, 500]) {
     test(`full card ${lang} at ${width}px: the header chip shows its whole count`, async (t) => {
       if (skip) return t.skip(skip);
@@ -280,7 +280,7 @@ for (const [type, widths] of [
   ["presence-mini-card", [156, 178, 245]],
 ])
   for (const width of widths)
-    for (const lang of ["en", "pl", "sr-Latn"])
+    for (const lang of ["en", "pl", "sr-Latn", "uk", "hu", "el"])
       for (const theme of ["light", "dark"])
         for (const state of ["normal", "unavailable"]) {
           test(`${type} ${lang} ${theme} ${state} at ${width}px: nothing out of the card, no value cut`, async (t) => {
@@ -321,7 +321,7 @@ const zoomedFit = async (el) => {
   return { ...r, zoomed: !!root.querySelector(".content"), names, since, header, rows };
 };
 for (const width of [156, 178, 245])
-  for (const lang of ["en", "pl", "sr-Latn"])
+  for (const lang of ["en", "pl", "sr-Latn", "uk", "hu", "el"])
     for (const theme of ["light", "dark"])
       for (const state of ["normal", "unavailable"]) {
         test(`presence-mini-card zoomed in, ${lang} ${theme} ${state} at ${width}px: rows readable, nothing out of the card`, async (t) => {

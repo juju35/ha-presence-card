@@ -229,7 +229,7 @@ test("editor: a state update alone does not rebuild the form's data and schema",
   assert.equal(editor._form.schema[2].selector.select.options[0].label, STRINGS.fr.sort_presence);
 });
 
-const LANGS = ["fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl"];
+const LANGS = ["fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl", "ro", "da", "sv", "bg", "ru", "uk", "hu", "sk", "cs", "sl", "lv", "el"];
 
 test("every supported language has a dictionary", () => {
   assert.deepEqual(Object.keys(STRINGS).sort(), ["en", ...LANGS].sort());
@@ -258,6 +258,11 @@ test("language: full tag if translated, else the part before the dash, else Engl
   // Brazilian Portuguese falls back to European Portuguese, on purpose.
   assert.equal(of("pt-BR"), "pt");
   assert.equal(of("pl-PL"), "pl");
+  assert.equal(of("ro-RO"), "ro");
+  assert.equal(of("sv-SE"), "sv");
+  assert.equal(of("uk-UA"), "uk");
+  assert.equal(of("cs-CZ"), "cs");
+  assert.equal(of("el-GR"), "el");
   assert.equal(of("ja"), "en");
   // Priority unchanged: the card's language, then the user's locale, then the server language.
   assert.equal(lang({ language: "fr", locale: { language: "sr-Latn" } }, {}), "sr-Latn");
@@ -295,10 +300,14 @@ test("editor offers every language, after Serbian, with its native name", () => 
   editor.setConfig({});
   editor.hass = { states: {}, language: "pl" };
   const options = editor._form.schema.find((s) => s.name === "language").selector.select.options;
-  assert.equal(options.map((o) => o.value).join(","), ",en,fr,de,es,sr,sr-Latn,it,nl,pt,pl");
+  assert.equal(options.map((o) => o.value).join(","), ",en,fr,de,es,sr,sr-Latn,it,nl,pt,pl,ro,da,sv,bg,ru,uk,hu,sk,cs,sl,lv,el");
   assert.equal(
-    options.slice(-4).map((o) => o.label).join(", "),
+    options.slice(7, 11).map((o) => o.label).join(", "),
     "Italiano, Nederlands, Português (Portugal), Polski"
+  );
+  assert.equal(
+    options.slice(-12).map((o) => o.label).join(", "),
+    "Română, Dansk, Svenska, Български, Русский, Українська, Magyar, Slovenčina, Čeština, Slovenščina, Latviešu, Ελληνικά"
   );
   assert.equal(options[0].label, STRINGS.pl.lang_auto);
   for (const o of options.slice(1)) assert.ok(STRINGS[o.value], `no dictionary for ${o.value}`);

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.9 - 2026-11-04
+### Added
+- Added Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek translations (`ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv`, `el`), also offered in the visual editor's language list.
+
 ## 1.5.8 - 2026-11-02
 ### Fixed
 - Mini cards: the header icon keeps its full size (40 px) in the compact view, like the full card.
