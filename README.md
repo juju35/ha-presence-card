@@ -5,7 +5,7 @@
 [![Validate](https://github.com/juju35/ha-presence-card/actions/workflows/validate.yml/badge.svg)](https://github.com/juju35/ha-presence-card/actions/workflows/validate.yml)
 [![Lint](https://github.com/juju35/ha-presence-card/actions/workflows/lint.yml/badge.svg)](https://github.com/juju35/ha-presence-card/actions/workflows/lint.yml)
 [![Release](https://img.shields.io/github/v/release/juju35/ha-presence-card)](https://github.com/juju35/ha-presence-card/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/juju35/ha-presence-card/blob/main/LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/julienstep9)
 
 Lovelace cards for Home Assistant showing the people of the house and where they are: at home, in a zone or away, since when, how far from home and their phone battery.
@@ -134,9 +134,9 @@ Note for the sections view: Lovelace sizes the cell when the dashboard loads and
 
 | Light | Dark |
 |---|---|
-| ![card](screenshots/card.png) | ![card dark](screenshots/card-dark.png) |
-| ![mini card](screenshots/mini-card.png) | ![mini card dark](screenshots/mini-card-dark.png) |
-| ![mini card zoomed in](screenshots/mini-card-zoom.png) | ![mini card zoomed in dark](screenshots/mini-card-zoom-dark.png) |
+| ![card](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card.png) | ![card dark](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card-dark.png) |
+| ![mini card](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card.png) | ![mini card dark](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-dark.png) |
+| ![mini card zoomed in](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-zoom.png) | ![mini card zoomed in dark](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-zoom-dark.png) |
 
 ## How it works
 
@@ -160,7 +160,7 @@ npm run screenshots  # renders the cards with mock data (scripts/mock-states.mjs
 ### Releasing
 
 1. Bump `version` in `package.json`
-2. Add a `## <version>` section at the top of [CHANGELOG.md](CHANGELOG.md)
+2. Add a `## <version>` section at the top of [CHANGELOG.md](https://github.com/juju35/ha-presence-card/blob/main/CHANGELOG.md)
 3. Push to `main`: the **Release** workflow builds the card, creates the tag and the GitHub release with the changelog section as notes, and attaches `presence-card.js`
 
 ## Translations
@@ -196,7 +196,7 @@ Contributions for additional languages are welcome!
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/juju35/ha-presence-card/blob/main/LICENSE)
 
 ## Support
 
