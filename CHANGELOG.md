@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.10 - 2026-11-04
+
+### Documentation
+- README: images and links use absolute URLs, so the screenshots, icons, badges and links display in HACS (relative paths broke there).
+- README: screenshots get a display size, so cards no longer show oversized in HACS and on GitHub.
+
 ## 1.5.9 - 2026-11-04
 ### Added
 - Added Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek translations (`ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv`, `el`), also offered in the visual editor's language list.
