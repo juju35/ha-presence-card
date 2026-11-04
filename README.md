@@ -16,7 +16,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 
 | Presence Card | Presence Mini Card |
 |---|---|
-| ![presence-card](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card.png) | ![presence-mini-card](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card.png) |
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card.png" alt="presence-card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card.png" alt="presence-mini-card" width="400"> |
 
 ## Features
 
@@ -134,9 +134,9 @@ Note for the sections view: Lovelace sizes the cell when the dashboard loads and
 
 | Light | Dark |
 |---|---|
-| ![card](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card.png) | ![card dark](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card-dark.png) |
-| ![mini card](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card.png) | ![mini card dark](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-dark.png) |
-| ![mini card zoomed in](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-zoom.png) | ![mini card zoomed in dark](https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-zoom-dark.png) |
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card.png" alt="card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card-dark.png" alt="card dark" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card.png" alt="mini card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-dark.png" alt="mini card dark" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-zoom.png" alt="mini card zoomed in" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-zoom-dark.png" alt="mini card zoomed in dark" width="400"> |
 
 ## How it works
 
