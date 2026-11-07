@@ -341,7 +341,24 @@ test("movements: arrivals, departures and zones from the logbook, newest first",
   assert.equal(moves[0].when, (t0 + 31000) * 1000);
 });
 
-test("movements section: folded by default, read from the logbook once unfolded", async () => {
+test("movements: the state at the start of the window is read against, not shown", () => {
+  const start = Date.parse("2026-10-25T07:00:00Z");
+  const t0 = start / 1000;
+  const events = [
+    // At Work when the window opened, then away: left Work, not left home.
+    { entity_id: "person.a", state: "Work", when: t0 },
+    { entity_id: "person.a", state: "not_home", when: t0 + 600 },
+    // Home all along: no movement.
+    { entity_id: "person.b", state: "home", when: t0 - 3600 },
+  ];
+  const moves = movesFrom(events, { "person.a": "A", "person.b": "B" }, start);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(moves.map((m) => [m.name, m.kind, m.zone]))),
+    [["A", "left_zone", "Work"]]
+  );
+});
+
+test("movements section: folded by default, read from the history once unfolded", async () => {
   const states = { ...HOME, "person.a": person("a", "home") };
   const el = new PresenceCard();
   el._config = {};
@@ -351,7 +368,15 @@ test("movements section: folded by default, read from the logbook once unfolded"
     language: "en",
     callWS: async (msg) => {
       calls.push(msg);
-      return [{ entity_id: "person.a", state: "home", when: Date.now() / 1000 - 60 }];
+      // Compressed history: the start-time state (stamped with the start), then the changes.
+      const start = Date.parse(msg.start_time) / 1000;
+      return {
+        "person.a": [
+          { s: "Work", lu: start },
+          { s: "not_home", lu: Date.now() / 1000 - 600 },
+          { s: "home", lu: Date.now() / 1000 - 60 },
+        ],
+      };
     },
   };
   el._update = () => {};
@@ -362,13 +387,18 @@ test("movements section: folded by default, read from the logbook once unfolded"
   el._movesOpen = true;
   el._render();
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].type, "logbook/get_events");
+  assert.equal(calls[0].type, "history/history_during_period");
   assert.deepEqual([...calls[0].entity_ids], ["person.a"]);
+  assert.equal(calls[0].include_start_time_state, true);
+  assert.equal(calls[0].no_attributes, true);
   await new Promise((r) => setTimeout(r, 0));
   html = el._render();
   assert.match(html, /class="move moved_home"/);
   assert.match(html, /A arrived home/);
-  // Unchanged people: the logbook is not read again.
+  assert.match(html, /A left Work/);
+  assert.doesNotMatch(html, /A left home/);
+  assert.doesNotMatch(html, /A arrived at Work/);
+  // Unchanged people: the history is not read again.
   assert.equal(calls.length, 1);
   assert.doesNotMatch(render(PresenceCard, { show_moves: false }, states), /class="moves-toggle"/);
 });

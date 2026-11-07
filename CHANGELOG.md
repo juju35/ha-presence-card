@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1 - 2026-11-07
+
+### Fixes
+- **Last 24 hours**: a person who was in a zone when the 24 hours began and then left it now shows as "left <zone>", not "left home". The movements are read from the history, with each person's state at the start of the window.
+
 ## 1.6.0 - 2026-11-07
 
 ### What's new
