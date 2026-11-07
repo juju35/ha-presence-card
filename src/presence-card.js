@@ -19,6 +19,8 @@ const ICONS = {
     "M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z",
   distance:
     "M6.5,8.11C5.61,8.11 4.89,7.39 4.89,6.5A1.61,1.61 0 0,1 6.5,4.89C7.39,4.89 8.11,5.61 8.11,6.5V6.5A1.61,1.61 0 0,1 6.5,8.11M6.5,2C4,2 2,4 2,6.5C2,9.87 6.5,14.86 6.5,14.86C6.5,14.86 11,9.87 11,6.5C11,4 9,2 6.5,2M17.5,8.11A1.61,1.61 0 0,1 15.89,6.5C15.89,5.61 16.61,4.89 17.5,4.89C18.39,4.89 19.11,5.61 19.11,6.5A1.61,1.61 0 0,1 17.5,8.11M17.5,2C15,2 13,4 13,6.5C13,9.87 17.5,14.86 17.5,14.86C17.5,14.86 22,9.87 22,6.5C22,4 20,2 17.5,2M17.5,16C16.23,16 15.1,16.8 14.68,18H9.32C8.77,16.44 7.05,15.62 5.5,16.17C3.93,16.72 3.11,18.44 3.66,20C4.22,21.56 5.93,22.38 7.5,21.83C8.35,21.53 9,20.85 9.32,20H14.69C15.24,21.56 16.96,22.38 18.5,21.83C20.08,21.27 20.9,19.56 20.35,18C19.92,16.8 18.78,16 17.5,16V16Z",
+  // mdi:chevron-right, the movements section's fold indicator (turned down when unfolded).
+  chevron: "M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z",
   // mdi:arrow-expand and mdi:arrow-collapse, the mini card's zoom button.
   expand: "M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z",
   collapse: "M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z",
@@ -44,6 +46,13 @@ const STRINGS = {
     unknown_person: "Person not found",
     zoom_in: "Show the full card",
     zoom_out: "Back to the compact view",
+    moves: "Last 24 hours",
+    moved_home: "{name} arrived home",
+    moved_away: "{name} left home",
+    moved_zone: "{name} arrived at {zone}",
+    left_zone: "{name} left {zone}",
+    no_moves: "No movement in the last 24 hours",
+    show_moves: "Show the movements of the last 24 hours",
     // Editor
     entities: "People (all by default)",
     title_option: "Title (optional)",
@@ -79,6 +88,13 @@ const STRINGS = {
     unknown_person: "Personne introuvable",
     zoom_in: "Afficher la carte complète",
     zoom_out: "Revenir à la vue compacte",
+    moves: "Dernières 24 heures",
+    moved_home: "{name} est rentré·e",
+    moved_away: "{name} est parti·e",
+    moved_zone: "{name} est arrivé·e à {zone}",
+    left_zone: "{name} a quitté {zone}",
+    no_moves: "Aucun mouvement ces dernières 24 heures",
+    show_moves: "Afficher les mouvements des dernières 24 heures",
     entities: "Personnes (toutes par défaut)",
     title_option: "Titre (facultatif)",
     sort: "Ordre",
@@ -113,6 +129,13 @@ const STRINGS = {
     unknown_person: "Person nicht gefunden",
     zoom_in: "Vollständige Karte anzeigen",
     zoom_out: "Zurück zur kompakten Ansicht",
+    moves: "Letzte 24 Stunden",
+    moved_home: "{name} ist nach Hause gekommen",
+    moved_away: "{name} hat das Zuhause verlassen",
+    moved_zone: "{name} ist bei {zone} angekommen",
+    left_zone: "{name} hat {zone} verlassen",
+    no_moves: "Keine Bewegung in den letzten 24 Stunden",
+    show_moves: "Bewegungen der letzten 24 Stunden anzeigen",
     entities: "Personen (standardmäßig alle)",
     title_option: "Titel (optional)",
     sort: "Reihenfolge",
@@ -147,6 +170,13 @@ const STRINGS = {
     unknown_person: "Persona no encontrada",
     zoom_in: "Mostrar la tarjeta completa",
     zoom_out: "Volver a la vista compacta",
+    moves: "Últimas 24 horas",
+    moved_home: "{name} llegó a casa",
+    moved_away: "{name} salió de casa",
+    moved_zone: "{name} llegó a {zone}",
+    left_zone: "{name} salió de {zone}",
+    no_moves: "Ningún movimiento en las últimas 24 horas",
+    show_moves: "Mostrar los movimientos de las últimas 24 horas",
     entities: "Personas (todas por defecto)",
     title_option: "Título (opcional)",
     sort: "Orden",
@@ -181,6 +211,13 @@ const STRINGS = {
     unknown_person: "Особа није пронађена",
     zoom_in: "Прикажи целу картицу",
     zoom_out: "Назад на компактни приказ",
+    moves: "Последња 24 сата",
+    moved_home: "{name}: долазак кући",
+    moved_away: "{name}: одлазак од куће",
+    moved_zone: "{name}: долазак у {zone}",
+    left_zone: "{name}: одлазак из {zone}",
+    no_moves: "Нема кретања у последња 24 сата",
+    show_moves: "Прикажи кретања у последња 24 сата",
     // Editor
     entities: "Особе (подразумевано све)",
     title_option: "Наслов (опционо)",
@@ -216,6 +253,13 @@ const STRINGS = {
     unknown_person: "Osoba nije pronađena",
     zoom_in: "Prikaži celu karticu",
     zoom_out: "Nazad na kompaktni prikaz",
+    moves: "Poslednja 24 sata",
+    moved_home: "{name}: dolazak kući",
+    moved_away: "{name}: odlazak od kuće",
+    moved_zone: "{name}: dolazak u {zone}",
+    left_zone: "{name}: odlazak iz {zone}",
+    no_moves: "Nema kretanja u poslednja 24 sata",
+    show_moves: "Prikaži kretanja u poslednja 24 sata",
     // Editor
     entities: "Osobe (podrazumevano sve)",
     title_option: "Naslov (opciono)",
@@ -251,6 +295,13 @@ const STRINGS = {
     unknown_person: "Persona non trovata",
     zoom_in: "Mostra la scheda completa",
     zoom_out: "Torna alla vista compatta",
+    moves: "Ultime 24 ore",
+    moved_home: "{name} è arrivato/a a casa",
+    moved_away: "{name} è uscito/a di casa",
+    moved_zone: "{name} è arrivato/a a {zone}",
+    left_zone: "{name} ha lasciato {zone}",
+    no_moves: "Nessun movimento nelle ultime 24 ore",
+    show_moves: "Mostra i movimenti delle ultime 24 ore",
     // Editor
     entities: "Persone (tutte per impostazione predefinita)",
     title_option: "Titolo (facoltativo)",
@@ -286,6 +337,13 @@ const STRINGS = {
     unknown_person: "Persoon niet gevonden",
     zoom_in: "Volledige kaart tonen",
     zoom_out: "Terug naar de compacte weergave",
+    moves: "Laatste 24 uur",
+    moved_home: "{name} is thuisgekomen",
+    moved_away: "{name} is van huis vertrokken",
+    moved_zone: "{name} is aangekomen bij {zone}",
+    left_zone: "{name} heeft {zone} verlaten",
+    no_moves: "Geen beweging in de laatste 24 uur",
+    show_moves: "Bewegingen van de laatste 24 uur tonen",
     // Editor
     entities: "Personen (standaard allemaal)",
     title_option: "Titel (optioneel)",
@@ -321,6 +379,13 @@ const STRINGS = {
     unknown_person: "Pessoa não encontrada",
     zoom_in: "Mostrar o cartão completo",
     zoom_out: "Voltar à vista compacta",
+    moves: "Últimas 24 horas",
+    moved_home: "{name} chegou a casa",
+    moved_away: "{name} saiu de casa",
+    moved_zone: "{name} chegou a {zone}",
+    left_zone: "{name} saiu de {zone}",
+    no_moves: "Nenhum movimento nas últimas 24 horas",
+    show_moves: "Mostrar os movimentos das últimas 24 horas",
     // Editor
     entities: "Pessoas (todas por predefinição)",
     title_option: "Título (opcional)",
@@ -356,6 +421,13 @@ const STRINGS = {
     unknown_person: "Nie znaleziono osoby",
     zoom_in: "Pokaż pełną kartę",
     zoom_out: "Wróć do widoku kompaktowego",
+    moves: "Ostatnie 24 godziny",
+    moved_home: "{name}: powrót do domu",
+    moved_away: "{name}: wyjście z domu",
+    moved_zone: "{name}: przybycie do {zone}",
+    left_zone: "{name}: wyjście z {zone}",
+    no_moves: "Brak ruchu w ostatnich 24 godzinach",
+    show_moves: "Pokaż ruchy z ostatnich 24 godzin",
     // Editor
     entities: "Osoby (domyślnie wszystkie)",
     title_option: "Tytuł (opcjonalnie)",
@@ -391,6 +463,13 @@ const STRINGS = {
     unknown_person: "Persoana nu a fost găsită",
     zoom_in: "Afișează cardul complet",
     zoom_out: "Înapoi la vizualizarea compactă",
+    moves: "Ultimele 24 de ore",
+    moved_home: "{name} a ajuns acasă",
+    moved_away: "{name} a plecat de acasă",
+    moved_zone: "{name} a ajuns la {zone}",
+    left_zone: "{name} a plecat de la {zone}",
+    no_moves: "Nicio mișcare în ultimele 24 de ore",
+    show_moves: "Afișează mișcările din ultimele 24 de ore",
     // Editor
     entities: "Persoane (implicit toate)",
     title_option: "Titlu (opțional)",
@@ -426,6 +505,13 @@ const STRINGS = {
     unknown_person: "Personen blev ikke fundet",
     zoom_in: "Vis hele kortet",
     zoom_out: "Tilbage til kompakt visning",
+    moves: "Seneste 24 timer",
+    moved_home: "{name} kom hjem",
+    moved_away: "{name} tog hjemmefra",
+    moved_zone: "{name} ankom til {zone}",
+    left_zone: "{name} forlod {zone}",
+    no_moves: "Ingen bevægelse de seneste 24 timer",
+    show_moves: "Vis bevægelserne de seneste 24 timer",
     // Editor
     entities: "Personer (alle som standard)",
     title_option: "Titel (valgfri)",
@@ -461,6 +547,13 @@ const STRINGS = {
     unknown_person: "Personen hittades inte",
     zoom_in: "Visa hela kortet",
     zoom_out: "Tillbaka till kompakt vy",
+    moves: "Senaste 24 timmarna",
+    moved_home: "{name} kom hem",
+    moved_away: "{name} lämnade hemmet",
+    moved_zone: "{name} kom till {zone}",
+    left_zone: "{name} lämnade {zone}",
+    no_moves: "Ingen rörelse de senaste 24 timmarna",
+    show_moves: "Visa rörelserna de senaste 24 timmarna",
     // Editor
     entities: "Personer (alla som standard)",
     title_option: "Rubrik (valfri)",
@@ -496,6 +589,13 @@ const STRINGS = {
     unknown_person: "Лицето не е намерено",
     zoom_in: "Покажи цялата карта",
     zoom_out: "Обратно към компактния изглед",
+    moves: "Последните 24 часа",
+    moved_home: "{name}: прибиране у дома",
+    moved_away: "{name}: излизане от дома",
+    moved_zone: "{name}: пристигане в {zone}",
+    left_zone: "{name}: напускане на {zone}",
+    no_moves: "Няма движение през последните 24 часа",
+    show_moves: "Покажи движенията от последните 24 часа",
     // Editor
     entities: "Хора (по подразбиране всички)",
     title_option: "Заглавие (по избор)",
@@ -531,6 +631,13 @@ const STRINGS = {
     unknown_person: "Человек не найден",
     zoom_in: "Показать полную карточку",
     zoom_out: "Вернуться к компактному виду",
+    moves: "Последние 24 часа",
+    moved_home: "{name}: возвращение домой",
+    moved_away: "{name}: уход из дома",
+    moved_zone: "{name}: прибытие в {zone}",
+    left_zone: "{name}: уход из {zone}",
+    no_moves: "Нет перемещений за последние 24 часа",
+    show_moves: "Показать перемещения за последние 24 часа",
     // Editor
     entities: "Люди (по умолчанию все)",
     title_option: "Заголовок (необязательно)",
@@ -566,6 +673,13 @@ const STRINGS = {
     unknown_person: "Особу не знайдено",
     zoom_in: "Показати повну картку",
     zoom_out: "Повернутися до компактного вигляду",
+    moves: "Останні 24 години",
+    moved_home: "{name}: повернення додому",
+    moved_away: "{name}: вихід з дому",
+    moved_zone: "{name}: прибуття до {zone}",
+    left_zone: "{name}: вихід з {zone}",
+    no_moves: "Немає переміщень за останні 24 години",
+    show_moves: "Показати переміщення за останні 24 години",
     // Editor
     entities: "Люди (за замовчуванням усі)",
     title_option: "Заголовок (необовʼязково)",
@@ -601,6 +715,13 @@ const STRINGS = {
     unknown_person: "A személy nem található",
     zoom_in: "Teljes kártya megjelenítése",
     zoom_out: "Vissza a kompakt nézethez",
+    moves: "Elmúlt 24 óra",
+    moved_home: "{name} hazaért",
+    moved_away: "{name} elment otthonról",
+    moved_zone: "{name} megérkezett ide: {zone}",
+    left_zone: "{name} elhagyta: {zone}",
+    no_moves: "Nem volt mozgás az elmúlt 24 órában",
+    show_moves: "Az elmúlt 24 óra mozgásainak megjelenítése",
     // Editor
     entities: "Személyek (alapértelmezés szerint mind)",
     title_option: "Cím (opcionális)",
@@ -636,6 +757,13 @@ const STRINGS = {
     unknown_person: "Osoba sa nenašla",
     zoom_in: "Zobraziť celú kartu",
     zoom_out: "Späť na kompaktné zobrazenie",
+    moves: "Posledných 24 hodín",
+    moved_home: "{name}: príchod domov",
+    moved_away: "{name}: odchod z domu",
+    moved_zone: "{name}: príchod do {zone}",
+    left_zone: "{name}: odchod z {zone}",
+    no_moves: "Žiadny pohyb za posledných 24 hodín",
+    show_moves: "Zobraziť pohyby za posledných 24 hodín",
     // Editor
     entities: "Osoby (predvolene všetky)",
     title_option: "Názov (voliteľné)",
@@ -671,6 +799,13 @@ const STRINGS = {
     unknown_person: "Osoba nebyla nalezena",
     zoom_in: "Zobrazit celou kartu",
     zoom_out: "Zpět na kompaktní zobrazení",
+    moves: "Posledních 24 hodin",
+    moved_home: "{name}: příchod domů",
+    moved_away: "{name}: odchod z domu",
+    moved_zone: "{name}: příchod do {zone}",
+    left_zone: "{name}: odchod z {zone}",
+    no_moves: "Žádný pohyb za posledních 24 hodin",
+    show_moves: "Zobrazit pohyby za posledních 24 hodin",
     // Editor
     entities: "Lidé (ve výchozím stavu všichni)",
     title_option: "Název (volitelné)",
@@ -706,6 +841,13 @@ const STRINGS = {
     unknown_person: "Oseba ni najdena",
     zoom_in: "Prikaži celotno kartico",
     zoom_out: "Nazaj na strnjen pogled",
+    moves: "Zadnjih 24 ur",
+    moved_home: "{name}: prihod domov",
+    moved_away: "{name}: odhod od doma",
+    moved_zone: "{name}: prihod v {zone}",
+    left_zone: "{name}: odhod iz {zone}",
+    no_moves: "V zadnjih 24 urah ni bilo gibanja",
+    show_moves: "Prikaži gibanja zadnjih 24 ur",
     // Editor
     entities: "Osebe (privzeto vse)",
     title_option: "Naslov (neobvezno)",
@@ -741,6 +883,13 @@ const STRINGS = {
     unknown_person: "Persona nav atrasta",
     zoom_in: "Rādīt pilno karti",
     zoom_out: "Atpakaļ uz kompakto skatu",
+    moves: "Pēdējās 24 stundas",
+    moved_home: "{name}: atgriešanās mājās",
+    moved_away: "{name}: aiziešana no mājām",
+    moved_zone: "{name}: ierašanās {zone}",
+    left_zone: "{name}: aiziešana no {zone}",
+    no_moves: "Pēdējās 24 stundās nav kustību",
+    show_moves: "Rādīt pēdējo 24 stundu kustības",
     // Editor
     entities: "Personas (pēc noklusējuma visas)",
     title_option: "Virsraksts (neobligāts)",
@@ -776,6 +925,13 @@ const STRINGS = {
     unknown_person: "Το άτομο δεν βρέθηκε",
     zoom_in: "Εμφάνιση πλήρους κάρτας",
     zoom_out: "Επιστροφή στη συμπτυγμένη προβολή",
+    moves: "Τελευταίες 24 ώρες",
+    moved_home: "{name}: επιστροφή στο σπίτι",
+    moved_away: "{name}: αναχώρηση από το σπίτι",
+    moved_zone: "{name}: άφιξη σε {zone}",
+    left_zone: "{name}: αναχώρηση από {zone}",
+    no_moves: "Καμία κίνηση τις τελευταίες 24 ώρες",
+    show_moves: "Εμφάνιση των κινήσεων των τελευταίων 24 ωρών",
     // Editor
     entities: "Άτομα (όλα από προεπιλογή)",
     title_option: "Τίτλος (προαιρετικό)",
@@ -959,6 +1115,42 @@ const personInfo = (hass, item, now = Date.now()) => {
     km,
     battery: batteryOf(hass, st),
   };
+};
+
+// Movements of the people from logbook events (oldest first): arrivals at home or in a zone, departures. A
+// person going from a zone straight to "away" left that zone; unknown / unavailable states are skipped.
+const MOVES_MAX = 8;
+const MOVES_HOURS = 24;
+const movesFrom = (events, names) => {
+  const prev = {};
+  const out = [];
+  const whenOf = (ev) => (typeof ev?.when === "number" ? ev.when * 1000 : Date.parse(ev?.when));
+  // Oldest first, whatever order the events came in: each movement is read against the state before it.
+  const sorted = [...(events || [])].sort((a, b) => whenOf(a) - whenOf(b));
+  for (const ev of sorted) {
+    const id = ev?.entity_id;
+    const state = ev?.state;
+    if (!id || !(id in names) || !state || state === "unknown" || state === "unavailable") continue;
+    const before = prev[id];
+    prev[id] = state;
+    if (before === state) continue;
+    const when = whenOf(ev);
+    if (!Number.isFinite(when)) continue;
+    let kind;
+    let zone = "";
+    if (state === "home") kind = "moved_home";
+    else if (state === "not_home") {
+      if (before && before !== "home") {
+        kind = "left_zone";
+        zone = before;
+      } else kind = "moved_away";
+    } else {
+      kind = "moved_zone";
+      zone = state;
+    }
+    out.push({ id, name: names[id], kind, zone, when });
+  }
+  return out.reverse().slice(0, MOVES_MAX);
 };
 
 const sortPeople = (people, sort) => {
@@ -1279,6 +1471,23 @@ const FULL_STYLE = `
   .person .facts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 12px; flex: none; }
   .person .facts span { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
   .person .facts .icon { width: 14px; height: 14px; color: var(--secondary-text-color); }
+  /* Movements of the last 24 hours: folded under the people, chevron right folded and down unfolded. */
+  .moves { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
+  .moves-toggle { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 2px;
+                  font-size: 12px; font-weight: 500; color: var(--secondary-text-color); border-radius: 6px; }
+  .moves-toggle:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 2px; }
+  .moves-toggle .icon { width: 16px; height: 16px; transition: transform .2s ease; }
+  .moves-toggle .icon.open { transform: rotate(90deg); }
+  .mlist { display: flex; flex-direction: column; gap: 2px; }
+  .move { display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 8px; font-size: 12px; cursor: pointer; }
+  .move:hover { background: var(--secondary-background-color, rgba(127,127,127,.08)); }
+  .move .icon { width: 16px; height: 16px; flex: none; color: var(--secondary-text-color); }
+  .move.moved_home .icon { color: var(--pr-home); }
+  .move.moved_zone .icon { color: var(--pr-zone); }
+  .move .mtext { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .move .mtime { flex: none; color: var(--secondary-text-color); font-variant-numeric: tabular-nums; }
+  .move.none { cursor: default; color: var(--secondary-text-color); }
+  @media (prefers-reduced-motion: reduce) { .moves-toggle .icon { transition: none; } }
   .batt { display: inline-flex; align-items: center; gap: 4px; }
   .batt .cell { position: relative; width: 18px; height: 9px; border: 1.5px solid var(--secondary-text-color); border-radius: 2.5px; box-sizing: border-box; }
   .batt .cell::after { content: ""; position: absolute; right: -4px; top: 1.5px; width: 2px; height: 3px; border-radius: 0 1px 1px 0; background: var(--secondary-text-color); }
@@ -1307,8 +1516,94 @@ const FULL_STYLE = `
 `;
 
 class PresenceCard extends PresenceBase {
+  constructor() {
+    super();
+    this._movesOpen = false;
+    this._moves = null;
+    this.shadowRoot.addEventListener("click", (ev) => {
+      if (!ev.composedPath().some((n) => n.classList?.contains("moves-toggle"))) return;
+      this._movesOpen = !this._movesOpen;
+      this._update();
+    });
+    // A click elsewhere folds the movements back, like the other sections of the ha-* cards.
+    this._foldMoves = (ev) => {
+      if (!this._movesOpen || ev.composedPath().includes(this) || inDialog(ev)) return;
+      this._movesOpen = false;
+      this._update();
+    };
+  }
+
   static getConfigElement() {
     return document.createElement("presence-card-editor");
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener("click", this._foldMoves, true);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener("click", this._foldMoves, true);
+  }
+
+  // Reads the logbook of the people when the section is unfolded, and again once one of them has moved since.
+  _loadMoves(people) {
+    if (!this._hass?.callWS) return;
+    const key = people.map((p) => `${p.id}:${this._hass.states[p.id]?.last_changed}`).join("|");
+    if (key === this._movesKey) return;
+    this._movesKey = key;
+    const names = Object.fromEntries(people.map((p) => [p.id, p.name]));
+    const start = new Date(Date.now() - MOVES_HOURS * 3600000).toISOString();
+    Promise.resolve(this._hass.callWS({ type: "logbook/get_events", start_time: start, entity_ids: Object.keys(names) }))
+      .then((events) => {
+        if (this._movesKey !== key) return;
+        this._moves = movesFrom(events, names);
+        this._update();
+      })
+      .catch(() => {
+        // Tried again at the next unfolding or movement.
+        this._movesKey = null;
+      });
+  }
+
+  _time(ms) {
+    const locale = this._hass?.locale?.language || this._hass?.language || "en";
+    const d = new Date(ms);
+    const today = new Date().toDateString() === d.toDateString();
+    try {
+      const time = d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+      return today ? time : `${d.toLocaleDateString(locale, { weekday: "short" })} ${time}`;
+    } catch {
+      return d.toISOString().slice(11, 16);
+    }
+  }
+
+  _movesSection(people) {
+    if (this._config.show_moves === false) return "";
+    const open = this._movesOpen;
+    if (open) this._loadMoves(people);
+    const label = this._t("moves");
+    let body = "";
+    if (open) {
+      const moves = this._moves;
+      body = moves?.length
+        ? moves
+            .map((m) => {
+              const text = this._t(m.kind).replace("{name}", m.name).replace("{zone}", m.zone);
+              const icon = m.kind === "moved_home" ? ICONS.home : m.kind === "moved_zone" ? ICONS.zone : ICONS.away;
+              return `<div class="move ${m.kind}" data-key="move:${esc(m.id)}:${m.when}" role="button" tabindex="0" data-entity="${esc(m.id)}">
+                ${svgIcon(icon)}<span class="mtext">${esc(text)}</span><span class="mtime">${esc(this._time(m.when))}</span></div>`;
+            })
+            .join("")
+        : moves
+          ? `<div class="move none">${esc(this._t("no_moves"))}</div>`
+          : "";
+    }
+    return `<div class="moves" data-key="moves">
+      <button class="moves-toggle" aria-expanded="${open}">${svgIcon(ICONS.chevron, open ? "open" : "")}<span>${esc(label)}</span></button>
+      ${body ? `<div class="mlist">${body}</div>` : ""}
+    </div>`;
   }
 
   static getStubConfig() {
@@ -1333,7 +1628,7 @@ class PresenceCard extends PresenceBase {
     return `<style>${BASE_STYLE}${FULL_STYLE}</style>
       <ha-card>
         ${this._header(people)}
-        <div class="content">${shown.map((p) => this._row(p)).join("")}${this._missing(all)}</div>
+        <div class="content">${shown.map((p) => this._row(p)).join("")}${this._missing(all)}${this._movesSection(people)}</div>
       </ha-card>`;
   }
 
@@ -1646,13 +1941,13 @@ class PresenceEditorBase extends HTMLElement {
 
 class PresenceCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_since", "show_distance", "show_battery", "show_away"];
+    return ["show_since", "show_distance", "show_battery", "show_away", "show_moves"];
   }
 }
 
 class PresenceMiniCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_away", "show_since", "show_distance", "show_battery", "zoom"];
+    return ["show_away", "show_since", "show_distance", "show_battery", "show_moves", "zoom"];
   }
 }
 
