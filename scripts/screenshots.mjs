@@ -51,21 +51,21 @@ const shots = [
   { file: "mini-card-dark", type: "presence-mini-card", theme: "dark", width: 380, config: {} },
   { file: "mini-card-zoom", type: "presence-mini-card", theme: "light", width: 460, config: {}, zoom: true },
   { file: "mini-card-zoom-dark", type: "presence-mini-card", theme: "dark", width: 460, config: {}, zoom: true },
-  // The movements of the last 24 hours unfolded (logbook events of the mock people).
+  // The movements of the last 24 hours unfolded (history of the mock people).
   { file: "card-moves", type: "presence-card", theme: "light", width: 460, config: {}, moves: true },
   { file: "card-moves-dark", type: "presence-card", theme: "dark", width: 460, config: {}, moves: true },
 ];
 
-// Logbook events behind the movements screenshot, seconds before NOW (oldest first).
-const MOVES = [
-  ["person.robin", "home", 22 * 3600],
-  ["person.sam", "home", 9 * 3600],
-  ["person.sam", "not_home", 4 * 3600 + 1200],
-  ["person.sam", "Work", 245 * 60],
-  ["person.alex", "home", 192 * 60],
-  ["person.charlie", "home", 6 * 3600],
-  ["person.charlie", "not_home", 47 * 60],
-].map(([entity_id, state, ago]) => ({ entity_id, state, when: NOW / 1000 - ago }));
+// History behind the movements screenshot (history/history_during_period, compressed): the state of each
+// mock person when the 24 h window opens, then their changes, seconds before NOW (oldest first).
+const MOVES = Object.fromEntries(
+  Object.entries({
+    "person.robin": [["not_home", 24 * 3600], ["home", 22 * 3600]],
+    "person.sam": [["not_home", 24 * 3600], ["home", 9 * 3600], ["not_home", 4 * 3600 + 1200], ["Work", 245 * 60]],
+    "person.alex": [["not_home", 24 * 3600], ["home", 192 * 60]],
+    "person.charlie": [["not_home", 24 * 3600], ["home", 6 * 3600], ["not_home", 47 * 60]],
+  }).map(([id, rows]) => [id, rows.map(([s, ago]) => ({ s, lu: NOW / 1000 - ago }))])
+);
 
 const browser = await chromium.launch(
   process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}
@@ -124,7 +124,7 @@ for (const s of shots) {
         locale: { language: "en" },
         themes: { darkMode: dark },
         config: { unit_system: { length: "km" } },
-        callWS: async () => moves || [],
+        callWS: async () => moves || {},
       };
       document.getElementById("root").appendChild(el);
       if (moves) el.shadowRoot.querySelector(".moves-toggle").dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 1 }));

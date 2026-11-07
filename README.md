@@ -31,7 +31,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 - Phone battery, found automatically: battery sensor of the tracker's device (Companion app) or the tracker's battery attribute; orange at 40 %, red at 20 %
 - Header summary: "2 of 4 at home", "Everyone is home", "Nobody home"
 - People at home first, by name, or as listed
-- **Last 24 hours**: a folded section under the people with their movements of the day — arrivals home, departures, arrivals in and departures from a zone, with the time — read from the logbook when unfolded; it folds back on a click elsewhere
+- **Last 24 hours**: a folded section under the people with their movements of the day — arrivals home, departures, arrivals in and departures from a zone, with the time — read from the history when unfolded; it folds back on a click elsewhere
 - Click a person or a battery to open its more-info dialog
 - Visual editor in the dashboard UI for both cards (no YAML needed)
 - Light and dark mode, English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek
@@ -124,7 +124,7 @@ language: fr
 | `show_distance` | both | `true` | Distance from home for people away |
 | `show_battery` | both | `true` | Phone battery |
 | `show_away` | both | `true` | Show the people away (`false` keeps only people at home or in a zone) |
-| `show_moves` | both | `true` | Folded **Last 24 hours** section with the arrivals and departures from the logbook (`false` removes it) |
+| `show_moves` | both | `true` | Folded **Last 24 hours** section with the arrivals and departures from the history (`false` removes it) |
 | `zoom` | mini | `true` | Zoom button at the top right: switches to the full card and back (`false` removes it) |
 | `language` | both | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings; `pt-BR` uses `pt`) |
 

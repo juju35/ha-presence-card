@@ -1117,11 +1117,13 @@ const personInfo = (hass, item, now = Date.now()) => {
   };
 };
 
-// Movements of the people from logbook events (oldest first): arrivals at home or in a zone, departures. A
+// Movements of the people from their state changes (any order): arrivals at home or in a zone, departures. A
 // person going from a zone straight to "away" left that zone; unknown / unavailable states are skipped.
+// Events at or before `start` (the state each person was in when the window opened) are not movements
+// themselves, only what the first movement is read against: leaving Work early in the window is "left Work".
 const MOVES_MAX = 8;
 const MOVES_HOURS = 24;
-const movesFrom = (events, names) => {
+const movesFrom = (events, names, start = Number.NEGATIVE_INFINITY) => {
   const prev = {};
   const out = [];
   const whenOf = (ev) => (typeof ev?.when === "number" ? ev.when * 1000 : Date.parse(ev?.when));
@@ -1131,11 +1133,11 @@ const movesFrom = (events, names) => {
     const id = ev?.entity_id;
     const state = ev?.state;
     if (!id || !(id in names) || !state || state === "unknown" || state === "unavailable") continue;
-    const before = prev[id];
-    prev[id] = state;
-    if (before === state) continue;
     const when = whenOf(ev);
     if (!Number.isFinite(when)) continue;
+    const before = prev[id];
+    prev[id] = state;
+    if (before === state || when <= start) continue;
     let kind;
     let zone = "";
     if (state === "home") kind = "moved_home";
@@ -1152,6 +1154,13 @@ const movesFrom = (events, names) => {
   }
   return out.reverse().slice(0, MOVES_MAX);
 };
+
+// The answer of history/history_during_period (compressed: {entity: [{s, lu, lc?}]}, times in seconds) as
+// the events movesFrom reads.
+const historyEvents = (history) =>
+  Object.entries(history || {}).flatMap(([entity_id, rows]) =>
+    (Array.isArray(rows) ? rows : []).map((r) => ({ entity_id, state: r?.s, when: r?.lc ?? r?.lu }))
+  );
 
 const sortPeople = (people, sort) => {
   const pos = new Map(people.map((p, i) => [p.id, i]));
@@ -1547,18 +1556,30 @@ class PresenceCard extends PresenceBase {
     document.removeEventListener("click", this._foldMoves, true);
   }
 
-  // Reads the logbook of the people when the section is unfolded, and again once one of them has moved since.
+  // Reads the history of the people when the section is unfolded, and again once one of them has moved since:
+  // their state changes of the window plus the state each was in when it opened (one call for all of them).
   _loadMoves(people) {
     if (!this._hass?.callWS) return;
     const key = people.map((p) => `${p.id}:${this._hass.states[p.id]?.last_changed}`).join("|");
     if (key === this._movesKey) return;
     this._movesKey = key;
     const names = Object.fromEntries(people.map((p) => [p.id, p.name]));
-    const start = new Date(Date.now() - MOVES_HOURS * 3600000).toISOString();
-    Promise.resolve(this._hass.callWS({ type: "logbook/get_events", start_time: start, entity_ids: Object.keys(names) }))
-      .then((events) => {
+    const start = Date.now() - MOVES_HOURS * 3600000;
+    Promise.resolve(
+      this._hass.callWS({
+        type: "history/history_during_period",
+        start_time: new Date(start).toISOString(),
+        entity_ids: Object.keys(names),
+        include_start_time_state: true,
+        significant_changes_only: true,
+        minimal_response: true,
+        no_attributes: true,
+      })
+    )
+      .then((history) => {
         if (this._movesKey !== key) return;
-        this._moves = movesFrom(events, names);
+        // A second of slack: the start-time states come back stamped with the start, as float seconds.
+        this._moves = movesFrom(historyEvents(history), names, start + 1000);
         this._update();
       })
       .catch(() => {
