@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { load } from "./load.mjs";
 
-const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, lang, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS, movesFrom } =
+const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, lang, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS, movesFrom, proximityOf, distanceKm } =
   load("presence-card.js", [
+    "proximityOf",
+    "distanceKm",
     "personInfo",
     "sortPeople",
     "fmtDuration",
@@ -401,4 +403,120 @@ test("movements section: folded by default, read from the history once unfolded"
   // Unchanged people: the history is not read again.
   assert.equal(calls.length, 1);
   assert.doesNotMatch(render(PresenceCard, { show_moves: false }, states), /class="moves-toggle"/);
+});
+
+// Proximity sensors as the core integration creates them: one pair per tracked person and proximity entry.
+const prox = (id, state, attributes = {}) => ({ entity_id: id, state, attributes });
+
+test("proximity: sensors found in the entity registry by platform and translation key, whatever their language", () => {
+  const states = {
+    ...HOME,
+    "person.alex": person("alex", "not_home", { friendly_name: "Alex", latitude: 48.2154, longitude: -1.5622 }),
+    "person.jean": person("jean", "not_home", { friendly_name: "Jean-Pierre" }),
+    "sensor.maison_alex_direction_de_deplacement": prox("sensor.maison_alex_direction_de_deplacement", "towards"),
+    "sensor.maison_alex_distance": prox("sensor.maison_alex_distance", "2.5", { unit_of_measurement: "km" }),
+    "sensor.maison_jean_pierre_direction_de_deplacement": prox("sensor.maison_jean_pierre_direction_de_deplacement", "away_from"),
+    "sensor.maison_plus_proche_direction": prox("sensor.maison_plus_proche_direction", "towards"),
+  };
+  const entities = {
+    "sensor.maison_alex_direction_de_deplacement": { platform: "proximity", translation_key: "dir_of_travel", device_id: "p1" },
+    "sensor.maison_alex_distance": { platform: "proximity", translation_key: "dist_to_zone", device_id: "p1" },
+    "sensor.maison_jean_pierre_direction_de_deplacement": { platform: "proximity", translation_key: "dir_of_travel", device_id: "p1" },
+    // The "nearest" sensors of the entry are not a person's.
+    "sensor.maison_plus_proche_direction": { platform: "proximity", translation_key: "nearest_dir_of_travel", device_id: "p1" },
+  };
+  const hass = { states, entities };
+  assert.deepEqual(
+    { ...proximityOf(hass, { entity: "person.alex" }) },
+    { direction: "sensor.maison_alex_direction_de_deplacement", distance: "sensor.maison_alex_distance" }
+  );
+  // Matched by the person's name when its id differs.
+  assert.equal(proximityOf(hass, { entity: "person.jean" }).direction, "sensor.maison_jean_pierre_direction_de_deplacement");
+  const p = personInfo(hass, { entity: "person.alex" }, NOW);
+  assert.equal(p.direction, "towards");
+  // The Proximity distance comes before the one computed from the coordinates.
+  assert.equal(p.km, 2.5);
+  // At home: neither direction nor distance.
+  const home = personInfo({ ...hass, states: { ...states, "person.alex": person("alex", "home") } }, { entity: "person.alex" }, NOW);
+  assert.equal(home.direction, null);
+  assert.equal(home.km, null);
+});
+
+test("proximity: without registry, the English entity ids; a proximity named after a person keeps each one's sensors", () => {
+  const states = {
+    "person.alex": person("alex", "not_home"),
+    "person.sam": person("sam", "Work"),
+    "sensor.alex_alex_direction_of_travel": prox("sensor.alex_alex_direction_of_travel", "stationary"),
+    "sensor.alex_alex_distance": prox("sensor.alex_alex_distance", "1200", { unit_of_measurement: "m" }),
+    "sensor.alex_sam_direction_of_travel": prox("sensor.alex_sam_direction_of_travel", "away_from"),
+    "sensor.alex_sam_distance": prox("sensor.alex_sam_distance", "3", { unit_of_measurement: "mi" }),
+    // A distance sensor of another integration is not a Proximity one.
+    "sensor.car_alex_distance": prox("sensor.car_alex_distance", "99"),
+  };
+  assert.deepEqual(
+    { ...proximityOf({ states }, { entity: "person.alex" }) },
+    { direction: "sensor.alex_alex_direction_of_travel", distance: "sensor.alex_alex_distance" }
+  );
+  assert.deepEqual(
+    { ...proximityOf({ states }, { entity: "person.sam" }) },
+    { direction: "sensor.alex_sam_direction_of_travel", distance: "sensor.alex_sam_distance" }
+  );
+  assert.equal(personInfo({ states }, { entity: "person.alex" }, NOW).km, 1.2);
+  const sam = personInfo({ states }, { entity: "person.sam" }, NOW);
+  assert.equal(sam.direction, "away_from");
+  assert.ok(Math.abs(sam.km - 4.828032) < 1e-9);
+  // No sensor for that person.
+  assert.equal(proximityOf({ states }, { entity: "person.robin" }), null);
+});
+
+test("proximity: sensors set in the configuration, unknown states ignored, distances converted to km", () => {
+  const states = {
+    ...HOME,
+    "person.a": person("a", "not_home", { latitude: 48.2154, longitude: -1.5622 }),
+    "sensor.my_dir": prox("sensor.my_dir", "arrived"),
+    "sensor.my_dist": prox("sensor.my_dist", "unknown", { unit_of_measurement: "m" }),
+  };
+  const item = { entity: "person.a", proximity_direction: "sensor.my_dir", proximity_distance: "sensor.my_dist" };
+  assert.deepEqual({ ...proximityOf({ states }, item) }, { direction: "sensor.my_dir", distance: "sensor.my_dist" });
+  const p = personInfo({ states }, item, NOW);
+  // "arrived" and "unknown" show nothing; an unknown distance falls back to the coordinates.
+  assert.equal(p.direction, null);
+  assert.ok(p.km > 13 && p.km < 14);
+  assert.equal(distanceKm(prox("x", "500", { unit_of_measurement: "m" })), 0.5);
+  assert.equal(distanceKm(prox("x", "500")), 0.5);
+  assert.equal(distanceKm(prox("x", "1", { unit_of_measurement: "parsec" })), null);
+});
+
+test("proximity: direction icon and label in the row and the mini card's face, show_direction: false hides it", () => {
+  const states = {
+    ...HOME,
+    "person.alex": person("alex", "not_home"),
+    "sensor.home_alex_direction_of_travel": prox("sensor.home_alex_direction_of_travel", "towards"),
+    "sensor.home_alex_distance": prox("sensor.home_alex_distance", "3400", { unit_of_measurement: "m" }),
+  };
+  const html = render(PresenceCard, {}, states);
+  assert.match(html, /class="dir towards" title="Arriving · from home"><svg class="icon" viewBox="0 0 24 24" role="img" aria-label="Arriving">/);
+  assert.match(html, /3\.4 km<\/span>/);
+  // Distance hidden: the direction keeps its label.
+  assert.match(render(PresenceCard, { show_distance: false }, states), /class="dir towards" title="Arriving">[\s\S]*?<\/svg>Arriving<\/span>/);
+  const off = render(PresenceCard, { show_direction: false }, states);
+  assert.doesNotMatch(off, /class="dir /);
+  assert.match(off, /class="dist" title="from home">/);
+  assert.match(render(PresenceMiniCard, {}, states), /title="Alex · Away · Arriving"/);
+  assert.match(render(PresenceMiniCard, { show_direction: false }, states), /title="Alex · Away"/);
+  // Every direction is translated in every language.
+  for (const l of Object.keys(STRINGS)) for (const d of ["towards", "away_from", "stationary"]) assert.ok(STRINGS[l][`dir_${d}`], `${l}.dir_${d}`);
+});
+
+test("proximity: a change of direction re-renders the card", () => {
+  const states = {
+    "person.alex": person("alex", "not_home"),
+    "sensor.home_alex_direction_of_travel": prox("sensor.home_alex_direction_of_travel", "towards"),
+  };
+  const el = new PresenceCard();
+  el._config = { show_since: false };
+  el._hass = { states, language: "en" };
+  const before = el._signature();
+  el._hass = { states: { ...states, "sensor.home_alex_direction_of_travel": prox("sensor.home_alex_direction_of_travel", "away_from") }, language: "en" };
+  assert.notDeepEqual(el._signature(), before);
 });

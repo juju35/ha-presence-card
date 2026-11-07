@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.0 - 2026-11-07
+
+### What's new
+- **Proximity**: for a person away who has sensors of the core Proximity integration, the row shows the direction of travel (arriving, leaving or stationary) as an icon next to the distance, which then comes from the Proximity sensor.
+- The Proximity sensors are found automatically in the entity registry (any language), or set per person with `proximity_direction` and `proximity_distance`.
+- `show_direction: false` (visual editor) hides the direction of travel; the mini card adds it to each avatar's tooltip. Translated in the 22 languages.
+
 ## 1.6.1 - 2026-11-07
 
 ### Fixes
