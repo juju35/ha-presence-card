@@ -1067,6 +1067,19 @@ const lang = (hass, config) => {
   return STRINGS[l] ? l : STRINGS[l.split("-")[0]] ? l.split("-")[0] : "en";
 };
 
+// The locale for dates and times: the card's language when one is set, else Home Assistant's.
+const intlLang = (hass, config) => config?.language || hass?.locale?.language || hass?.language || "en";
+
+// 12 / 24 h clock from the Home Assistant profile (time_format): "12", "24", "system" (the browser's own
+// locale) or "language" (the locale's default: undefined).
+const hour12Of = (hass) => {
+  const tf = hass?.locale?.time_format;
+  if (tf === "12") return true;
+  if (tf === "24") return false;
+  if (tf === "system") return new Intl.DateTimeFormat(undefined, { hour: "numeric" }).resolvedOptions().hour12;
+  return undefined;
+};
+
 const t = (hass, config, key) => STRINGS[lang(hass, config)][key] ?? STRINGS.en[key] ?? key;
 
 const svgIcon = (path, cls = "") => `<svg class="icon ${cls}" viewBox="0 0 24 24"><path d="${path}"/></svg>`;
@@ -1119,7 +1132,7 @@ const avatarColor = (id) => {
 
 // Card logo: a house sheltering two people, drawn in the accent color on a round tinted badge like the other
 // ha-* cards.
-const logo = () => `<div class="logo"><svg class="icon" viewBox="6 6 36 36" role="img" aria-label="Presence">
+const logo = (label) => `<div class="logo"><svg class="icon" viewBox="6 6 36 36" role="img" aria-label="${esc(label)}">
   <path d="M24 9 8 22.5h4.5V38h23V22.5H40Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
   <circle cx="19.5" cy="25" r="3.2"/><path d="M13.5 37c0-4 2.7-6.6 6-6.6s6 2.6 6 6.6Z"/>
   <circle cx="29" cy="26.5" r="2.7" opacity=".85"/><path d="M24.6 37c0-3.3 2-5.4 4.4-5.4s4.4 2.1 4.4 5.4Z" opacity=".85"/>
@@ -1260,11 +1273,13 @@ const personInfo = (hass, item, now = Date.now()) => {
   const a = st.attributes || {};
   const homeZone = hass.states["zone.home"]?.attributes;
   let km = null;
-  if (kind !== "home" && Number.isFinite(a.latitude) && Number.isFinite(a.longitude) && homeZone) {
+  // Unknown / unavailable: the last GPS fix and the Proximity sensors are stale, no distance or direction.
+  const located = kind === "away" || kind === "zone";
+  if (located && Number.isFinite(a.latitude) && Number.isFinite(a.longitude) && homeZone) {
     km = haversine(a.latitude, a.longitude, homeZone.latitude, homeZone.longitude);
   }
   // Proximity sensors, when the person has some: their direction of travel, and their distance first.
-  const prox = kind === "home" ? null : proximityOf(hass, item);
+  const prox = located ? proximityOf(hass, item) : null;
   const dir = prox?.direction ? hass.states[prox.direction]?.state : null;
   const proxKm = prox?.distance ? distanceKm(hass.states[prox.distance]) : null;
   if (proxKm !== null) km = proxKm;
@@ -1528,8 +1543,10 @@ class PresenceBase extends HTMLElement {
   // people, their trackers, their battery sensors and the home zone.
   _signature() {
     const h = this._hass;
-    const sig = [h.language, h.locale?.language, h.themes?.darkMode, h.config?.unit_system?.length, h.entities, h.states["zone.home"]];
+    const sig = [h.language, h.locale?.language, h.locale?.time_format, h.themes?.darkMode, h.config?.unit_system?.length, h.entities, h.states["zone.home"]];
     if (this._config.show_since !== false) sig.push(Math.floor(Date.now() / 60000));
+    // Unfolded movements: dropped once older than 24 hours, read again each hour.
+    if (this._movesOpen) sig.push(Math.floor(Date.now() / 60000));
     for (const item of this._items()) {
       const st = h.states[item.entity];
       sig.push(item.entity, st);
@@ -1572,7 +1589,7 @@ class PresenceBase extends HTMLElement {
     const { n, text } = this._summary(people);
     return `
       <div class="header">
-        ${logo()}
+        ${logo(this._t("title"))}
         <div class="titles">
           <div class="name">${esc(this._config.title || this._t("title"))}</div>
           <div class="sub">${esc(text)}</div>
@@ -1733,7 +1750,9 @@ class PresenceCard extends PresenceBase {
   // their state changes of the window plus the state each was in when it opened (one call for all of them).
   _loadMoves(people) {
     if (!this._hass?.callWS) return;
-    const key = people.map((p) => `${p.id}:${this._hass.states[p.id]?.last_changed}`).join("|");
+    // Read again each hour too, so the window keeps sliding when nobody moves.
+    const hour = Math.floor(Date.now() / 3600000);
+    const key = `${hour}|${people.map((p) => `${p.id}:${this._hass.states[p.id]?.last_changed}`).join("|")}`;
     if (key === this._movesKey) return;
     this._movesKey = key;
     const names = Object.fromEntries(people.map((p) => [p.id, p.name]));
@@ -1762,11 +1781,12 @@ class PresenceCard extends PresenceBase {
   }
 
   _time(ms) {
-    const locale = this._hass?.locale?.language || this._hass?.language || "en";
+    const locale = intlLang(this._hass, this._config);
+    const hour12 = hour12Of(this._hass);
     const d = new Date(ms);
     const today = new Date().toDateString() === d.toDateString();
     try {
-      const time = d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+      const time = d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", ...(hour12 === undefined ? {} : { hour12 }) });
       return today ? time : `${d.toLocaleDateString(locale, { weekday: "short" })} ${time}`;
     } catch {
       return d.toISOString().slice(11, 16);
@@ -1780,7 +1800,9 @@ class PresenceCard extends PresenceBase {
     const label = this._t("moves");
     let body = "";
     if (open) {
-      const moves = this._moves;
+      // Only the last 24 hours, even before the history is read again.
+      const since = Date.now() - MOVES_HOURS * 3600000;
+      const moves = this._moves?.filter((m) => m.when >= since);
       body = moves?.length
         ? moves
             .map((m) => {
@@ -2014,7 +2036,7 @@ class PresenceMiniCard extends PresenceCard {
       <ha-card>
         <div class="mini${this._inline ? " row" : ""}${this._tight ? " tight" : ""}">
           <div class="header">
-            ${logo()}
+            ${logo(this._t("title"))}
             <div class="titles">
               <div class="name"><span>${esc(c.title || this._t("title"))}</span></div>
               <div class="sub"><span class="st ${n ? "home" : "away"}"><span class="dot"></span>${esc(text)}</span></div>
