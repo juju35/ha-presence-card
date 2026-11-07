@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { load } from "./load.mjs";
 
-const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, lang, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS } =
+const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, lang, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS, movesFrom } =
   load("presence-card.js", [
     "personInfo",
     "sortPeople",
@@ -16,6 +16,7 @@ const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, 
     "PresenceMiniCard",
     "PresenceCardEditor",
     "STRINGS",
+    "movesFrom",
   ]);
 
 const NOW = Date.parse("2026-10-25T12:00:00Z");
@@ -311,4 +312,63 @@ test("editor offers every language, after Serbian, with its native name", () => 
   );
   assert.equal(options[0].label, STRINGS.pl.lang_auto);
   for (const o of options.slice(1)) assert.ok(STRINGS[o.value], `no dictionary for ${o.value}`);
+});
+
+
+test("movements: arrivals, departures and zones from the logbook, newest first", () => {
+  const t0 = Date.parse("2026-10-25T07:00:00Z") / 1000;
+  const events = [
+    { entity_id: "person.a", state: "home", when: t0 },
+    { entity_id: "person.a", state: "not_home", when: t0 + 600 },
+    { entity_id: "person.a", state: "Work", when: t0 + 1800 },
+    { entity_id: "person.a", state: "unavailable", when: t0 + 2000 },
+    { entity_id: "person.a", state: "not_home", when: t0 + 30000 },
+    { entity_id: "person.b", state: "home", when: t0 + 31000 },
+    { entity_id: "person.b", state: "home", when: t0 + 32000 },
+    { entity_id: "light.x", state: "on", when: t0 + 33000 },
+  ];
+  const moves = movesFrom(events, { "person.a": "A", "person.b": "B" });
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(moves.map((m) => [m.name, m.kind, m.zone]))),
+    [
+      ["B", "moved_home", ""],
+      ["A", "left_zone", "Work"],
+      ["A", "moved_zone", "Work"],
+      ["A", "moved_away", ""],
+      ["A", "moved_home", ""],
+    ]
+  );
+  assert.equal(moves[0].when, (t0 + 31000) * 1000);
+});
+
+test("movements section: folded by default, read from the logbook once unfolded", async () => {
+  const states = { ...HOME, "person.a": person("a", "home") };
+  const el = new PresenceCard();
+  el._config = {};
+  const calls = [];
+  el._hass = {
+    states,
+    language: "en",
+    callWS: async (msg) => {
+      calls.push(msg);
+      return [{ entity_id: "person.a", state: "home", when: Date.now() / 1000 - 60 }];
+    },
+  };
+  el._update = () => {};
+  let html = el._render();
+  assert.match(html, /class="moves-toggle" aria-expanded="false"/);
+  assert.doesNotMatch(html, /class="mlist"/);
+  assert.equal(calls.length, 0);
+  el._movesOpen = true;
+  el._render();
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].type, "logbook/get_events");
+  assert.deepEqual([...calls[0].entity_ids], ["person.a"]);
+  await new Promise((r) => setTimeout(r, 0));
+  html = el._render();
+  assert.match(html, /class="move moved_home"/);
+  assert.match(html, /A arrived home/);
+  // Unchanged people: the logbook is not read again.
+  assert.equal(calls.length, 1);
+  assert.doesNotMatch(render(PresenceCard, { show_moves: false }, states), /class="moves-toggle"/);
 });

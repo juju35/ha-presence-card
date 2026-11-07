@@ -31,6 +31,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 - Phone battery, found automatically: battery sensor of the tracker's device (Companion app) or the tracker's battery attribute; orange at 40 %, red at 20 %
 - Header summary: "2 of 4 at home", "Everyone is home", "Nobody home"
 - People at home first, by name, or as listed
+- **Last 24 hours**: a folded section under the people with their movements of the day — arrivals home, departures, arrivals in and departures from a zone, with the time — read from the logbook when unfolded; it folds back on a click elsewhere
 - Click a person or a battery to open its more-info dialog
 - Visual editor in the dashboard UI for both cards (no YAML needed)
 - Light and dark mode, English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek
@@ -123,10 +124,11 @@ language: fr
 | `show_distance` | both | `true` | Distance from home for people away |
 | `show_battery` | both | `true` | Phone battery |
 | `show_away` | both | `true` | Show the people away (`false` keeps only people at home or in a zone) |
+| `show_moves` | both | `true` | Folded **Last 24 hours** section with the arrivals and departures from the logbook (`false` removes it) |
 | `zoom` | mini | `true` | Zoom button at the top right: switches to the full card and back (`false` removes it) |
 | `language` | both | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings; `pt-BR` uses `pt`) |
 
-`show_since`, `show_distance` and `show_battery` apply to the mini card once zoomed in.
+`show_since`, `show_distance`, `show_battery` and `show_moves` apply to the mini card once zoomed in.
 
 Note for the sections view: Lovelace sizes the cell when the dashboard loads and offers no way for a card to ask for a resize afterwards, so the zoomed-in mini card keeps the compact card's cell and simply grows taller inside it.
 
@@ -137,6 +139,7 @@ Note for the sections view: Lovelace sizes the cell when the dashboard loads and
 | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card.png" alt="card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card-dark.png" alt="card dark" width="400"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card.png" alt="mini card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-dark.png" alt="mini card dark" width="400"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-zoom.png" alt="mini card zoomed in" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/mini-card-zoom-dark.png" alt="mini card zoomed in dark" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card-moves.png" alt="card with the last 24 hours unfolded" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card-moves-dark.png" alt="card with the last 24 hours unfolded, dark" width="400"> |
 
 ## How it works
 

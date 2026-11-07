@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0 - 2026-11-07
+
+### What's new
+- **Last 24 hours**: a folded section under the people of the full card (and of the mini card zoomed in) lists their movements — arrived home, left home, arrived at a zone, left a zone — newest first with the time (the day for yesterday's), read from the logbook when unfolded and again once someone moves. Chevron right folded, down unfolded, folds back on a click elsewhere; a click on a movement opens the person. `show_moves: false` (visual editor) removes it. Translated in the 22 languages.
+
 ## 1.5.10 - 2026-11-04
 
 ### Documentation

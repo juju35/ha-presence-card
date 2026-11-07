@@ -51,7 +51,21 @@ const shots = [
   { file: "mini-card-dark", type: "presence-mini-card", theme: "dark", width: 380, config: {} },
   { file: "mini-card-zoom", type: "presence-mini-card", theme: "light", width: 460, config: {}, zoom: true },
   { file: "mini-card-zoom-dark", type: "presence-mini-card", theme: "dark", width: 460, config: {}, zoom: true },
+  // The movements of the last 24 hours unfolded (logbook events of the mock people).
+  { file: "card-moves", type: "presence-card", theme: "light", width: 460, config: {}, moves: true },
+  { file: "card-moves-dark", type: "presence-card", theme: "dark", width: 460, config: {}, moves: true },
 ];
+
+// Logbook events behind the movements screenshot, seconds before NOW (oldest first).
+const MOVES = [
+  ["person.robin", "home", 22 * 3600],
+  ["person.sam", "home", 9 * 3600],
+  ["person.sam", "not_home", 4 * 3600 + 1200],
+  ["person.sam", "Work", 245 * 60],
+  ["person.alex", "home", 192 * 60],
+  ["person.charlie", "home", 6 * 3600],
+  ["person.charlie", "not_home", 47 * 60],
+].map(([entity_id, state, ago]) => ({ entity_id, state, when: NOW / 1000 - ago }));
 
 const browser = await chromium.launch(
   process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}
@@ -101,18 +115,26 @@ for (const s of shots) {
   await page.addScriptTag({ content: HA_CARD });
   await page.addScriptTag({ content: cardJs });
   await page.evaluate(
-    ({ type, config, states, dark, zoom }) => {
+    ({ type, config, states, dark, zoom, moves }) => {
       const el = document.createElement(type);
       el.setConfig({ type: `custom:${type}`, ...config });
-      el.hass = { states, language: "en", locale: { language: "en" }, themes: { darkMode: dark }, config: { unit_system: { length: "km" } } };
+      el.hass = {
+        states,
+        language: "en",
+        locale: { language: "en" },
+        themes: { darkMode: dark },
+        config: { unit_system: { length: "km" } },
+        callWS: async () => moves || [],
+      };
       document.getElementById("root").appendChild(el);
+      if (moves) el.shadowRoot.querySelector(".moves-toggle").dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 1 }));
       // A mouse click (detail 1) on the zoom button: the zoomed-in view, without a keyboard focus ring.
       if (zoom)
         el.shadowRoot
           .querySelector(".zoom")
           .dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 1 }));
     },
-    { type: s.type, config: s.config, states, dark: s.theme === "dark", zoom: !!s.zoom }
+    { type: s.type, config: s.config, states, dark: s.theme === "dark", zoom: !!s.zoom, moves: s.moves ? MOVES : null }
   );
   // Deterministic render signal instead of a fixed wait: fonts loaded, then two frame pairs so the
   // mini card's ResizeObserver `_fit` pass (which can re-render once) has settled before the capture.
