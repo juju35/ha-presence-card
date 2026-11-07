@@ -24,6 +24,11 @@ const ICONS = {
   // mdi:arrow-expand and mdi:arrow-collapse, the mini card's zoom button.
   expand: "M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z",
   collapse: "M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z",
+  // mdi:home-import-outline, mdi:home-export-outline and mdi:pause-circle-outline: the Proximity direction of travel.
+  towards: "M15 13L11 17V14H2V12H11V9L15 13M5 20V16H7V18H17V10.19L12 5.69L7.21 10H4.22L12 3L22 12H19V20H5Z",
+  away_from: "M24 13L20 17V14H11V12H20V9L24 13M4 20V12H1L11 3L18 9.3V10H15.79L11 5.69L6 10.19V18H16V16H18V20H4Z",
+  stationary:
+    "M13,16V8H15V16H13M9,16V8H11V16H9M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z",
 };
 
 const STRINGS = {
@@ -53,6 +58,9 @@ const STRINGS = {
     left_zone: "{name} left {zone}",
     no_moves: "No movement in the last 24 hours",
     show_moves: "Show the movements of the last 24 hours",
+    dir_towards: "Arriving",
+    dir_away_from: "Leaving",
+    dir_stationary: "Stationary",
     // Editor
     entities: "People (all by default)",
     title_option: "Title (optional)",
@@ -62,6 +70,7 @@ const STRINGS = {
     sort_config: "As listed",
     show_since: "Show since when",
     show_distance: "Show distance from home",
+    show_direction: "Show direction of travel (Proximity)",
     show_battery: "Show phone battery",
     show_away: "Show people away",
     zoom: "Zoom button",
@@ -95,6 +104,9 @@ const STRINGS = {
     left_zone: "{name} a quitté {zone}",
     no_moves: "Aucun mouvement ces dernières 24 heures",
     show_moves: "Afficher les mouvements des dernières 24 heures",
+    dir_towards: "En approche",
+    dir_away_from: "S'éloigne",
+    dir_stationary: "Immobile",
     entities: "Personnes (toutes par défaut)",
     title_option: "Titre (facultatif)",
     sort: "Ordre",
@@ -103,6 +115,7 @@ const STRINGS = {
     sort_config: "Dans l'ordre de la liste",
     show_since: "Afficher depuis quand",
     show_distance: "Afficher la distance de la maison",
+    show_direction: "Afficher le sens de déplacement (Proximité)",
     show_battery: "Afficher la batterie du téléphone",
     show_away: "Afficher les absents",
     zoom: "Bouton zoom",
@@ -136,6 +149,9 @@ const STRINGS = {
     left_zone: "{name} hat {zone} verlassen",
     no_moves: "Keine Bewegung in den letzten 24 Stunden",
     show_moves: "Bewegungen der letzten 24 Stunden anzeigen",
+    dir_towards: "Nähert sich",
+    dir_away_from: "Entfernt sich",
+    dir_stationary: "Stillstehend",
     entities: "Personen (standardmäßig alle)",
     title_option: "Titel (optional)",
     sort: "Reihenfolge",
@@ -144,6 +160,7 @@ const STRINGS = {
     sort_config: "Wie aufgelistet",
     show_since: "Seit wann anzeigen",
     show_distance: "Entfernung von zu Hause anzeigen",
+    show_direction: "Bewegungsrichtung anzeigen (Nähe)",
     show_battery: "Handy-Akku anzeigen",
     show_away: "Abwesende Personen anzeigen",
     zoom: "Zoom-Schaltfläche",
@@ -177,6 +194,9 @@ const STRINGS = {
     left_zone: "{name} salió de {zone}",
     no_moves: "Ningún movimiento en las últimas 24 horas",
     show_moves: "Mostrar los movimientos de las últimas 24 horas",
+    dir_towards: "Acercándose",
+    dir_away_from: "Alejándose",
+    dir_stationary: "Sin moverse",
     entities: "Personas (todas por defecto)",
     title_option: "Título (opcional)",
     sort: "Orden",
@@ -185,6 +205,7 @@ const STRINGS = {
     sort_config: "Según la lista",
     show_since: "Mostrar desde cuándo",
     show_distance: "Mostrar la distancia desde casa",
+    show_direction: "Mostrar la dirección de desplazamiento (Proximidad)",
     show_battery: "Mostrar la batería del teléfono",
     show_away: "Mostrar a las personas ausentes",
     zoom: "Botón de zoom",
@@ -218,6 +239,9 @@ const STRINGS = {
     left_zone: "{name}: одлазак из {zone}",
     no_moves: "Нема кретања у последња 24 сата",
     show_moves: "Прикажи кретања у последња 24 сата",
+    dir_towards: "Приближава се",
+    dir_away_from: "Удаљава се",
+    dir_stationary: "Мирује",
     // Editor
     entities: "Особе (подразумевано све)",
     title_option: "Наслов (опционо)",
@@ -227,6 +251,7 @@ const STRINGS = {
     sort_config: "Како је наведено",
     show_since: "Прикажи од када",
     show_distance: "Прикажи удаљеност од куће",
+    show_direction: "Прикажи смер кретања (Близина)",
     show_battery: "Прикажи батерију телефона",
     show_away: "Прикажи одсутне особе",
     zoom: "Дугме за увећање",
@@ -260,6 +285,9 @@ const STRINGS = {
     left_zone: "{name}: odlazak iz {zone}",
     no_moves: "Nema kretanja u poslednja 24 sata",
     show_moves: "Prikaži kretanja u poslednja 24 sata",
+    dir_towards: "Približava se",
+    dir_away_from: "Udaljava se",
+    dir_stationary: "Miruje",
     // Editor
     entities: "Osobe (podrazumevano sve)",
     title_option: "Naslov (opciono)",
@@ -269,6 +297,7 @@ const STRINGS = {
     sort_config: "Kako je navedeno",
     show_since: "Prikaži od kada",
     show_distance: "Prikaži udaljenost od kuće",
+    show_direction: "Prikaži smer kretanja (Blizina)",
     show_battery: "Prikaži bateriju telefona",
     show_away: "Prikaži odsutne osobe",
     zoom: "Dugme za uvećanje",
@@ -302,6 +331,9 @@ const STRINGS = {
     left_zone: "{name} ha lasciato {zone}",
     no_moves: "Nessun movimento nelle ultime 24 ore",
     show_moves: "Mostra i movimenti delle ultime 24 ore",
+    dir_towards: "In avvicinamento",
+    dir_away_from: "In allontanamento",
+    dir_stationary: "Fermo",
     // Editor
     entities: "Persone (tutte per impostazione predefinita)",
     title_option: "Titolo (facoltativo)",
@@ -311,6 +343,7 @@ const STRINGS = {
     sort_config: "Come nell'elenco",
     show_since: "Mostra da quando",
     show_distance: "Mostra la distanza da casa",
+    show_direction: "Mostra la direzione di spostamento (Prossimità)",
     show_battery: "Mostra la batteria del telefono",
     show_away: "Mostra le persone fuori casa",
     zoom: "Pulsante zoom",
@@ -344,6 +377,9 @@ const STRINGS = {
     left_zone: "{name} heeft {zone} verlaten",
     no_moves: "Geen beweging in de laatste 24 uur",
     show_moves: "Bewegingen van de laatste 24 uur tonen",
+    dir_towards: "Komt dichterbij",
+    dir_away_from: "Gaat verder weg",
+    dir_stationary: "Stilstaand",
     // Editor
     entities: "Personen (standaard allemaal)",
     title_option: "Titel (optioneel)",
@@ -353,6 +389,7 @@ const STRINGS = {
     sort_config: "Zoals opgegeven",
     show_since: "Sinds wanneer tonen",
     show_distance: "Afstand tot huis tonen",
+    show_direction: "Reisrichting tonen (Nabijheid)",
     show_battery: "Batterij van de telefoon tonen",
     show_away: "Afwezige personen tonen",
     zoom: "Zoomknop",
@@ -386,6 +423,9 @@ const STRINGS = {
     left_zone: "{name} saiu de {zone}",
     no_moves: "Nenhum movimento nas últimas 24 horas",
     show_moves: "Mostrar os movimentos das últimas 24 horas",
+    dir_towards: "A aproximar-se",
+    dir_away_from: "A afastar-se",
+    dir_stationary: "Parado",
     // Editor
     entities: "Pessoas (todas por predefinição)",
     title_option: "Título (opcional)",
@@ -395,6 +435,7 @@ const STRINGS = {
     sort_config: "Pela ordem da lista",
     show_since: "Mostrar desde quando",
     show_distance: "Mostrar a distância a casa",
+    show_direction: "Mostrar o sentido de deslocação (Proximidade)",
     show_battery: "Mostrar a bateria do telemóvel",
     show_away: "Mostrar as pessoas ausentes",
     zoom: "Botão de zoom",
@@ -428,6 +469,9 @@ const STRINGS = {
     left_zone: "{name}: wyjście z {zone}",
     no_moves: "Brak ruchu w ostatnich 24 godzinach",
     show_moves: "Pokaż ruchy z ostatnich 24 godzin",
+    dir_towards: "Zbliża się",
+    dir_away_from: "Oddala się",
+    dir_stationary: "Bez ruchu",
     // Editor
     entities: "Osoby (domyślnie wszystkie)",
     title_option: "Tytuł (opcjonalnie)",
@@ -437,6 +481,7 @@ const STRINGS = {
     sort_config: "Jak na liście",
     show_since: "Pokaż od kiedy",
     show_distance: "Pokaż odległość od domu",
+    show_direction: "Pokaż kierunek ruchu (Bliskość)",
     show_battery: "Pokaż baterię telefonu",
     show_away: "Pokaż osoby poza domem",
     zoom: "Przycisk powiększenia",
@@ -470,6 +515,9 @@ const STRINGS = {
     left_zone: "{name} a plecat de la {zone}",
     no_moves: "Nicio mișcare în ultimele 24 de ore",
     show_moves: "Afișează mișcările din ultimele 24 de ore",
+    dir_towards: "Se apropie",
+    dir_away_from: "Se îndepărtează",
+    dir_stationary: "Staționar",
     // Editor
     entities: "Persoane (implicit toate)",
     title_option: "Titlu (opțional)",
@@ -479,6 +527,7 @@ const STRINGS = {
     sort_config: "Ca în listă",
     show_since: "Afișează de când",
     show_distance: "Afișează distanța față de casă",
+    show_direction: "Afișează direcția de deplasare (Proximitate)",
     show_battery: "Afișează bateria telefonului",
     show_away: "Afișează persoanele plecate",
     zoom: "Buton de zoom",
@@ -512,6 +561,9 @@ const STRINGS = {
     left_zone: "{name} forlod {zone}",
     no_moves: "Ingen bevægelse de seneste 24 timer",
     show_moves: "Vis bevægelserne de seneste 24 timer",
+    dir_towards: "Nærmer sig",
+    dir_away_from: "Fjerner sig",
+    dir_stationary: "Stillestående",
     // Editor
     entities: "Personer (alle som standard)",
     title_option: "Titel (valgfri)",
@@ -521,6 +573,7 @@ const STRINGS = {
     sort_config: "Som angivet",
     show_since: "Vis siden hvornår",
     show_distance: "Vis afstand fra hjemmet",
+    show_direction: "Vis bevægelsesretning (Nærhed)",
     show_battery: "Vis telefonens batteri",
     show_away: "Vis personer, der er ude",
     zoom: "Zoomknap",
@@ -554,6 +607,9 @@ const STRINGS = {
     left_zone: "{name} lämnade {zone}",
     no_moves: "Ingen rörelse de senaste 24 timmarna",
     show_moves: "Visa rörelserna de senaste 24 timmarna",
+    dir_towards: "Närmar sig",
+    dir_away_from: "Avlägsnar sig",
+    dir_stationary: "Stillastående",
     // Editor
     entities: "Personer (alla som standard)",
     title_option: "Rubrik (valfri)",
@@ -563,6 +619,7 @@ const STRINGS = {
     sort_config: "Som i listan",
     show_since: "Visa sedan när",
     show_distance: "Visa avstånd hemifrån",
+    show_direction: "Visa färdriktning (Närhet)",
     show_battery: "Visa telefonens batteri",
     show_away: "Visa personer som är borta",
     zoom: "Zoomknapp",
@@ -596,6 +653,9 @@ const STRINGS = {
     left_zone: "{name}: напускане на {zone}",
     no_moves: "Няма движение през последните 24 часа",
     show_moves: "Покажи движенията от последните 24 часа",
+    dir_towards: "Приближава се",
+    dir_away_from: "Отдалечава се",
+    dir_stationary: "Неподвижен",
     // Editor
     entities: "Хора (по подразбиране всички)",
     title_option: "Заглавие (по избор)",
@@ -605,6 +665,7 @@ const STRINGS = {
     sort_config: "Както са изброени",
     show_since: "Показвай от кога",
     show_distance: "Показвай разстоянието от дома",
+    show_direction: "Показвай посоката на движение (Близост)",
     show_battery: "Показвай батерията на телефона",
     show_away: "Показвай отсъстващите",
     zoom: "Бутон за мащабиране",
@@ -638,6 +699,9 @@ const STRINGS = {
     left_zone: "{name}: уход из {zone}",
     no_moves: "Нет перемещений за последние 24 часа",
     show_moves: "Показать перемещения за последние 24 часа",
+    dir_towards: "Приближается",
+    dir_away_from: "Удаляется",
+    dir_stationary: "На месте",
     // Editor
     entities: "Люди (по умолчанию все)",
     title_option: "Заголовок (необязательно)",
@@ -647,6 +711,7 @@ const STRINGS = {
     sort_config: "Как в списке",
     show_since: "Показывать, с какого времени",
     show_distance: "Показывать расстояние от дома",
+    show_direction: "Показывать направление движения (Близость)",
     show_battery: "Показывать заряд телефона",
     show_away: "Показывать отсутствующих",
     zoom: "Кнопка масштаба",
@@ -680,6 +745,9 @@ const STRINGS = {
     left_zone: "{name}: вихід з {zone}",
     no_moves: "Немає переміщень за останні 24 години",
     show_moves: "Показати переміщення за останні 24 години",
+    dir_towards: "Наближається",
+    dir_away_from: "Віддаляється",
+    dir_stationary: "На місці",
     // Editor
     entities: "Люди (за замовчуванням усі)",
     title_option: "Заголовок (необовʼязково)",
@@ -689,6 +757,7 @@ const STRINGS = {
     sort_config: "Як у списку",
     show_since: "Показувати, відколи",
     show_distance: "Показувати відстань від дому",
+    show_direction: "Показувати напрямок руху (Близькість)",
     show_battery: "Показувати заряд телефону",
     show_away: "Показувати відсутніх",
     zoom: "Кнопка масштабу",
@@ -722,6 +791,9 @@ const STRINGS = {
     left_zone: "{name} elhagyta: {zone}",
     no_moves: "Nem volt mozgás az elmúlt 24 órában",
     show_moves: "Az elmúlt 24 óra mozgásainak megjelenítése",
+    dir_towards: "Közeledik",
+    dir_away_from: "Távolodik",
+    dir_stationary: "Egy helyben",
     // Editor
     entities: "Személyek (alapértelmezés szerint mind)",
     title_option: "Cím (opcionális)",
@@ -731,6 +803,7 @@ const STRINGS = {
     sort_config: "A lista sorrendjében",
     show_since: "Mióta megjelenítése",
     show_distance: "Otthontól való távolság megjelenítése",
+    show_direction: "Haladási irány megjelenítése (Közelség)",
     show_battery: "Telefon akkumulátorának megjelenítése",
     show_away: "Távol lévők megjelenítése",
     zoom: "Nagyítás gomb",
@@ -764,6 +837,9 @@ const STRINGS = {
     left_zone: "{name}: odchod z {zone}",
     no_moves: "Žiadny pohyb za posledných 24 hodín",
     show_moves: "Zobraziť pohyby za posledných 24 hodín",
+    dir_towards: "Približuje sa",
+    dir_away_from: "Vzďaľuje sa",
+    dir_stationary: "Stojí",
     // Editor
     entities: "Osoby (predvolene všetky)",
     title_option: "Názov (voliteľné)",
@@ -773,6 +849,7 @@ const STRINGS = {
     sort_config: "Podľa zoznamu",
     show_since: "Zobraziť od kedy",
     show_distance: "Zobraziť vzdialenosť od domu",
+    show_direction: "Zobraziť smer pohybu (Blízkosť)",
     show_battery: "Zobraziť batériu telefónu",
     show_away: "Zobraziť osoby mimo domu",
     zoom: "Tlačidlo priblíženia",
@@ -806,6 +883,9 @@ const STRINGS = {
     left_zone: "{name}: odchod z {zone}",
     no_moves: "Žádný pohyb za posledních 24 hodin",
     show_moves: "Zobrazit pohyby za posledních 24 hodin",
+    dir_towards: "Přibližuje se",
+    dir_away_from: "Vzdaluje se",
+    dir_stationary: "Stojí",
     // Editor
     entities: "Lidé (ve výchozím stavu všichni)",
     title_option: "Název (volitelné)",
@@ -815,6 +895,7 @@ const STRINGS = {
     sort_config: "Podle seznamu",
     show_since: "Zobrazit od kdy",
     show_distance: "Zobrazit vzdálenost od domova",
+    show_direction: "Zobrazit směr pohybu (Blízkost)",
     show_battery: "Zobrazit baterii telefonu",
     show_away: "Zobrazit nepřítomné osoby",
     zoom: "Tlačítko přiblížení",
@@ -848,6 +929,9 @@ const STRINGS = {
     left_zone: "{name}: odhod iz {zone}",
     no_moves: "V zadnjih 24 urah ni bilo gibanja",
     show_moves: "Prikaži gibanja zadnjih 24 ur",
+    dir_towards: "Se približuje",
+    dir_away_from: "Se oddaljuje",
+    dir_stationary: "Miruje",
     // Editor
     entities: "Osebe (privzeto vse)",
     title_option: "Naslov (neobvezno)",
@@ -857,6 +941,7 @@ const STRINGS = {
     sort_config: "Kot na seznamu",
     show_since: "Prikaži od kdaj",
     show_distance: "Prikaži oddaljenost od doma",
+    show_direction: "Prikaži smer gibanja (Bližina)",
     show_battery: "Prikaži baterijo telefona",
     show_away: "Prikaži odsotne osebe",
     zoom: "Gumb za povečavo",
@@ -890,6 +975,9 @@ const STRINGS = {
     left_zone: "{name}: aiziešana no {zone}",
     no_moves: "Pēdējās 24 stundās nav kustību",
     show_moves: "Rādīt pēdējo 24 stundu kustības",
+    dir_towards: "Tuvojas",
+    dir_away_from: "Attālinās",
+    dir_stationary: "Nekustas",
     // Editor
     entities: "Personas (pēc noklusējuma visas)",
     title_option: "Virsraksts (neobligāts)",
@@ -899,6 +987,7 @@ const STRINGS = {
     sort_config: "Kā sarakstā",
     show_since: "Rādīt, kopš kura laika",
     show_distance: "Rādīt attālumu no mājām",
+    show_direction: "Rādīt kustības virzienu (Tuvums)",
     show_battery: "Rādīt tālruņa akumulatoru",
     show_away: "Rādīt prombūtnē esošos",
     zoom: "Tālummaiņas poga",
@@ -932,6 +1021,9 @@ const STRINGS = {
     left_zone: "{name}: αναχώρηση από {zone}",
     no_moves: "Καμία κίνηση τις τελευταίες 24 ώρες",
     show_moves: "Εμφάνιση των κινήσεων των τελευταίων 24 ωρών",
+    dir_towards: "Πλησιάζει",
+    dir_away_from: "Απομακρύνεται",
+    dir_stationary: "Σε στάση",
     // Editor
     entities: "Άτομα (όλα από προεπιλογή)",
     title_option: "Τίτλος (προαιρετικό)",
@@ -941,6 +1033,7 @@ const STRINGS = {
     sort_config: "Όπως στη λίστα",
     show_since: "Εμφάνιση από πότε",
     show_distance: "Εμφάνιση απόστασης από το σπίτι",
+    show_direction: "Εμφάνιση κατεύθυνσης κίνησης (Εγγύτητα)",
     show_battery: "Εμφάνιση μπαταρίας τηλεφώνου",
     show_away: "Εμφάνιση ατόμων εκτός σπιτιού",
     zoom: "Κουμπί μεγέθυνσης",
@@ -1089,6 +1182,72 @@ const batteryOf = (hass, st) => {
   return null;
 };
 
+// Proximity integration (core): for each tracked person, a direction of travel sensor and a distance sensor,
+// named "<proximity> <person> Direction of travel" / "… Distance" (sensor.home_alex_direction_of_travel in
+// English, translated in other languages). Found in the entity registry by platform and translation key, a
+// pair per proximity entry (its device); without registry, by the English entity ids.
+const DIRECTIONS = ["towards", "away_from", "stationary"];
+const PROX_KEYS = { dir_of_travel: "direction", dist_to_zone: "distance" };
+const RE_PROX = /^sensor\.(.+)_(direction_of_travel|distance)$/;
+let _prox = { entities: null, states: null, list: [] };
+const proximitySensors = (hass) => {
+  if (_prox.entities === hass.entities && (_prox.registry || _prox.states === hass.states)) return _prox.list;
+  let list = Object.entries(hass.entities || {})
+    .filter(([, e]) => e?.platform === "proximity" && PROX_KEYS[e.translation_key])
+    .map(([id, e]) => ({ id, key: PROX_KEYS[e.translation_key], group: e.device_id || "" }));
+  const registry = list.length > 0;
+  if (!registry)
+    list = Object.keys(hass.states).flatMap((id) => {
+      const m = RE_PROX.exec(id);
+      // Only a distance sensor next to a direction of travel sensor: any other "_distance" sensor is not one.
+      if (!m || (m[2] === "distance" && !hass.states[`sensor.${m[1]}_direction_of_travel`])) return [];
+      return [{ id, key: m[2] === "distance" ? "distance" : "direction", group: m[1] }];
+    });
+  _prox = { entities: hass.entities, states: hass.states, registry, list };
+  return list;
+};
+
+// Entity id form of a name, as Home Assistant builds it ("Jean-Pierre" → "jean_pierre").
+const slugify = (v) =>
+  String(v ?? "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+// The Proximity sensors of a person: { direction, distance } entity ids, set in the configuration
+// (`proximity_direction`, `proximity_distance`) or found by the person's id or name in the sensors' ids.
+const proximityOf = (hass, item) => {
+  if (item.proximity_direction || item.proximity_distance)
+    return { direction: item.proximity_direction || null, distance: item.proximity_distance || null };
+  const names = [item.entity.split(".")[1], slugify(hass.states[item.entity]?.attributes?.friendly_name)].filter(Boolean);
+  // The person's part comes after the proximity's name: of two sensors matching in one entry (a proximity
+  // named after a person), the one with the name furthest in its id.
+  const groups = new Map();
+  for (const s of proximitySensors(hass)) {
+    const id = `_${s.id.slice(7)}_`;
+    const at = Math.max(...names.map((n) => id.lastIndexOf(`_${n}_`)));
+    if (at < 0) continue;
+    const g = groups.get(s.group) ?? { direction: null, distance: null, at: {} };
+    if (!(g.at[s.key] >= at)) {
+      g[s.key] = s.id;
+      g.at[s.key] = at;
+    }
+    groups.set(s.group, g);
+  }
+  const found = [...groups.values()].find((g) => g.direction) ?? [...groups.values()][0];
+  return found ? { direction: found.direction, distance: found.distance } : null;
+};
+
+// A distance sensor's value in km, from its unit (meters by default, or the unit chosen for it).
+const TO_KM = { mm: 1e-6, cm: 1e-5, m: 1e-3, km: 1, in: 2.54e-5, ft: 3.048e-4, yd: 9.144e-4, mi: 1.609344 };
+const distanceKm = (st) => {
+  const v = parseFloat(st?.state);
+  const k = TO_KM[st?.attributes?.unit_of_measurement ?? "m"];
+  return Number.isFinite(v) && k ? Math.max(0, v * k) : null;
+};
+
 const ORDER = { home: 0, zone: 1, away: 2, unknown: 3 };
 
 /** What the card shows for one person. */
@@ -1104,6 +1263,11 @@ const personInfo = (hass, item, now = Date.now()) => {
   if (kind !== "home" && Number.isFinite(a.latitude) && Number.isFinite(a.longitude) && homeZone) {
     km = haversine(a.latitude, a.longitude, homeZone.latitude, homeZone.longitude);
   }
+  // Proximity sensors, when the person has some: their direction of travel, and their distance first.
+  const prox = kind === "home" ? null : proximityOf(hass, item);
+  const dir = prox?.direction ? hass.states[prox.direction]?.state : null;
+  const proxKm = prox?.distance ? distanceKm(hass.states[prox.distance]) : null;
+  if (proxKm !== null) km = proxKm;
   const changed = Date.parse(st.last_changed);
   return {
     id: item.entity,
@@ -1113,6 +1277,7 @@ const personInfo = (hass, item, now = Date.now()) => {
     zone: kind === "zone" ? state : null,
     since: Number.isFinite(changed) ? Math.max(0, Math.floor((now - changed) / 1000)) : null,
     km,
+    direction: DIRECTIONS.includes(dir) ? dir : null,
     battery: batteryOf(hass, st),
   };
 };
@@ -1369,6 +1534,8 @@ class PresenceBase extends HTMLElement {
       const st = h.states[item.entity];
       sig.push(item.entity, st);
       if (!st) continue;
+      const prox = proximityOf(h, item);
+      if (prox) sig.push(h.states[prox.direction], h.states[prox.distance]);
       for (const tr of trackersOf(st)) {
         sig.push(h.states[tr]);
         const dev = h.entities?.[tr]?.device_id;
@@ -1432,6 +1599,11 @@ class PresenceBase extends HTMLElement {
     return p.kind === "zone" ? p.zone : this._t(p.kind);
   }
 
+  // Direction of travel from the Proximity sensors ("Arriving"), or "" when unknown or hidden.
+  _direction(p) {
+    return this._config.show_direction !== false && p.direction ? this._t(`dir_${p.direction}`) : "";
+  }
+
   // One warning line per configured person that does not exist (deleted or renamed), shown with the others.
   _missing(all) {
     return all
@@ -1480,6 +1652,7 @@ const FULL_STYLE = `
   .person .facts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 12px; flex: none; }
   .person .facts span { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
   .person .facts .icon { width: 14px; height: 14px; color: var(--secondary-text-color); }
+  .person .facts .towards .icon { color: var(--pr-home); }
   /* Movements of the last 24 hours: folded under the people, chevron right folded and down unfolded. */
   .moves { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
   .moves-toggle { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 2px;
@@ -1665,8 +1838,16 @@ class PresenceCard extends PresenceBase {
     const miles = this._hass.config?.unit_system?.length === "mi";
     const tr = (k) => this._t(k);
     const facts = [];
-    if (c.show_distance !== false && p.km !== null)
-      facts.push(`<span title="${esc(tr("from_home"))}">${svgIcon(ICONS.distance)}${fmtDistance(p.km, miles)}</span>`);
+    // Distance from home, behind the direction of travel's icon when the person has Proximity sensors.
+    const dist = c.show_distance !== false && p.km !== null ? fmtDistance(p.km, miles) : "";
+    const dir = this._direction(p);
+    if (dist || dir) {
+      const title = [dir, dist && tr("from_home")].filter(Boolean).join(" · ");
+      const icon = dir
+        ? `<svg class="icon" viewBox="0 0 24 24" ${dist ? `role="img" aria-label="${esc(dir)}"` : 'aria-hidden="true"'}><path d="${ICONS[p.direction]}"/></svg>`
+        : svgIcon(ICONS.distance);
+      facts.push(`<span class="${dir ? `dir ${p.direction}` : "dist"}" title="${esc(title)}">${icon}${esc(dist || dir)}</span>`);
+    }
     if (c.show_battery !== false && p.battery) facts.push(this._battery(p.battery));
     // A number stays with its unit ("23 h") when the duration wraps.
     const sinceText = p.since === null ? "" : p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr).replace(/(\d) /g, "$1\u00a0")}`;
@@ -1826,7 +2007,7 @@ class PresenceMiniCard extends PresenceCard {
     const { n, text } = this._summary(people);
     const faces = shown.map(
       (p) => `<div class="face clickable" role="button" tabindex="0" data-key="${esc(p.id)}" data-entity="${esc(p.id)}" title="${esc(
-        `${p.name} · ${this._place(p)}`
+        [p.name, this._place(p), this._direction(p)].filter(Boolean).join(" · ")
       )}">${this._avatar(p, FACE)}</div>`
     );
     return `<style>${BASE_STYLE}${MINI_STYLE}</style>
@@ -1962,13 +2143,13 @@ class PresenceEditorBase extends HTMLElement {
 
 class PresenceCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_since", "show_distance", "show_battery", "show_away", "show_moves"];
+    return ["show_since", "show_distance", "show_direction", "show_battery", "show_away", "show_moves"];
   }
 }
 
 class PresenceMiniCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_away", "show_since", "show_distance", "show_battery", "show_moves", "zoom"];
+    return ["show_away", "show_since", "show_distance", "show_direction", "show_battery", "show_moves", "zoom"];
   }
 }
 

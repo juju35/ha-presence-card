@@ -51,3 +51,20 @@ for (const p of people) {
     },
   };
 }
+
+// Proximity sensors (core integration, a "Home" proximity): direction of travel and distance of the people away.
+for (const [id, direction, meters] of [
+  ["sam", "stationary", 3870],
+  ["charlie", "towards", 13350],
+]) {
+  states[`sensor.home_${id}_direction_of_travel`] = {
+    entity_id: `sensor.home_${id}_direction_of_travel`,
+    state: direction,
+    attributes: { device_class: "enum", options: ["arrived", "away_from", "stationary", "towards"] },
+  };
+  states[`sensor.home_${id}_distance`] = {
+    entity_id: `sensor.home_${id}_distance`,
+    state: String(meters),
+    attributes: { device_class: "distance", unit_of_measurement: "m" },
+  };
+}

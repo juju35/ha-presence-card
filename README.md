@@ -28,6 +28,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 - Badge and color per state: home (green), zone (blue, with the zone name), away (grey), unknown (orange)
 - How long each person has been there ("for 3 h 12 min"), refreshed every minute
 - Distance from home for people away, in km or miles following the Home Assistant unit system
+- Direction of travel (arriving, leaving, stationary) for people away, from the core [Proximity](https://www.home-assistant.io/integrations/proximity/) integration's sensors, found automatically
 - Phone battery, found automatically: battery sensor of the tracker's device (Companion app) or the tracker's battery attribute; orange at 40 %, red at 20 %
 - Header summary: "2 of 4 at home", "Everyone is home", "Nobody home"
 - People at home first, by name, or as listed
@@ -92,10 +93,13 @@ entities:
   - entity: person.sam
     name: Sam
     picture: /local/sam.jpg
+    proximity_direction: sensor.home_sam_direction_of_travel
+    proximity_distance: sensor.home_sam_distance
 title: Family
 sort: presence
 show_since: true
 show_distance: true
+show_direction: true
 show_battery: true
 show_away: true
 language: fr
@@ -117,18 +121,19 @@ language: fr
 
 | Option | Card | Default | Description |
 |---|---|---|---|
-| `entities` | both | All people | People to show: `person` entity ids, or objects with `entity` and an optional `name` and `picture` |
+| `entities` | both | All people | People to show: `person` entity ids, or objects with `entity` and an optional `name`, `picture`, `proximity_direction` and `proximity_distance` (the person's Proximity sensors, when not found automatically) |
 | `title` | both | Presence | Card title |
 | `sort` | both | `presence` | Order: `presence` (at home, then in a zone, then away), `name`, or `config` (as listed) |
 | `show_since` | both | `true` | How long each person has been in their current state |
 | `show_distance` | both | `true` | Distance from home for people away |
+| `show_direction` | both | `true` | Direction of travel (arriving, leaving, stationary) for people away, from the Proximity sensors |
 | `show_battery` | both | `true` | Phone battery |
 | `show_away` | both | `true` | Show the people away (`false` keeps only people at home or in a zone) |
 | `show_moves` | both | `true` | Folded **Last 24 hours** section with the arrivals and departures from the history (`false` removes it) |
 | `zoom` | mini | `true` | Zoom button at the top right: switches to the full card and back (`false` removes it) |
 | `language` | both | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings; `pt-BR` uses `pt`) |
 
-`show_since`, `show_distance`, `show_battery` and `show_moves` apply to the mini card once zoomed in.
+`show_since`, `show_distance`, `show_direction`, `show_battery` and `show_moves` apply to the mini card once zoomed in; the mini card also adds the direction of travel to each avatar's tooltip.
 
 Note for the sections view: Lovelace sizes the cell when the dashboard loads and offers no way for a card to ask for a resize afterwards, so the zoomed-in mini card keeps the compact card's cell and simply grows taller inside it.
 
@@ -145,7 +150,8 @@ Note for the sections view: Lovelace sizes the cell when the dashboard loads and
 
 - **State**: `home` is at home, `not_home` is away, `unknown` / `unavailable` is unknown, any other state is the name of the zone the person is in.
 - **Since**: the `last_changed` time of the person entity.
-- **Distance**: great-circle distance between the person's `latitude` / `longitude` and `zone.home`.
+- **Distance**: the person's Proximity distance sensor when there is one, else the great-circle distance between the person's `latitude` / `longitude` and `zone.home`.
+- **Direction of travel**: the [Proximity](https://www.home-assistant.io/integrations/proximity/) integration creates, for each person it tracks, a direction of travel sensor and a distance sensor (`sensor.<proximity>_<person>_direction_of_travel` and `sensor.<proximity>_<person>_distance` in English). The card finds them in the entity registry (platform `proximity`, whatever the language of their names), matching the person's id or name in their entity id; `proximity_direction` / `proximity_distance` on a person set them by hand. `towards` shows as arriving, `away_from` as leaving, `stationary` as stationary; `arrived` and `unknown` show nothing. With several proximities for one person, the first one found is used: set the sensors by hand to choose.
 - **Battery**: for each tracker of the person (the one in use first), the battery sensor of the same device (`sensor.*_battery_level` or `sensor.*_battery`, as created by the Companion app), else the tracker's `battery_level` / `battery` attribute.
 
 ## Development
