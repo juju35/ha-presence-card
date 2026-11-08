@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.8.0 - 2026-11-07
+
+### What's new
+- **Last 24 hours**: the movement times follow the 12 / 24 hour clock of the Home Assistant profile and the card's language.
+- The header logo's label for screen readers is translated in the 22 languages.
+
+### Fixes
+- **Last 24 hours**: movements older than 24 hours no longer stay in the list when nobody has moved since; the history is also read again each hour.
+- A person whose state is unknown or unavailable no longer shows a distance (or direction of travel) from their last known position.
+
 ## 1.7.0 - 2026-11-07
 
 ### What's new

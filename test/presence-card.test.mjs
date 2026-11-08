@@ -520,3 +520,76 @@ test("proximity: a change of direction re-renders the card", () => {
   el._hass = { states: { ...states, "sensor.home_alex_direction_of_travel": prox("sensor.home_alex_direction_of_travel", "away_from") }, language: "en" };
   assert.notDeepEqual(el._signature(), before);
 });
+
+test("unknown / unavailable person: no distance from the last GPS fix", () => {
+  const gps = { latitude: 48.2154, longitude: -1.5622 };
+  const states = { ...HOME, "person.a": person("a", "unknown", gps), "person.b": person("b", "unavailable", gps) };
+  assert.equal(personInfo({ states }, { entity: "person.a" }, NOW).km, null);
+  assert.equal(personInfo({ states }, { entity: "person.b" }, NOW).km, null);
+});
+
+test("header logo: aria-label in the card's language", () => {
+  const states = { ...HOME, "person.a": person("a", "home") };
+  for (const Card of [PresenceCard, PresenceMiniCard]) {
+    const html = render(Card, { language: "fr" }, states);
+    assert.match(html, new RegExp(`role="img" aria-label="${STRINGS.fr.title}"`));
+    assert.doesNotMatch(render(Card, { language: "de" }, states), /aria-label="Presence"/);
+  }
+});
+
+// A card with the movements unfolded and already read, rendered without the history being read again.
+const movesCard = (config, hass, moves) => {
+  const el = new PresenceCard();
+  el._config = config;
+  el._hass = { states: { ...HOME, "person.a": person("a", "home") }, ...hass };
+  el._update = () => {};
+  el._movesOpen = true;
+  el._loadMoves = () => {};
+  el._moves = moves;
+  return el._render();
+};
+
+test("movements: entries older than 24 hours are dropped at render", () => {
+  const html = movesCard({}, { language: "en" }, [
+    { id: "person.a", name: "A", kind: "moved_home", zone: "", when: Date.now() - 3600000 },
+    { id: "person.a", name: "A", kind: "moved_away", zone: "", when: Date.now() - 25 * 3600000 },
+  ]);
+  assert.match(html, /A arrived home/);
+  assert.doesNotMatch(html, /A left home/);
+});
+
+test("movements: read again each hour, not only when someone moves", () => {
+  const el = new PresenceCard();
+  el._config = {};
+  let calls = 0;
+  el._hass = { states: { ...HOME, "person.a": person("a", "home") }, language: "en", callWS: async () => {
+      calls++;
+      return {};
+    },
+  };
+  const people = [{ id: "person.a", name: "A" }];
+  const realNow = Date.now;
+  try {
+    Date.now = () => NOW;
+    el._loadMoves(people);
+    el._loadMoves(people);
+    assert.equal(calls, 1);
+    Date.now = () => NOW + 3600000;
+    el._loadMoves(people);
+    assert.equal(calls, 2);
+  } finally {
+    Date.now = realNow;
+  }
+});
+
+test("movements: times follow the profile's time format and the card's language", () => {
+  const when = Date.now() - 60000;
+  const m = [{ id: "person.a", name: "A", kind: "moved_home", zone: "", when }];
+  const time = (locale, hour12) => new Date(when).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", hour12 });
+  // (Ends with: a weekday comes first just after midnight.)
+  const mtime = (html) => html.match(/class="mtime">([^<]*)</)[1];
+  assert.ok(mtime(movesCard({}, { language: "en", locale: { language: "en", time_format: "24" } }, m)).endsWith(time("en", false)));
+  assert.ok(mtime(movesCard({}, { language: "fr", locale: { language: "fr", time_format: "12" } }, m)).endsWith(time("fr", true)));
+  // The card's language wins over Home Assistant's.
+  assert.ok(mtime(movesCard({ language: "de" }, { language: "en", locale: { language: "en", time_format: "language" } }, m)).endsWith(new Date(when).toLocaleTimeString("de", { hour: "2-digit", minute: "2-digit" })));
+});
