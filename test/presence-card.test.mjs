@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { load } from "./load.mjs";
 
-const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, lang, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS, movesFrom, proximityOf, distanceKm } =
+const { personInfo, sortPeople, fmtDuration, fmtDistance, haversine, batteryOf, cssUrl, lang, PresenceCard, PresenceMiniCard, PresenceCardEditor, STRINGS, movesFrom, proximityOf, distanceKm, intlLang, proximitySensors } =
   load("presence-card.js", [
+    "intlLang",
+    "proximitySensors",
     "proximityOf",
     "distanceKm",
     "personInfo",
@@ -592,4 +594,50 @@ test("movements: times follow the profile's time format and the card's language"
   assert.ok(mtime(movesCard({}, { language: "fr", locale: { language: "fr", time_format: "12" } }, m)).endsWith(time("fr", true)));
   // The card's language wins over Home Assistant's.
   assert.ok(mtime(movesCard({ language: "de" }, { language: "en", locale: { language: "en", time_format: "language" } }, m)).endsWith(new Date(when).toLocaleTimeString("de", { hour: "2-digit", minute: "2-digit" })));
+});
+
+test("distances in the locale's number format", () => {
+  const nf = (locale, unit, digits, v) =>
+    new Intl.NumberFormat(locale, { style: "unit", unit, unitDisplay: "short", maximumFractionDigits: digits }).format(v);
+  assert.equal(fmtDistance(2.54, false, "fr"), nf("fr", "kilometer", 1, 2.54));
+  assert.match(fmtDistance(2.54, false, "fr"), /^2,5\s?km$/);
+  assert.equal(fmtDistance(2.54, false, "en"), "2.5 km");
+  assert.equal(fmtDistance(12345.6, false, "de"), nf("de", "kilometer", 0, 12345.6));
+  assert.match(fmtDistance(12345.6, false, "de"), /^12\.346\s?km$/);
+  assert.equal(fmtDistance(0.42, false, "fr"), nf("fr", "meter", 0, 420));
+  assert.equal(fmtDistance(3, true, "en"), "1.9 mi");
+  // The row follows the card's language.
+  const states = { ...HOME, "person.b": person("b", "not_home", { latitude: 48.1273, longitude: -1.6778 }) };
+  const html = render(PresenceCard, { entities: ["person.b"], language: "fr" }, states);
+  assert.ok(html.includes(nf("fr", "kilometer", 1, personInfo({ states }, { entity: "person.b" }, NOW).km)));
+});
+
+test("Intl locale: Home Assistant's region kept, a bare pt is European Portuguese", () => {
+  assert.equal(intlLang({ locale: { language: "pt" } }, {}), "pt-PT");
+  assert.equal(intlLang({ locale: { language: "en" } }, { language: "pt" }), "pt-PT");
+  assert.equal(intlLang({ locale: { language: "pt-BR" } }, {}), "pt-BR");
+  assert.equal(intlLang({ locale: { language: "fr-CA" } }, {}), "fr-CA");
+  assert.equal(intlLang({ locale: { language: "fr-CA" } }, { language: "de" }), "de");
+  assert.equal(intlLang({ locale: { language: "sr-Latn" } }, {}), "sr-Latn");
+  assert.equal(intlLang({ locale: { language: "xx" } }, {}), "en");
+});
+
+test("proximity: a registry without Proximity sensors is not searched again in the states at each update", () => {
+  let scans = 0;
+  const counted = (states) =>
+    new Proxy(states, {
+      ownKeys(t) {
+        scans++;
+        return Reflect.ownKeys(t);
+      },
+    });
+  const entities = { "sensor.phone_battery": { platform: "mobile_app", device_id: "d1" } };
+  const states = { "person.alex": person("alex", "not_home") };
+  assert.deepEqual([...proximitySensors({ entities, states: counted(states) })], []);
+  assert.deepEqual([...proximitySensors({ entities, states: counted({ ...states }) })], []);
+  assert.equal(scans, 0);
+  // Without registry, the states are read (and again when they change).
+  proximitySensors({ states: counted(states) });
+  proximitySensors({ states: counted({ ...states }) });
+  assert.equal(scans, 2);
 });
