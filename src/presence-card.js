@@ -1067,8 +1067,18 @@ const lang = (hass, config) => {
   return STRINGS[l] ? l : STRINGS[l.split("-")[0]] ? l.split("-")[0] : "en";
 };
 
-// The locale for dates and times: the card's language when one is set, else Home Assistant's.
-const intlLang = (hass, config) => config?.language || hass?.locale?.language || hass?.language || "en";
+// Locale for Intl: Home Assistant's full locale when it is the card's language (pt-BR keeps Brazilian formats)
+// or a language the card does not translate (ja, ko…: its formats, English texts), else the card's language.
+// A bare "pt" is Home Assistant's European Portuguese: Intl reads it as Brazilian.
+const intlLang = (hass, config) => {
+  const l = lang(hass, config);
+  const full = config?.language ? "" : (hass && (hass.locale?.language || hass.language)) || "";
+  const base = l.split("-")[0];
+  const untranslated = full && !STRINGS[full] && !STRINGS[full.split("-")[0]];
+  let out = l;
+  if (untranslated || (full && full.split("-")[0] === base && !(l === "sr" && /-Latn\b/.test(full)))) out = full;
+  return out === "pt" ? "pt-PT" : out;
+};
 
 // 12 / 24 h clock from the Home Assistant profile (time_format): "12", "24", "system" (the browser's own
 // locale) or "language" (the locale's default: undefined).
@@ -1104,11 +1114,17 @@ const haversine = (lat1, lon1, lat2, lon2) => {
   return 12742 * Math.asin(Math.min(1, Math.sqrt(a)));
 };
 
-const fmtDistance = (km, miles) => {
+// Distance in the locale's number format: meters under 1 km, one decimal under 10, none above.
+const fmtDistance = (km, miles, locale) => {
   const v = miles ? km / 1.609344 : km;
-  const unit = miles ? "mi" : "km";
-  if (!miles && v < 1) return `${Math.round(v * 1000)} m`;
-  return `${v < 10 ? v.toFixed(1).replace(/\.0$/, "") : Math.round(v)} ${unit}`;
+  const meters = !miles && v < 1;
+  const [value, unit] = meters ? [Math.round(v * 1000), "meter"] : [v, miles ? "mile" : "kilometer"];
+  const digits = !meters && v < 10 ? 1 : 0;
+  try {
+    return new Intl.NumberFormat(locale, { style: "unit", unit, unitDisplay: "short", maximumFractionDigits: digits }).format(value);
+  } catch {
+    return `${digits ? value.toFixed(1).replace(/\.0$/, "") : Math.round(value)} ${meters ? "m" : miles ? "mi" : "km"}`;
+  }
 };
 
 const level = (v, warn, crit) => (v === null ? "" : v <= crit ? "crit" : v <= warn ? "warn" : "ok");
@@ -1208,7 +1224,9 @@ const proximitySensors = (hass) => {
   let list = Object.entries(hass.entities || {})
     .filter(([, e]) => e?.platform === "proximity" && PROX_KEYS[e.translation_key])
     .map(([id, e]) => ({ id, key: PROX_KEYS[e.translation_key], group: e.device_id || "" }));
-  const registry = list.length > 0;
+  // A registry without Proximity sensors has none to find in the states either: its empty result is kept
+  // until the registry changes, instead of scanning the states at each update.
+  const registry = list.length > 0 || Object.keys(hass.entities || {}).length > 0;
   if (!registry)
     list = Object.keys(hass.states).flatMap((id) => {
       const m = RE_PROX.exec(id);
@@ -1861,7 +1879,7 @@ class PresenceCard extends PresenceBase {
     const tr = (k) => this._t(k);
     const facts = [];
     // Distance from home, behind the direction of travel's icon when the person has Proximity sensors.
-    const dist = c.show_distance !== false && p.km !== null ? fmtDistance(p.km, miles) : "";
+    const dist = c.show_distance !== false && p.km !== null ? fmtDistance(p.km, miles, intlLang(this._hass, c)) : "";
     const dir = this._direction(p);
     if (dist || dir) {
       const title = [dir, dist && tr("from_home")].filter(Boolean).join(" · ");
