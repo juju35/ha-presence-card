@@ -619,7 +619,12 @@ test("Intl locale: Home Assistant's region kept, a bare pt is European Portugues
   assert.equal(intlLang({ locale: { language: "fr-CA" } }, {}), "fr-CA");
   assert.equal(intlLang({ locale: { language: "fr-CA" } }, { language: "de" }), "de");
   assert.equal(intlLang({ locale: { language: "sr-Latn" } }, {}), "sr-Latn");
-  assert.equal(intlLang({ locale: { language: "xx" } }, {}), "en");
+  // A language the card does not translate keeps its own formats (texts in English).
+  assert.equal(intlLang({ locale: { language: "ja" } }, {}), "ja");
+  assert.equal(intlLang({ locale: { language: "zh-Hant" } }, {}), "zh-Hant");
+  assert.equal(intlLang({ language: "fi" }, {}), "fi");
+  assert.equal(intlLang({ locale: { language: "ja" } }, { language: "de" }), "de");
+  assert.equal(intlLang({}, {}), "en");
 });
 
 test("proximity: a registry without Proximity sensors is not searched again in the states at each update", () => {

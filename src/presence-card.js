@@ -1067,14 +1067,16 @@ const lang = (hass, config) => {
   return STRINGS[l] ? l : STRINGS[l.split("-")[0]] ? l.split("-")[0] : "en";
 };
 
-// Locale for Intl: Home Assistant's full locale when it is the card's language (pt-BR keeps Brazilian formats),
-// else the card's language. A bare "pt" is Home Assistant's European Portuguese: Intl reads it as Brazilian.
+// Locale for Intl: Home Assistant's full locale when it is the card's language (pt-BR keeps Brazilian formats)
+// or a language the card does not translate (ja, ko…: its formats, English texts), else the card's language.
+// A bare "pt" is Home Assistant's European Portuguese: Intl reads it as Brazilian.
 const intlLang = (hass, config) => {
   const l = lang(hass, config);
   const full = config?.language ? "" : (hass && (hass.locale?.language || hass.language)) || "";
   const base = l.split("-")[0];
+  const untranslated = full && !STRINGS[full] && !STRINGS[full.split("-")[0]];
   let out = l;
-  if (full && full.split("-")[0] === base && !(l === "sr" && /-Latn\b/.test(full))) out = full;
+  if (untranslated || (full && full.split("-")[0] === base && !(l === "sr" && /-Latn\b/.test(full)))) out = full;
   return out === "pt" ? "pt-PT" : out;
 };
 

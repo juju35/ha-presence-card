@@ -5,6 +5,7 @@
 ### What's new
 - Distances are written in the number format of the card's language (decimal separator, thousands, unit).
 - Dates, times and distances keep the region of the Home Assistant profile (pt-BR, en-GB, fr-CA…), and Portuguese uses European Portuguese formats.
+- In a Home Assistant language the card does not translate (Japanese, Finnish, Turkish…), dates, times and distances keep that language's formats; only the texts are in English.
 - Without any Proximity sensor in the entity registry, the card no longer searches the states for them at each update.
 
 ## 1.8.0 - 2026-11-07
