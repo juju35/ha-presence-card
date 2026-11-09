@@ -29,6 +29,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 - How long each person has been there ("for 3 h 12 min"), refreshed every minute
 - Distance from home for people away, in km or miles following the Home Assistant unit system
 - Direction of travel (arriving, leaving, stationary) for people away, from the core [Proximity](https://www.home-assistant.io/integrations/proximity/) integration's sensors, found automatically
+- Travel time home for people away, from a travel time sensor you give each person (Waze, Google Maps)
 - Phone battery, found automatically: battery sensor of the tracker's device (Companion app) or the tracker's battery attribute; orange at 40 %, red at 20 %
 - Header summary: "2 of 4 at home", "Everyone is home", "Nobody home"
 - People at home first, by name, or as listed
@@ -95,11 +96,13 @@ entities:
     picture: /local/sam.jpg
     proximity_direction: sensor.home_sam_direction_of_travel
     proximity_distance: sensor.home_sam_distance
+    travel_time: sensor.sam_to_home
 title: Family
 sort: presence
 show_since: true
 show_distance: true
 show_direction: true
+show_travel: true
 show_battery: true
 show_away: true
 language: fr
@@ -121,12 +124,13 @@ language: fr
 
 | Option | Card | Default | Description |
 |---|---|---|---|
-| `entities` | both | All people | People to show: `person` entity ids, or objects with `entity` and an optional `name`, `picture`, `proximity_direction` and `proximity_distance` (the person's Proximity sensors, when not found automatically) |
+| `entities` | both | All people | People to show: `person` entity ids, or objects with `entity` and an optional `name`, `picture`, `proximity_direction` and `proximity_distance` (the person's Proximity sensors, when not found automatically), and `travel_time` (a travel time sensor home, such as [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time/)) |
 | `title` | both | Presence | Card title |
 | `sort` | both | `presence` | Order: `presence` (at home, then in a zone, then away), `name`, or `config` (as listed) |
 | `show_since` | both | `true` | How long each person has been in their current state |
 | `show_distance` | both | `true` | Distance from home for people away |
 | `show_direction` | both | `true` | Direction of travel (arriving, leaving, stationary) for people away, from the Proximity sensors |
+| `show_travel` | both | `true` | Travel time home of the people away, from their `travel_time` sensor (in any unit: s, min, h) |
 | `show_battery` | both | `true` | Phone battery |
 | `show_away` | both | `true` | Show the people away (`false` keeps only people at home or in a zone) |
 | `show_moves` | both | `true` | Folded **Last 24 hours** section with the arrivals and departures from the history (`false` removes it) |

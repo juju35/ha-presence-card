@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11.0 - 2026-11-09
+
+### Features
+- **Travel time home**: give a person a `travel_time` sensor (Waze Travel Time, Google Maps Travel Time…) and the card shows how long they are from home while they are away, next to the distance. `show_travel: false` hides it.
+
 ## 1.10.1 - 2026-11-09
 
 ### Fixes
