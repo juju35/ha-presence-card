@@ -646,3 +646,23 @@ test("proximity: a registry without Proximity sensors is not searched again in t
   proximitySensors({ states: counted({ ...states }) });
   assert.equal(scans, 2);
 });
+
+test("travel time home from the person's travel_time sensor, only while away", () => {
+  const states = {
+    ...HOME,
+    "person.a": person("a", "not_home"),
+    "person.b": person("b", "home"),
+    "sensor.a_to_home": { entity_id: "sensor.a_to_home", state: "0.4", attributes: { unit_of_measurement: "h" } },
+  };
+  assert.equal(personInfo({ states }, { entity: "person.a", travel_time: "sensor.a_to_home" }, NOW).travel, 24);
+  assert.equal(personInfo({ states }, { entity: "person.b", travel_time: "sensor.a_to_home" }, NOW).travel, null);
+  assert.equal(personInfo({ states }, { entity: "person.a" }, NOW).travel, null);
+
+  const el = new PresenceCard();
+  el._config = {};
+  el._hass = { states, language: "en" };
+  const p = personInfo({ states }, { entity: "person.a", travel_time: "sensor.a_to_home" }, NOW);
+  assert.match(el._row(p), /<span class="eta" title="Travel time home">.*24 min<\/span>/);
+  el._config = { show_travel: false };
+  assert.doesNotMatch(el._row(p), /class="eta"/);
+});

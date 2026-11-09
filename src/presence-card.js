@@ -19,6 +19,9 @@ const ICONS = {
     "M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z",
   distance:
     "M6.5,8.11C5.61,8.11 4.89,7.39 4.89,6.5A1.61,1.61 0 0,1 6.5,4.89C7.39,4.89 8.11,5.61 8.11,6.5V6.5A1.61,1.61 0 0,1 6.5,8.11M6.5,2C4,2 2,4 2,6.5C2,9.87 6.5,14.86 6.5,14.86C6.5,14.86 11,9.87 11,6.5C11,4 9,2 6.5,2M17.5,8.11A1.61,1.61 0 0,1 15.89,6.5C15.89,5.61 16.61,4.89 17.5,4.89C18.39,4.89 19.11,5.61 19.11,6.5A1.61,1.61 0 0,1 17.5,8.11M17.5,2C15,2 13,4 13,6.5C13,9.87 17.5,14.86 17.5,14.86C17.5,14.86 22,9.87 22,6.5C22,4 20,2 17.5,2M17.5,16C16.23,16 15.1,16.8 14.68,18H9.32C8.77,16.44 7.05,15.62 5.5,16.17C3.93,16.72 3.11,18.44 3.66,20C4.22,21.56 5.93,22.38 7.5,21.83C8.35,21.53 9,20.85 9.32,20H14.69C15.24,21.56 16.96,22.38 18.5,21.83C20.08,21.27 20.9,19.56 20.35,18C19.92,16.8 18.78,16 17.5,16V16Z",
+  // mdi:car-clock, the travel time home.
+  travel:
+    "M18 13C15.2 13 13 15.2 13 18S15.2 23 18 23 23 20.8 23 18 20.8 13 18 13M20.1 19.9L17.5 18.4V15H18.7V17.7L20.7 18.9L20.1 19.9M11.1 18H5V19C5 19.6 4.6 20 4 20H3C2.4 20 2 19.6 2 19V11L4.1 5C4.3 4.4 4.9 4 5.5 4H16.5C17.1 4 17.7 4.4 17.9 5L19.9 11.1C19.3 11 18.7 11 18 11C17.5 11 17 11 16.5 11.1C16.4 11 16.2 11 16.1 11H3.9L5.4 6.5H16.6L17.8 10.1C14.8 10.6 12.3 12.8 11.4 15.7M3.5 15C3.5 15.8 4.2 16.5 5 16.5S6.5 15.8 6.5 15 5.8 13.5 5 13.5 3.5 14.2 3.5 15Z",
   // mdi:chevron-right, the movements section's fold indicator (turned down when unfolded).
   chevron: "M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z",
   // mdi:arrow-expand and mdi:arrow-collapse, the mini card's zoom button.
@@ -72,6 +75,8 @@ const STRINGS = {
     show_distance: "Show distance from home",
     show_direction: "Show direction of travel (Proximity)",
     show_battery: "Show phone battery",
+    show_travel: "Show travel time home (travel_time option)",
+    travel_home: "Travel time home",
     show_away: "Show people away",
     zoom: "Zoom button",
     zoom_helper: "Switches the mini card to the full card and back",
@@ -117,6 +122,8 @@ const STRINGS = {
     show_distance: "Afficher la distance de la maison",
     show_direction: "Afficher le sens de déplacement (Proximité)",
     show_battery: "Afficher la batterie du téléphone",
+    show_travel: "Afficher le temps de trajet jusqu'à la maison (option travel_time)",
+    travel_home: "Temps de trajet jusqu'à la maison",
     show_away: "Afficher les absents",
     zoom: "Bouton zoom",
     zoom_helper: "Bascule la mini-carte en carte complète, et inversement",
@@ -162,6 +169,8 @@ const STRINGS = {
     show_distance: "Entfernung von zu Hause anzeigen",
     show_direction: "Bewegungsrichtung anzeigen (Nähe)",
     show_battery: "Handy-Akku anzeigen",
+    show_travel: "Fahrzeit nach Hause anzeigen (Option travel_time)",
+    travel_home: "Fahrzeit nach Hause",
     show_away: "Abwesende Personen anzeigen",
     zoom: "Zoom-Schaltfläche",
     zoom_helper: "Wechselt von der Mini-Karte zur vollständigen Karte und zurück",
@@ -207,6 +216,8 @@ const STRINGS = {
     show_distance: "Mostrar la distancia desde casa",
     show_direction: "Mostrar la dirección de desplazamiento (Proximidad)",
     show_battery: "Mostrar la batería del teléfono",
+    show_travel: "Mostrar el tiempo de viaje a casa (opción travel_time)",
+    travel_home: "Tiempo de viaje a casa",
     show_away: "Mostrar a las personas ausentes",
     zoom: "Botón de zoom",
     zoom_helper: "Cambia la minitarjeta a la tarjeta completa y viceversa",
@@ -253,6 +264,8 @@ const STRINGS = {
     show_distance: "Прикажи удаљеност од куће",
     show_direction: "Прикажи смер кретања (Близина)",
     show_battery: "Прикажи батерију телефона",
+    show_travel: "Прикажи време пута до куће",
+    travel_home: "Време пута до куће",
     show_away: "Прикажи одсутне особе",
     zoom: "Дугме за увећање",
     zoom_helper: "Пребацује мини картицу на пун приказ и назад",
@@ -299,6 +312,8 @@ const STRINGS = {
     show_distance: "Prikaži udaljenost od kuće",
     show_direction: "Prikaži smer kretanja (Blizina)",
     show_battery: "Prikaži bateriju telefona",
+    show_travel: "Prikaži vreme puta do kuće (opcija travel_time)",
+    travel_home: "Vreme puta do kuće",
     show_away: "Prikaži odsutne osobe",
     zoom: "Dugme za uvećanje",
     zoom_helper: "Prebacuje mini karticu na pun prikaz i nazad",
@@ -345,6 +360,8 @@ const STRINGS = {
     show_distance: "Mostra la distanza da casa",
     show_direction: "Mostra la direzione di spostamento (Prossimità)",
     show_battery: "Mostra la batteria del telefono",
+    show_travel: "Mostra il tempo di viaggio verso casa (opzione travel_time)",
+    travel_home: "Tempo di viaggio verso casa",
     show_away: "Mostra le persone fuori casa",
     zoom: "Pulsante zoom",
     zoom_helper: "Passa dalla mini scheda alla scheda completa e viceversa",
@@ -391,6 +408,8 @@ const STRINGS = {
     show_distance: "Afstand tot huis tonen",
     show_direction: "Reisrichting tonen (Nabijheid)",
     show_battery: "Batterij van de telefoon tonen",
+    show_travel: "Reistijd naar huis tonen (optie travel_time)",
+    travel_home: "Reistijd naar huis",
     show_away: "Afwezige personen tonen",
     zoom: "Zoomknop",
     zoom_helper: "Schakelt tussen de minikaart en de volledige kaart",
@@ -437,6 +456,8 @@ const STRINGS = {
     show_distance: "Mostrar a distância a casa",
     show_direction: "Mostrar o sentido de deslocação (Proximidade)",
     show_battery: "Mostrar a bateria do telemóvel",
+    show_travel: "Mostrar o tempo de viagem até casa (opção travel_time)",
+    travel_home: "Tempo de viagem até casa",
     show_away: "Mostrar as pessoas ausentes",
     zoom: "Botão de zoom",
     zoom_helper: "Alterna entre o minicartão e o cartão completo",
@@ -483,6 +504,8 @@ const STRINGS = {
     show_distance: "Pokaż odległość od domu",
     show_direction: "Pokaż kierunek ruchu (Bliskość)",
     show_battery: "Pokaż baterię telefonu",
+    show_travel: "Pokaż czas dojazdu do domu (opcja travel_time)",
+    travel_home: "Czas dojazdu do domu",
     show_away: "Pokaż osoby poza domem",
     zoom: "Przycisk powiększenia",
     zoom_helper: "Przełącza minikartę na pełną kartę i z powrotem",
@@ -529,6 +552,8 @@ const STRINGS = {
     show_distance: "Afișează distanța față de casă",
     show_direction: "Afișează direcția de deplasare (Proximitate)",
     show_battery: "Afișează bateria telefonului",
+    show_travel: "Afișează timpul de drum până acasă (opțiunea travel_time)",
+    travel_home: "Timp de drum până acasă",
     show_away: "Afișează persoanele plecate",
     zoom: "Buton de zoom",
     zoom_helper: "Comută mini-cardul la cardul complet și înapoi",
@@ -575,6 +600,8 @@ const STRINGS = {
     show_distance: "Vis afstand fra hjemmet",
     show_direction: "Vis bevægelsesretning (Nærhed)",
     show_battery: "Vis telefonens batteri",
+    show_travel: "Vis rejsetid hjem (indstillingen travel_time)",
+    travel_home: "Rejsetid hjem",
     show_away: "Vis personer, der er ude",
     zoom: "Zoomknap",
     zoom_helper: "Skifter mellem minikortet og hele kortet",
@@ -621,6 +648,8 @@ const STRINGS = {
     show_distance: "Visa avstånd hemifrån",
     show_direction: "Visa färdriktning (Närhet)",
     show_battery: "Visa telefonens batteri",
+    show_travel: "Visa restid hem (alternativet travel_time)",
+    travel_home: "Restid hem",
     show_away: "Visa personer som är borta",
     zoom: "Zoomknapp",
     zoom_helper: "Växlar mellan minikortet och hela kortet",
@@ -667,6 +696,8 @@ const STRINGS = {
     show_distance: "Показвай разстоянието от дома",
     show_direction: "Показвай посоката на движение (Близост)",
     show_battery: "Показвай батерията на телефона",
+    show_travel: "Показване на времето за път до вкъщи (опция travel_time)",
+    travel_home: "Време за път до вкъщи",
     show_away: "Показвай отсъстващите",
     zoom: "Бутон за мащабиране",
     zoom_helper: "Превключва мини картата към пълната карта и обратно",
@@ -713,6 +744,8 @@ const STRINGS = {
     show_distance: "Показывать расстояние от дома",
     show_direction: "Показывать направление движения (Близость)",
     show_battery: "Показывать заряд телефона",
+    show_travel: "Показывать время в пути домой (параметр travel_time)",
+    travel_home: "Время в пути домой",
     show_away: "Показывать отсутствующих",
     zoom: "Кнопка масштаба",
     zoom_helper: "Переключает мини-карточку на полную карточку и обратно",
@@ -759,6 +792,8 @@ const STRINGS = {
     show_distance: "Показувати відстань від дому",
     show_direction: "Показувати напрямок руху (Близькість)",
     show_battery: "Показувати заряд телефону",
+    show_travel: "Показувати час у дорозі додому (параметр travel_time)",
+    travel_home: "Час у дорозі додому",
     show_away: "Показувати відсутніх",
     zoom: "Кнопка масштабу",
     zoom_helper: "Перемикає міні-картку на повну картку й назад",
@@ -805,6 +840,8 @@ const STRINGS = {
     show_distance: "Otthontól való távolság megjelenítése",
     show_direction: "Haladási irány megjelenítése (Közelség)",
     show_battery: "Telefon akkumulátorának megjelenítése",
+    show_travel: "Utazási idő megjelenítése hazáig (travel_time beállítás)",
+    travel_home: "Utazási idő hazáig",
     show_away: "Távol lévők megjelenítése",
     zoom: "Nagyítás gomb",
     zoom_helper: "Vált a mini kártya és a teljes kártya között",
@@ -851,6 +888,8 @@ const STRINGS = {
     show_distance: "Zobraziť vzdialenosť od domu",
     show_direction: "Zobraziť smer pohybu (Blízkosť)",
     show_battery: "Zobraziť batériu telefónu",
+    show_travel: "Zobraziť čas cesty domov (možnosť travel_time)",
+    travel_home: "Čas cesty domov",
     show_away: "Zobraziť osoby mimo domu",
     zoom: "Tlačidlo priblíženia",
     zoom_helper: "Prepína mini kartu na celú kartu a späť",
@@ -897,6 +936,8 @@ const STRINGS = {
     show_distance: "Zobrazit vzdálenost od domova",
     show_direction: "Zobrazit směr pohybu (Blízkost)",
     show_battery: "Zobrazit baterii telefonu",
+    show_travel: "Zobrazit dobu cesty domů (volba travel_time)",
+    travel_home: "Doba cesty domů",
     show_away: "Zobrazit nepřítomné osoby",
     zoom: "Tlačítko přiblížení",
     zoom_helper: "Přepíná mini kartu na celou kartu a zpět",
@@ -943,6 +984,8 @@ const STRINGS = {
     show_distance: "Prikaži oddaljenost od doma",
     show_direction: "Prikaži smer gibanja (Bližina)",
     show_battery: "Prikaži baterijo telefona",
+    show_travel: "Prikaži čas poti domov (možnost travel_time)",
+    travel_home: "Čas poti domov",
     show_away: "Prikaži odsotne osebe",
     zoom: "Gumb za povečavo",
     zoom_helper: "Preklaplja med mini kartico in celotno kartico",
@@ -989,6 +1032,8 @@ const STRINGS = {
     show_distance: "Rādīt attālumu no mājām",
     show_direction: "Rādīt kustības virzienu (Tuvums)",
     show_battery: "Rādīt tālruņa akumulatoru",
+    show_travel: "Rādīt ceļa laiku līdz mājām (opcija travel_time)",
+    travel_home: "Ceļa laiks līdz mājām",
     show_away: "Rādīt prombūtnē esošos",
     zoom: "Tālummaiņas poga",
     zoom_helper: "Pārslēdz mini karti uz pilno karti un atpakaļ",
@@ -1035,6 +1080,8 @@ const STRINGS = {
     show_distance: "Εμφάνιση απόστασης από το σπίτι",
     show_direction: "Εμφάνιση κατεύθυνσης κίνησης (Εγγύτητα)",
     show_battery: "Εμφάνιση μπαταρίας τηλεφώνου",
+    show_travel: "Εμφάνιση χρόνου διαδρομής προς το σπίτι (επιλογή travel_time)",
+    travel_home: "Χρόνος διαδρομής προς το σπίτι",
     show_away: "Εμφάνιση ατόμων εκτός σπιτιού",
     zoom: "Κουμπί μεγέθυνσης",
     zoom_helper: "Εναλλάσσει τη μίνι κάρτα με την πλήρη κάρτα",
@@ -1158,7 +1205,7 @@ const logo = (label) => `<div class="logo"><svg class="icon" viewBox="6 6 36 36"
 // People
 // ---------------------------------------------------------------------------
 
-// `entities` items: "person.x" or { entity: "person.x", name: "…", picture: "…" }.
+// `entities` items: "person.x" or { entity: "person.x", name: "…", picture: "…", travel_time: "sensor.…" }.
 const normalize = (items) =>
   (Array.isArray(items) ? items : [])
     .map((e) => (typeof e === "string" ? { entity: e } : e))
@@ -1312,7 +1359,17 @@ const personInfo = (hass, item, now = Date.now()) => {
     km,
     direction: DIRECTIONS.includes(dir) ? dir : null,
     battery: batteryOf(hass, st),
+    travel: located ? travelMinutes(hass.states[item.travel_time]) : null,
   };
+};
+
+// Travel time home, in minutes, from a travel time sensor (Waze, Google Maps…: `travel_time` of a person), whatever
+// its unit; null when unknown.
+const TRAVEL_FACTORS = { s: 1 / 60, min: 1, h: 60, d: 1440 };
+const travelMinutes = (st) => {
+  const v = st ? Number.parseFloat(st.state) : Number.NaN;
+  if (!Number.isFinite(v) || v < 0) return null;
+  return Math.round(v * (TRAVEL_FACTORS[st.attributes?.unit_of_measurement] ?? 1));
 };
 
 // Movements of the people from their state changes (any order): arrivals at home or in a zone, departures. A
@@ -1571,6 +1628,7 @@ class PresenceBase extends HTMLElement {
       if (!st) continue;
       const prox = proximityOf(h, item);
       if (prox) sig.push(h.states[prox.direction], h.states[prox.distance]);
+      if (item.travel_time) sig.push(h.states[item.travel_time]);
       for (const tr of trackersOf(st)) {
         sig.push(h.states[tr]);
         const dev = h.entities?.[tr]?.device_id;
@@ -1888,6 +1946,10 @@ class PresenceCard extends PresenceBase {
         : svgIcon(ICONS.distance);
       facts.push(`<span class="${dir ? `dir ${p.direction}` : "dist"}" title="${esc(title)}">${icon}${esc(dist || dir)}</span>`);
     }
+    if (c.show_travel !== false && p.travel !== null) {
+      const eta = fmtDuration(p.travel * 60, tr).replace(/(\d) /g, "$1\u00a0");
+      facts.push(`<span class="eta" title="${esc(tr("travel_home"))}">${svgIcon(ICONS.travel)}${esc(eta)}</span>`);
+    }
     if (c.show_battery !== false && p.battery) facts.push(this._battery(p.battery));
     // A number stays with its unit ("23 h") when the duration wraps.
     const sinceText = p.since === null ? "" : p.since < 60 ? tr("just_now") : `${tr("for")} ${fmtDuration(p.since, tr).replace(/(\d) /g, "$1\u00a0")}`;
@@ -2183,13 +2245,13 @@ class PresenceEditorBase extends HTMLElement {
 
 class PresenceCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_since", "show_distance", "show_direction", "show_battery", "show_away", "show_moves"];
+    return ["show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_away", "show_moves"];
   }
 }
 
 class PresenceMiniCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_away", "show_since", "show_distance", "show_direction", "show_battery", "show_moves", "zoom"];
+    return ["show_away", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_moves", "zoom"];
   }
 }
 
