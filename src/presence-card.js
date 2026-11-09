@@ -2251,7 +2251,7 @@ class PresenceCardEditor extends PresenceEditorBase {
 
 class PresenceMiniCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_away", "show_since", "show_distance", "show_direction", "show_battery", "show_moves", "zoom"];
+    return ["show_away", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_moves", "zoom"];
   }
 }
 
