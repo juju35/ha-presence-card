@@ -126,6 +126,8 @@ language: fr
 |---|---|---|---|
 | `entities` | both | All people | People to show: `person` entity ids, or objects with `entity` and an optional `name`, `picture`, `proximity_direction` and `proximity_distance` (the person's Proximity sensors, when not found automatically), and `travel_time` (a travel time sensor home, such as [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time/)) |
 | `title` | both | Presence | Card title |
+| `show_title` | both | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
+| `show_subtitle` | both | `true` | Show the subtitle under the title |
 | `sort` | both | `presence` | Order: `presence` (at home, then in a zone, then away), `name`, or `config` (as listed) |
 | `show_since` | both | `true` | How long each person has been in their current state |
 | `show_distance` | both | `true` | Distance from home for people away |

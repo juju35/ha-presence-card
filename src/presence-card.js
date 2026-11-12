@@ -61,6 +61,8 @@ const STRINGS = {
     left_zone: "{name} left {zone}",
     no_moves: "No movement in the last 24 hours",
     show_moves: "Show the movements of the last 24 hours",
+    show_title: "Show title",
+    show_subtitle: "Show subtitle",
     dir_towards: "Arriving",
     dir_away_from: "Leaving",
     dir_stationary: "Stationary",
@@ -109,6 +111,8 @@ const STRINGS = {
     left_zone: "{name} a quitté {zone}",
     no_moves: "Aucun mouvement ces dernières 24 heures",
     show_moves: "Afficher les mouvements des dernières 24 heures",
+    show_title: "Afficher le titre",
+    show_subtitle: "Afficher le sous-titre",
     dir_towards: "En approche",
     dir_away_from: "S'éloigne",
     dir_stationary: "Immobile",
@@ -156,6 +160,8 @@ const STRINGS = {
     left_zone: "{name} hat {zone} verlassen",
     no_moves: "Keine Bewegung in den letzten 24 Stunden",
     show_moves: "Bewegungen der letzten 24 Stunden anzeigen",
+    show_title: "Titel anzeigen",
+    show_subtitle: "Untertitel anzeigen",
     dir_towards: "Nähert sich",
     dir_away_from: "Entfernt sich",
     dir_stationary: "Stillstehend",
@@ -203,6 +209,8 @@ const STRINGS = {
     left_zone: "{name} salió de {zone}",
     no_moves: "Ningún movimiento en las últimas 24 horas",
     show_moves: "Mostrar los movimientos de las últimas 24 horas",
+    show_title: "Mostrar el título",
+    show_subtitle: "Mostrar el subtítulo",
     dir_towards: "Acercándose",
     dir_away_from: "Alejándose",
     dir_stationary: "Sin moverse",
@@ -250,6 +258,8 @@ const STRINGS = {
     left_zone: "{name}: одлазак из {zone}",
     no_moves: "Нема кретања у последња 24 сата",
     show_moves: "Прикажи кретања у последња 24 сата",
+    show_title: "Прикажи наслов",
+    show_subtitle: "Прикажи поднаслов",
     dir_towards: "Приближава се",
     dir_away_from: "Удаљава се",
     dir_stationary: "Мирује",
@@ -298,6 +308,8 @@ const STRINGS = {
     left_zone: "{name}: odlazak iz {zone}",
     no_moves: "Nema kretanja u poslednja 24 sata",
     show_moves: "Prikaži kretanja u poslednja 24 sata",
+    show_title: "Prikaži naslov",
+    show_subtitle: "Prikaži podnaslov",
     dir_towards: "Približava se",
     dir_away_from: "Udaljava se",
     dir_stationary: "Miruje",
@@ -346,6 +358,8 @@ const STRINGS = {
     left_zone: "{name} ha lasciato {zone}",
     no_moves: "Nessun movimento nelle ultime 24 ore",
     show_moves: "Mostra i movimenti delle ultime 24 ore",
+    show_title: "Mostra il titolo",
+    show_subtitle: "Mostra il sottotitolo",
     dir_towards: "In avvicinamento",
     dir_away_from: "In allontanamento",
     dir_stationary: "Fermo",
@@ -394,6 +408,8 @@ const STRINGS = {
     left_zone: "{name} heeft {zone} verlaten",
     no_moves: "Geen beweging in de laatste 24 uur",
     show_moves: "Bewegingen van de laatste 24 uur tonen",
+    show_title: "Titel tonen",
+    show_subtitle: "Ondertitel tonen",
     dir_towards: "Komt dichterbij",
     dir_away_from: "Gaat verder weg",
     dir_stationary: "Stilstaand",
@@ -442,6 +458,8 @@ const STRINGS = {
     left_zone: "{name} saiu de {zone}",
     no_moves: "Nenhum movimento nas últimas 24 horas",
     show_moves: "Mostrar os movimentos das últimas 24 horas",
+    show_title: "Mostrar o título",
+    show_subtitle: "Mostrar o subtítulo",
     dir_towards: "A aproximar-se",
     dir_away_from: "A afastar-se",
     dir_stationary: "Parado",
@@ -490,6 +508,8 @@ const STRINGS = {
     left_zone: "{name}: wyjście z {zone}",
     no_moves: "Brak ruchu w ostatnich 24 godzinach",
     show_moves: "Pokaż ruchy z ostatnich 24 godzin",
+    show_title: "Pokaż tytuł",
+    show_subtitle: "Pokaż podtytuł",
     dir_towards: "Zbliża się",
     dir_away_from: "Oddala się",
     dir_stationary: "Bez ruchu",
@@ -538,6 +558,8 @@ const STRINGS = {
     left_zone: "{name} a plecat de la {zone}",
     no_moves: "Nicio mișcare în ultimele 24 de ore",
     show_moves: "Afișează mișcările din ultimele 24 de ore",
+    show_title: "Afișează titlul",
+    show_subtitle: "Afișează subtitlul",
     dir_towards: "Se apropie",
     dir_away_from: "Se îndepărtează",
     dir_stationary: "Staționar",
@@ -586,6 +608,8 @@ const STRINGS = {
     left_zone: "{name} forlod {zone}",
     no_moves: "Ingen bevægelse de seneste 24 timer",
     show_moves: "Vis bevægelserne de seneste 24 timer",
+    show_title: "Vis titel",
+    show_subtitle: "Vis undertitel",
     dir_towards: "Nærmer sig",
     dir_away_from: "Fjerner sig",
     dir_stationary: "Stillestående",
@@ -634,6 +658,8 @@ const STRINGS = {
     left_zone: "{name} lämnade {zone}",
     no_moves: "Ingen rörelse de senaste 24 timmarna",
     show_moves: "Visa rörelserna de senaste 24 timmarna",
+    show_title: "Visa rubrik",
+    show_subtitle: "Visa underrubrik",
     dir_towards: "Närmar sig",
     dir_away_from: "Avlägsnar sig",
     dir_stationary: "Stillastående",
@@ -682,6 +708,8 @@ const STRINGS = {
     left_zone: "{name}: напускане на {zone}",
     no_moves: "Няма движение през последните 24 часа",
     show_moves: "Покажи движенията от последните 24 часа",
+    show_title: "Показване на заглавието",
+    show_subtitle: "Показване на подзаглавието",
     dir_towards: "Приближава се",
     dir_away_from: "Отдалечава се",
     dir_stationary: "Неподвижен",
@@ -730,6 +758,8 @@ const STRINGS = {
     left_zone: "{name}: уход из {zone}",
     no_moves: "Нет перемещений за последние 24 часа",
     show_moves: "Показать перемещения за последние 24 часа",
+    show_title: "Показывать заголовок",
+    show_subtitle: "Показывать подзаголовок",
     dir_towards: "Приближается",
     dir_away_from: "Удаляется",
     dir_stationary: "На месте",
@@ -778,6 +808,8 @@ const STRINGS = {
     left_zone: "{name}: вихід з {zone}",
     no_moves: "Немає переміщень за останні 24 години",
     show_moves: "Показати переміщення за останні 24 години",
+    show_title: "Показувати заголовок",
+    show_subtitle: "Показувати підзаголовок",
     dir_towards: "Наближається",
     dir_away_from: "Віддаляється",
     dir_stationary: "На місці",
@@ -826,6 +858,8 @@ const STRINGS = {
     left_zone: "{name} elhagyta: {zone}",
     no_moves: "Nem volt mozgás az elmúlt 24 órában",
     show_moves: "Az elmúlt 24 óra mozgásainak megjelenítése",
+    show_title: "Cím megjelenítése",
+    show_subtitle: "Alcím megjelenítése",
     dir_towards: "Közeledik",
     dir_away_from: "Távolodik",
     dir_stationary: "Egy helyben",
@@ -874,6 +908,8 @@ const STRINGS = {
     left_zone: "{name}: odchod z {zone}",
     no_moves: "Žiadny pohyb za posledných 24 hodín",
     show_moves: "Zobraziť pohyby za posledných 24 hodín",
+    show_title: "Zobraziť názov",
+    show_subtitle: "Zobraziť podnázov",
     dir_towards: "Približuje sa",
     dir_away_from: "Vzďaľuje sa",
     dir_stationary: "Stojí",
@@ -922,6 +958,8 @@ const STRINGS = {
     left_zone: "{name}: odchod z {zone}",
     no_moves: "Žádný pohyb za posledních 24 hodin",
     show_moves: "Zobrazit pohyby za posledních 24 hodin",
+    show_title: "Zobrazit název",
+    show_subtitle: "Zobrazit podnázev",
     dir_towards: "Přibližuje se",
     dir_away_from: "Vzdaluje se",
     dir_stationary: "Stojí",
@@ -970,6 +1008,8 @@ const STRINGS = {
     left_zone: "{name}: odhod iz {zone}",
     no_moves: "V zadnjih 24 urah ni bilo gibanja",
     show_moves: "Prikaži gibanja zadnjih 24 ur",
+    show_title: "Prikaži naslov",
+    show_subtitle: "Prikaži podnaslov",
     dir_towards: "Se približuje",
     dir_away_from: "Se oddaljuje",
     dir_stationary: "Miruje",
@@ -1018,6 +1058,8 @@ const STRINGS = {
     left_zone: "{name}: aiziešana no {zone}",
     no_moves: "Pēdējās 24 stundās nav kustību",
     show_moves: "Rādīt pēdējo 24 stundu kustības",
+    show_title: "Rādīt virsrakstu",
+    show_subtitle: "Rādīt apakšvirsrakstu",
     dir_towards: "Tuvojas",
     dir_away_from: "Attālinās",
     dir_stationary: "Nekustas",
@@ -1066,6 +1108,8 @@ const STRINGS = {
     left_zone: "{name}: αναχώρηση από {zone}",
     no_moves: "Καμία κίνηση τις τελευταίες 24 ώρες",
     show_moves: "Εμφάνιση των κινήσεων των τελευταίων 24 ωρών",
+    show_title: "Εμφάνιση τίτλου",
+    show_subtitle: "Εμφάνιση υπότιτλου",
     dir_towards: "Πλησιάζει",
     dir_away_from: "Απομακρύνεται",
     dir_stationary: "Σε στάση",
@@ -1515,6 +1559,7 @@ const BASE_STYLE = `
      A zero basis (not auto): in the mini card's wrapping header, a basis at the text's width would push the
      zoom button onto a second line at narrow widths. */
   .titles { flex: 1 1 0%; min-width: 6ch; }
+  :host([hide-title]) .titles > .name, :host([hide-subtitle]) .titles > .sub { display: none; }
   .logo { --c: var(--pr-accent); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; align-self: flex-start;
           background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
   .logo .icon { width: 24px; height: 24px; }
@@ -1600,6 +1645,9 @@ class PresenceBase extends HTMLElement {
     if (!config) throw new Error("Invalid configuration");
     if (config.entities !== undefined && !Array.isArray(config.entities)) throw new Error("entities must be a list");
     this._config = { ...config };
+    // show_title / show_subtitle: the header's title / subtitle, hidden by the stylesheet
+    this.toggleAttribute?.("hide-title", config.show_title === false);
+    this.toggleAttribute?.("hide-subtitle", config.show_subtitle === false);
     this._html = "";
     this._update();
     this._startTimer();
@@ -2245,13 +2293,13 @@ class PresenceEditorBase extends HTMLElement {
 
 class PresenceCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_away", "show_moves"];
+    return ["show_title", "show_subtitle", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_away", "show_moves"];
   }
 }
 
 class PresenceMiniCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_away", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_moves", "zoom"];
+    return ["show_title", "show_subtitle", "show_away", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_moves", "zoom"];
   }
 }
 
