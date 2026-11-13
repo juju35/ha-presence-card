@@ -38,6 +38,9 @@ export const load = (file, names) => {
     },
     Intl,
     Date,
+    // connectedCallback restarts the "since" timer (none in the tests: the stub is never connected).
+    setInterval,
+    clearInterval,
   };
   vm.createContext(context);
   return vm.runInContext(`${src}\n;({ ${names.join(", ")} })`, context);
