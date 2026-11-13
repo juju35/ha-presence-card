@@ -1592,6 +1592,42 @@ const inDialog = (ev) => ev.composedPath().some((n) => ["ha-more-info-dialog", "
 
 const BADGE = { home: ICONS.home, zone: ICONS.zone, away: ICONS.away, unknown: ICONS.unknown };
 
+// "A click elsewhere" is caught on the pointer, not only on the click event: on iOS (Safari and the companion app)
+// a tap on something that is not clickable (the background, an empty spot, a card with no action) sends no click to
+// the page. The handler runs when the press and the release are both outside the card (a slider dragged out of the
+// card does not count, and a scroll cancels the pointer); keyboard clicks (no click count) still go through the click
+// event. The handler keeps its own checks (dialogs opened from the card…). `tap(ev)` is for the tests.
+const watchOutside = (card, handler) => {
+  let downOutside = false;
+  const outside = (ev) => !ev.composedPath().includes(card);
+  const onDown = (ev) => {
+    downOutside = outside(ev);
+  };
+  const onUp = (ev) => {
+    if (downOutside && outside(ev)) handler(ev);
+    downOutside = false;
+  };
+  const onClick = (ev) => {
+    if (ev.detail === 0) handler(ev);
+  };
+  return {
+    on() {
+      document.addEventListener("pointerdown", onDown, true);
+      document.addEventListener("pointerup", onUp, true);
+      document.addEventListener("click", onClick, true);
+    },
+    off() {
+      document.removeEventListener("pointerdown", onDown, true);
+      document.removeEventListener("pointerup", onUp, true);
+      document.removeEventListener("click", onClick, true);
+    },
+    tap(ev) {
+      onDown(ev);
+      onUp(ev);
+    },
+  };
+};
+
 class PresenceBase extends HTMLElement {
   constructor() {
     super();
@@ -1862,12 +1898,17 @@ class PresenceCard extends PresenceBase {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("click", this._foldMoves, true);
+    (this._foldMovesWatch ??= watchOutside(this, (ev) => this._foldMoves(ev))).on();
+    // Back on the page after leaving it: rendered again in its default state.
+    this._update?.();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener("click", this._foldMoves, true);
+    this._foldMovesWatch?.off();
+    // Left (another dashboard view, a conditional card hidden): back to the default state, so that the card does
+    // not come back unfolded or with its popup open.
+    this._movesOpen = false;
   }
 
   // Reads the history of the people when the section is unfolded, and again once one of them has moved since:
@@ -2069,13 +2110,18 @@ class PresenceMiniCard extends PresenceCard {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("click", this._onOutside, true);
+    (this._onOutsideWatch ??= watchOutside(this, (ev) => this._onOutside(ev))).on();
+    // Back on the page after leaving it: rendered again in its default state.
+    this._update?.();
     this._resize?.observe(this);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener("click", this._onOutside, true);
+    this._onOutsideWatch?.off();
+    // Left (another dashboard view, a conditional card hidden): back to the default state, so that the card does
+    // not come back unfolded or with its popup open.
+    this._zoomed = false;
     this._resize?.disconnect();
   }
 

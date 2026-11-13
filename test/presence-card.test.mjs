@@ -666,3 +666,39 @@ test("travel time home from the person's travel_time sensor, only while away", (
   el._config = { show_travel: false };
   assert.doesNotMatch(el._row(p), /class="eta"/);
 });
+
+test("folding: a tap elsewhere (pointer) folds the movements and collapses the mini card, not a press in the card released outside; leaving the page folds back too", () => {
+  const outside = { composedPath: () => [{ tagName: "DIV" }] };
+  const el = new PresenceCard();
+  el._config = {};
+  el._hass = { states: { ...HOME, "person.a": person("a", "home") }, language: "en" };
+  el._update = () => {};
+  el.connectedCallback();
+  el._movesOpen = true;
+  // Pressed in the card and released outside: the movements stay unfolded.
+  el._foldMovesWatch.tap({ composedPath: () => [el] });
+  assert.equal(el._movesOpen, true);
+  // A tap on a spot that sends no click (iOS): the pointer alone folds them.
+  el._foldMovesWatch.tap(outside);
+  assert.equal(el._movesOpen, false);
+  // Left unfolded and back on the page: folded.
+  el._movesOpen = true;
+  el.disconnectedCallback();
+  el.connectedCallback();
+  assert.equal(el._movesOpen, false);
+  el.disconnectedCallback();
+  // The mini card comes back compact.
+  const mini = new PresenceMiniCard();
+  mini._config = {};
+  mini._hass = el._hass;
+  mini._update = () => {};
+  mini.connectedCallback();
+  mini._zoomed = true;
+  mini._onOutsideWatch.tap(outside);
+  assert.equal(mini._zoomed, false);
+  mini._zoomed = true;
+  mini.disconnectedCallback();
+  mini.connectedCallback();
+  assert.equal(mini._zoomed, false);
+  mini.disconnectedCallback();
+});
