@@ -8,6 +8,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/juju35/ha-presence-card/blob/main/LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/julienstep9)
 
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/images/icon.svg" alt="Presence Card" width="120"></p>
+
 Lovelace cards for Home Assistant showing the people of the house and where they are: at home, in a zone or away, since when, how far from home and their phone battery.
 
 The cards read the [`person`](https://www.home-assistant.io/integrations/person/) entities: no integration to install, every person is **found automatically**.
