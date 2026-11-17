@@ -145,6 +145,22 @@ test("all person entities by default, summary in the header", () => {
   assert.match(render(PresenceCard, {}, { ...states, "person.b": person("b", "home") }), /Everyone is home/);
 });
 
+test("the subtitle names who is away beside the count pill, instead of repeating the count", () => {
+  const states = { ...HOME, "person.a": person("a", "home"), "person.b": person("b", "not_home"), "person.c": person("c", "not_home") };
+  const sub = (html) => html.match(/<div class="sub">(?:<span>)?([^<]*)</)[1];
+  for (const Cls of [PresenceCard, PresenceMiniCard]) {
+    const html = render(Cls, {}, states);
+    assert.match(html, /<span class="txt">1\/3<\/span>/);
+    assert.match(html, /title="1 of 3 at home"/, "the count's summary stays in the pill's tooltip");
+    assert.equal(sub(html), `Away: ${states["person.b"].attributes.friendly_name}, ${states["person.c"].attributes.friendly_name}`);
+  }
+  assert.match(render(PresenceCard, { illustration: false }, states), /<div class="sub">Away: /);
+  const all = { ...states, "person.b": person("b", "home"), "person.c": person("c", "home") };
+  assert.equal(sub(render(PresenceCard, {}, all)), "Everyone is home");
+  const none = { ...states, "person.a": person("a", "not_home") };
+  assert.equal(sub(render(PresenceCard, {}, none)), "Nobody home");
+});
+
 test("show_away: false hides people away, a missing person is reported", () => {
   const states = { "person.a": person("a", "home"), "person.b": person("b", "not_home") };
   assert.doesNotMatch(render(PresenceCard, { show_away: false }, states), /data-entity="person\.b"/);

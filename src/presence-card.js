@@ -41,6 +41,7 @@ const STRINGS = {
     away: "Away",
     unknown: "Unknown",
     at_home: "{n} of {total} at home",
+    away_names: "Away: {names}",
     all_home: "Everyone is home",
     nobody_home: "Nobody home",
     for: "for",
@@ -96,6 +97,7 @@ const STRINGS = {
     away: "Absent",
     unknown: "Inconnu",
     at_home: "{n} sur {total} à la maison",
+    away_names: "Absents : {names}",
     all_home: "Tout le monde est là",
     nobody_home: "Personne à la maison",
     for: "depuis",
@@ -150,6 +152,7 @@ const STRINGS = {
     away: "Abwesend",
     unknown: "Unbekannt",
     at_home: "{n} von {total} zu Hause",
+    away_names: "Abwesend: {names}",
     all_home: "Alle sind zu Hause",
     nobody_home: "Niemand zu Hause",
     for: "seit",
@@ -204,6 +207,7 @@ const STRINGS = {
     away: "Fuera",
     unknown: "Desconocido",
     at_home: "{n} de {total} en casa",
+    away_names: "Fuera: {names}",
     all_home: "Todos están en casa",
     nobody_home: "No hay nadie en casa",
     for: "desde hace",
@@ -258,6 +262,7 @@ const STRINGS = {
     away: "Одсутан",
     unknown: "Непознато",
     at_home: "{n} од {total} код куће",
+    away_names: "Одсутни: {names}",
     all_home: "Сви су код куће",
     nobody_home: "Нико није код куће",
     for: "већ",
@@ -313,6 +318,7 @@ const STRINGS = {
     away: "Odsutan",
     unknown: "Nepoznato",
     at_home: "{n} od {total} kod kuće",
+    away_names: "Odsutni: {names}",
     all_home: "Svi su kod kuće",
     nobody_home: "Niko nije kod kuće",
     for: "već",
@@ -368,6 +374,7 @@ const STRINGS = {
     away: "Fuori",
     unknown: "Sconosciuto",
     at_home: "{n} su {total} a casa",
+    away_names: "Fuori: {names}",
     all_home: "Sono tutti a casa",
     nobody_home: "Nessuno in casa",
     for: "da",
@@ -423,6 +430,7 @@ const STRINGS = {
     away: "Afwezig",
     unknown: "Onbekend",
     at_home: "{n} van {total} thuis",
+    away_names: "Weg: {names}",
     all_home: "Iedereen is thuis",
     nobody_home: "Niemand thuis",
     for: "al",
@@ -478,6 +486,7 @@ const STRINGS = {
     away: "Fora",
     unknown: "Desconhecido",
     at_home: "{n} de {total} em casa",
+    away_names: "Fora: {names}",
     all_home: "Estão todos em casa",
     nobody_home: "Ninguém em casa",
     for: "há",
@@ -533,6 +542,7 @@ const STRINGS = {
     away: "Poza domem",
     unknown: "Nieznany",
     at_home: "W domu: {n} z {total}",
+    away_names: "Poza domem: {names}",
     all_home: "Wszyscy są w domu",
     nobody_home: "Nikogo nie ma w domu",
     for: "od",
@@ -588,6 +598,7 @@ const STRINGS = {
     away: "Plecat",
     unknown: "Necunoscut",
     at_home: "{n} din {total} acasă",
+    away_names: "Plecați: {names}",
     all_home: "Toți sunt acasă",
     nobody_home: "Nimeni acasă",
     for: "de",
@@ -643,6 +654,7 @@ const STRINGS = {
     away: "Ude",
     unknown: "Ukendt",
     at_home: "{n} af {total} hjemme",
+    away_names: "Ude: {names}",
     all_home: "Alle er hjemme",
     nobody_home: "Ingen hjemme",
     for: "i",
@@ -698,6 +710,7 @@ const STRINGS = {
     away: "Borta",
     unknown: "Okänd",
     at_home: "{n} av {total} hemma",
+    away_names: "Borta: {names}",
     all_home: "Alla är hemma",
     nobody_home: "Ingen hemma",
     for: "i",
@@ -753,6 +766,7 @@ const STRINGS = {
     away: "Отсъства",
     unknown: "Неизвестно",
     at_home: "{n} от {total} вкъщи",
+    away_names: "Навън: {names}",
     all_home: "Всички са вкъщи",
     nobody_home: "Никой вкъщи",
     for: "от",
@@ -808,6 +822,7 @@ const STRINGS = {
     away: "Не дома",
     unknown: "Неизвестно",
     at_home: "Дома: {n} из {total}",
+    away_names: "Не дома: {names}",
     all_home: "Все дома",
     nobody_home: "Никого дома",
     for: "уже",
@@ -863,6 +878,7 @@ const STRINGS = {
     away: "Не вдома",
     unknown: "Невідомо",
     at_home: "Вдома: {n} з {total}",
+    away_names: "Не вдома: {names}",
     all_home: "Усі вдома",
     nobody_home: "Нікого вдома",
     for: "уже",
@@ -918,6 +934,7 @@ const STRINGS = {
     away: "Távol",
     unknown: "Ismeretlen",
     at_home: "{total} közül {n} otthon",
+    away_names: "Távol: {names}",
     all_home: "Mindenki otthon",
     nobody_home: "Senki otthon",
     for: "már",
@@ -973,6 +990,7 @@ const STRINGS = {
     away: "Preč",
     unknown: "Neznámy",
     at_home: "Doma: {n} z {total}",
+    away_names: "Mimo domu: {names}",
     all_home: "Všetci sú doma",
     nobody_home: "Nikto doma",
     for: "už",
@@ -1028,6 +1046,7 @@ const STRINGS = {
     away: "Pryč",
     unknown: "Neznámý",
     at_home: "Doma: {n} z {total}",
+    away_names: "Mimo domov: {names}",
     all_home: "Všichni jsou doma",
     nobody_home: "Nikdo doma",
     for: "už",
@@ -1083,6 +1102,7 @@ const STRINGS = {
     away: "Odsoten",
     unknown: "Neznano",
     at_home: "Doma: {n} od {total}",
+    away_names: "Odsotni: {names}",
     all_home: "Vsi so doma",
     nobody_home: "Nikogar doma",
     for: "že",
@@ -1138,6 +1158,7 @@ const STRINGS = {
     away: "Prom",
     unknown: "Nezināms",
     at_home: "Mājās: {n} no {total}",
+    away_names: "Prom: {names}",
     all_home: "Visi ir mājās",
     nobody_home: "Neviena mājās",
     for: "jau",
@@ -1193,6 +1214,7 @@ const STRINGS = {
     away: "Εκτός",
     unknown: "Άγνωστο",
     at_home: "{n} από {total} στο σπίτι",
+    away_names: "Εκτός: {names}",
     all_home: "Όλοι στο σπίτι",
     nobody_home: "Κανείς στο σπίτι",
     for: "εδώ και",
@@ -2019,6 +2041,15 @@ class PresenceBase extends HTMLElement {
     return { n, text: this._t("at_home").replace("{n}", n).replace("{total}", people.length) };
   }
 
+  // The header's subtitle beside the count pill ("2/4"): who is away, rather than the count again; everyone home or
+  // nobody home as the summary says it.
+  _subtitle(people) {
+    const { n, text } = this._summary(people);
+    if (n === 0 || n === people.length) return text;
+    const away = people.filter((p) => p.kind !== "home").map((p) => p.name);
+    return this._t("away_names").replace("{names}", away.join(", "));
+  }
+
   // The house's status, for the header icon's color: someone home, else someone in a zone, else someone unknown,
   // else nobody (grey).
   _status(people) {
@@ -2039,7 +2070,7 @@ class PresenceBase extends HTMLElement {
     const pill = `<span class="chip st ${status}" role="img" title="${esc(text)}" aria-label="${esc(text)}"><span class="dot"></span><span class="txt">${n}/${people.length}</span></span>`;
     return `<div class="banner${isNight(this._hass, this._config) ? " night" : ""}">${presenceScene(n)}<div class="htext">
         <div class="logo ${status}" role="img" aria-label="${esc(this._t("title"))}">${svgIcon(ICONS.home)}</div>
-        <div class="titles"><div class="trow"><div class="name"><span>${title}</span></div>${pill}</div><div class="sub"><span>${esc(text)}</span></div></div>
+        <div class="titles"><div class="trow"><div class="name"><span>${title}</span></div>${pill}</div><div class="sub"><span>${esc(this._subtitle(people))}</span></div></div>
       </div>${this._zoomButton()}</div>`;
   }
 
@@ -2051,7 +2082,7 @@ class PresenceBase extends HTMLElement {
         ${logo(this._t("title"), this._status(people))}
         <div class="titles">
           <div class="name">${esc(this._config.title || this._t("title"))}</div>
-          <div class="sub">${esc(text)}</div>
+          <div class="sub">${esc(this._subtitle(people))}</div>
         </div>
         <span class="chip ${n ? "home" : "away"}" role="img" title="${esc(text)}" aria-label="${esc(text)}">${svgIcon(ICONS.home)}<span class="txt">${n}/${people.length}</span></span>
         ${this._zoomButton()}

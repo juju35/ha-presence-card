@@ -133,7 +133,7 @@ const header = (el) => {
     title: name.clientWidth,
     four: Math.ceil(four),
     chipLabel: chip?.getAttribute("aria-label") ?? null,
-    summary: hd.querySelector(".sub").textContent.trim(),
+    summary: root.host._summary(root.host._people().people).text,
     chipInside: chip ? chip.getBoundingClientRect().right <= card.right + 0.5 : true,
     zoom: zoom ? Math.round(zoom.getBoundingClientRect().width) : null,
     // The header logo keeps the full card's size in the mini card too (0 when a narrow mini card drops it).
@@ -156,7 +156,7 @@ for (const type of ["presence-card", "presence-mini-card"])
           assert.deepEqual(r.out, []);
           assert.ok(r.title >= r.four, `title ${r.title}px < 4 characters (${r.four}px)`);
           assert.ok(r.chipInside);
-          // The classic full card's count chip: "2 of 4 at home", translated (the illustrated header says it in its subtitle).
+          // The classic full card's count chip: "2 of 4 at home", translated (the subtitle names who is away).
           if (type === "presence-card" && !illustration) assert.equal(r.chipLabel, r.summary);
           if (type === "presence-mini-card") assert.equal(r.zoom, 24);
           if (r.logo) assert.equal(r.logo, 40, "header logo resized");

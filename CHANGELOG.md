@@ -11,6 +11,7 @@
 
 ### Fixes
 - Night picture with the dark theme even while the sun is up (`illustration_theme: auto`): the header is night when `sun.sun` is below the horizon or Home Assistant's theme is dark; `day` / `night` still force it.
+- **No repeated count**: beside the "2/4" pill, the subtitle names who is away ("Away: Sam, Charlie") instead of repeating "2 of 4 at home" (still in the pill's tooltip); "Everyone is home" and "Nobody home" stay. New string in every language.
 
 ## 1.12.1 - 2026-11-13
 

@@ -34,7 +34,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 - Direction of travel (arriving, leaving, stationary) for people away, from the core [Proximity](https://www.home-assistant.io/integrations/proximity/) integration's sensors, found automatically
 - Travel time home for people away, from a travel time sensor you give each person (Waze, Google Maps)
 - Phone battery, found automatically: battery sensor of the tracker's device (Companion app) or the tracker's battery attribute; orange at 40 %, red at 20 %
-- Header summary: "2 of 4 at home", "Everyone is home", "Nobody home"
+- Header summary: the count at home in the pill ("2/4", "2 of 4 at home" on hover) and who is away in the subtitle ("Away: Sam, Charlie", "Everyone is home", "Nobody home")
 - People at home first, by name, or as listed
 - **Last 24 hours**: a folded section under the people with their movements of the day — arrivals home, departures, arrivals in and departures from a zone, with the time — read from the history when unfolded; it folds back on a click elsewhere
 - Click a person or a battery to open its more-info dialog
