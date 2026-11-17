@@ -110,49 +110,54 @@ for (const [lang, width] of [
 
 // Header at a narrow width: the title keeps at least four characters, nothing goes past the card's right
 // edge, the icon buttons keep their size.
+// The classic header (`.header`) or the illustrated one (its text block `.htext` and its zoom button).
 const header = (el) => {
   const root = el.shadowRoot;
   const card = root.querySelector("ha-card").getBoundingClientRect();
   const out = [];
-  for (const n of root.querySelectorAll(".header *")) {
+  const hd = root.querySelector(".header") ?? root.querySelector(".htext");
+  for (const n of [...hd.querySelectorAll("*"), ...root.querySelectorAll(".zoom")]) {
     const b = n.getBoundingClientRect();
     if (b.width && b.right > card.right + 0.5) out.push(`${n.getAttribute("class") || n.localName} +${Math.round(b.right - card.right)}`);
   }
-  const name = root.querySelector(".header .name");
+  const name = hd.querySelector(".name");
   const span = name.querySelector("span") ?? name;
   const range = document.createRange();
   range.setStart(span.firstChild, 0);
   range.setEnd(span.firstChild, Math.min(4, span.firstChild.length));
   const four = range.getBoundingClientRect().width;
-  const chip = root.querySelector(".header > .chip");
+  const chip = hd.querySelector(".trow > .chip");
   const zoom = root.querySelector(".zoom");
   return {
     out,
     title: name.clientWidth,
     four: Math.ceil(four),
     chipLabel: chip?.getAttribute("aria-label") ?? null,
-    summary: root.querySelector(".header .sub").textContent.trim(),
+    summary: root.host._summary(root.host._people().people).text,
     chipInside: chip ? chip.getBoundingClientRect().right <= card.right + 0.5 : true,
     zoom: zoom ? Math.round(zoom.getBoundingClientRect().width) : null,
     // The header logo keeps the full card's size in the mini card too (0 when a narrow mini card drops it).
-    logo: Math.round(root.querySelector(".header > .logo").getBoundingClientRect().width),
+    logo: Math.round(hd.querySelector(":scope > .logo").getBoundingClientRect().width),
     // The mini card's zoom button stays on the logo's row, it never wraps onto a line of its own.
     // (Measured against the title when a narrow mini card drops its logo.)
     zoomOnRow: zoom ? zoom.getBoundingClientRect().top < (root.querySelector(".logo").offsetWidth ? root.querySelector(".logo") : name).getBoundingClientRect().bottom : true,
   };
 };
 
+for (const illustration of [true, false])
 for (const type of ["presence-card", "presence-mini-card"])
   for (const lang of ["en", "pl", "sr-Latn", "uk", "hu", "el"])
     for (const theme of ["light", "dark"])
       for (const width of [160, 200, 250]) {
-        test(`${type} ${lang} ${theme} at ${width}px: the header keeps its title readable and its buttons inside`, async (t) => {
+        const kind = illustration ? "illustrated" : "classic";
+        test(`${type} ${lang} ${theme} at ${width}px: the ${kind} header keeps its title readable and its buttons inside`, async (t) => {
           if (skip) return t.skip(skip);
-          const r = await inPage({ type, width, lang, theme }, header);
+          const r = await inPage({ type, width, lang, theme, config: illustration ? {} : { illustration: false } }, header);
           assert.deepEqual(r.out, []);
           assert.ok(r.title >= r.four, `title ${r.title}px < 4 characters (${r.four}px)`);
           assert.ok(r.chipInside);
-          if (type === "presence-card") assert.equal(r.chipLabel, r.summary); // "2 of 4 at home", translated
+          // The classic full card's count chip: "2 of 4 at home", translated (the subtitle names who is away).
+          if (type === "presence-card" && !illustration) assert.equal(r.chipLabel, r.summary);
           if (type === "presence-mini-card") assert.equal(r.zoom, 24);
           if (r.logo) assert.equal(r.logo, 40, "header logo resized");
           assert.ok(r.zoomOnRow, "zoom button wrapped under the title row");
@@ -162,12 +167,12 @@ for (const type of ["presence-card", "presence-mini-card"])
 test("full card at a narrow width: the header chip keeps only its icon, its count stays in its label", async (t) => {
   if (skip) return t.skip(skip);
   const read = (el) => {
-    const chip = el.shadowRoot.querySelector(".header > .chip");
+    const chip = el.shadowRoot.querySelector(".header .trow > .chip");
     const txt = chip.querySelector(".txt");
     return { shown: txt.getBoundingClientRect().width > 0, title: chip.getAttribute("title") };
   };
-  const narrow = await inPage({ type: "presence-card", width: 200 }, read);
-  const wide = await inPage({ type: "presence-card", width: 480 }, read);
+  const narrow = await inPage({ type: "presence-card", width: 200, config: { illustration: false } }, read);
+  const wide = await inPage({ type: "presence-card", width: 480, config: { illustration: false } }, read);
   assert.deepEqual(narrow, { shown: false, title: "2 of 4 at home" });
   assert.deepEqual(wide, { shown: true, title: "2 of 4 at home" });
 });
@@ -199,8 +204,8 @@ for (const lang of ["en", "pl", "sr-Latn", "uk", "hu", "el"])
   for (const width of [234, 245, 273, 320, 500]) {
     test(`full card ${lang} at ${width}px: the header chip shows its whole count`, async (t) => {
       if (skip) return t.skip(skip);
-      const r = await inPage({ type: "presence-card", width, lang }, (el) => {
-        const txt = el.shadowRoot.querySelector(".header > .chip .txt");
+      const r = await inPage({ type: "presence-card", width, lang, config: { illustration: false } }, (el) => {
+        const txt = el.shadowRoot.querySelector(".header .trow > .chip .txt");
         return { shown: txt.getBoundingClientRect().width > 0, cut: txt.scrollWidth > txt.clientWidth + 1 };
       });
       assert.deepEqual(r, { shown: true, cut: false });
@@ -261,18 +266,20 @@ const fit = (el) => {
       out.push(n.getAttribute("class") || n.localName);
   }
   const isCut = (n) => n.scrollWidth > n.clientWidth + 1;
-  const name = root.querySelector(".header .name");
+  const name = root.querySelector(".header .name, .htext .name");
   const tn = (name.querySelector("span") ?? name).firstChild;
   const range = document.createRange();
   range.setStart(tn, 0);
   range.setEnd(tn, Math.min(4, tn.length));
   const values = [
-    ...root.querySelectorAll(".person .where .chip .txt, .person .facts > span, .header .sub"),
+    ...root.querySelectorAll(".person .where .chip .txt, .person .facts > span, .header .sub, .htext .sub"),
   ].filter((n) => n.textContent.trim());
+  // With the status pill on a line of its own, the header's subtitle keeps one line: cut, its whole text in its tooltip.
+  const kept = (n) => n.matches(".sub") && !!n.closest(".titles.below") && n.title === n.textContent.trim();
   return {
     out,
     title: name.clientWidth >= Math.ceil(range.getBoundingClientRect().width),
-    cut: values.filter(isCut).map((n) => n.textContent.trim()),
+    cut: values.filter((n) => isCut(n) && !kept(n)).map((n) => n.textContent.trim()),
   };
 };
 for (const [type, widths] of [
@@ -308,7 +315,7 @@ const zoomedFit = async (el) => {
     .map((n) => n.textContent.trim());
   // The header's buttons and chip, which the card's overflow would hide rather than show outside it.
   const card = root.querySelector("ha-card").getBoundingClientRect();
-  const header = [...root.querySelectorAll(".header > *")]
+  const header = [...root.querySelectorAll(".header > *, .htext > *, .banner > .zoom")]
     .filter((n) => n.getBoundingClientRect().width && n.getBoundingClientRect().right > card.right + 0.5)
     .map((n) => n.getAttribute("class"));
   // Each row's content stays in its row (the card's overflow would hide a battery past its edge).

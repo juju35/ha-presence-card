@@ -145,6 +145,22 @@ test("all person entities by default, summary in the header", () => {
   assert.match(render(PresenceCard, {}, { ...states, "person.b": person("b", "home") }), /Everyone is home/);
 });
 
+test("the subtitle names who is away beside the count pill, instead of repeating the count", () => {
+  const states = { ...HOME, "person.a": person("a", "home"), "person.b": person("b", "not_home"), "person.c": person("c", "not_home") };
+  const sub = (html) => html.match(/<div class="sub">(?:<span>)?([^<]*)</)[1];
+  for (const Cls of [PresenceCard, PresenceMiniCard]) {
+    const html = render(Cls, {}, states);
+    assert.match(html, /<span class="txt">1\/3<\/span>/);
+    assert.match(html, /title="1 of 3 at home"/, "the count's summary stays in the pill's tooltip");
+    assert.equal(sub(html), `Away: ${states["person.b"].attributes.friendly_name}, ${states["person.c"].attributes.friendly_name}`);
+  }
+  assert.match(render(PresenceCard, { illustration: false }, states), /<div class="sub">Away: /);
+  const all = { ...states, "person.b": person("b", "home"), "person.c": person("c", "home") };
+  assert.equal(sub(render(PresenceCard, {}, all)), "Everyone is home");
+  const none = { ...states, "person.a": person("a", "not_home") };
+  assert.equal(sub(render(PresenceCard, {}, none)), "Nobody home");
+});
+
 test("show_away: false hides people away, a missing person is reported", () => {
   const states = { "person.a": person("a", "home"), "person.b": person("b", "not_home") };
   assert.doesNotMatch(render(PresenceCard, { show_away: false }, states), /data-entity="person\.b"/);
@@ -158,7 +174,7 @@ test("a configured person that no longer exists is reported on its own line, the
   const full = render(PresenceCard, config, states);
   assert.match(full, /data-entity="person\.a"/);
   assert.match(full, /data-entity="person\.b"/);
-  assert.match(full, /class="header"/);
+  assert.match(full, /class="banner/);
   assert.match(full, /1 of 2 at home/);
   assert.equal(full.match(/class="warning[ "]/g).length, 1);
   assert.match(full, /Person not found: person\.zz/);
@@ -169,7 +185,7 @@ test("a configured person that no longer exists is reported on its own line, the
   const two = render(PresenceCard, { entities: ["person.a", "person.x", "person.y"] }, states);
   assert.match(two, /Person not found: person\.x[\s\S]*Person not found: person\.y/);
   const none = render(PresenceCard, { entities: ["person.x", "person.y"] }, states);
-  assert.doesNotMatch(none, /class="header"/);
+  assert.doesNotMatch(none, /class="(header|banner)/);
   assert.match(none, /Person not found: person\.x[\s\S]*Person not found: person\.y/);
   // show_away: false never hides the warning.
   assert.match(render(PresenceCard, { ...config, show_away: false }, states), /Person not found: person\.zz/);
@@ -178,7 +194,7 @@ test("a configured person that no longer exists is reported on its own line, the
 test("mini card: one face per person, the zoom button switches to the full card", () => {
   const states = { "person.a": person("a", "home"), "person.b": person("b", "Work") };
   const el = new PresenceMiniCard();
-  el._config = {};
+  el._config = { illustration: false };
   el._hass = { states, language: "en" };
   const mini = el._render();
   assert.equal(mini.match(/class="face /g).length, 2);
@@ -195,7 +211,7 @@ test("mini card: one face per person, the zoom button switches to the full card"
   el._inline = true;
   el._zoomed = true;
   assert.match(el._render(), /class="person /);
-  el._config = { zoom: false };
+  el._config = { zoom: false, illustration: false };
   el._zoomed = false;
   assert.doesNotMatch(el._render(), /class="zoom"/);
 });
@@ -701,4 +717,77 @@ test("folding: a tap elsewhere (pointer) folds the movements and collapses the m
   mini.connectedCallback();
   assert.equal(mini._zoomed, false);
   mini.disconnectedCallback();
+});
+
+test("illustrated header: one lit window per person at home, car while someone is home, walking in or out", () => {
+  const two = { ...HOME, "person.a": person("a", "home"), "person.b": person("b", "home"), "person.c": person("c", "not_home") };
+  const html = render(PresenceCard, {}, two);
+  assert.match(html, /class="banner"/);
+  assert.equal(html.match(/class="pr-win lit"/g).length, 2);
+  assert.match(html, /class="pr-car"/);
+  assert.match(html, /class="pr-walk in"/);
+  assert.match(html, /class="pr-ground"/);
+  const none = render(PresenceCard, {}, { ...HOME, "person.a": person("a", "not_home") });
+  assert.doesNotMatch(none, /pr-win lit/);
+  assert.doesNotMatch(none, /class="pr-car"/);
+  assert.match(none, /class="pr-walk out"/);
+  // Never more than the four windows of the house.
+  const many = Object.fromEntries(["a", "b", "c", "d", "e", "f"].map((id) => [`person.${id}`, person(id, "home")]));
+  assert.equal(render(PresenceCard, {}, many).match(/class="pr-win lit"/g).length, 4);
+  // The mini card has the same banner, its faces under it.
+  const mini = render(PresenceMiniCard, {}, two);
+  assert.match(mini, /class="banner"[\s\S]*class="faces"/);
+  // illustration: false keeps the classic header.
+  const classic = render(PresenceCard, { illustration: false }, two);
+  assert.doesNotMatch(classic, /class="banner/);
+  assert.match(classic, /class="header"/);
+});
+
+test("illustrated header: the icon's color follows the house's status", () => {
+  const icon = (states, config = {}) => render(PresenceCard, config, { ...HOME, ...states }).match(/class="logo ([a-z]+)"/)[1];
+  assert.equal(icon({ "person.a": person("a", "home"), "person.b": person("b", "Work") }), "home");
+  assert.equal(icon({ "person.a": person("a", "not_home"), "person.b": person("b", "Work") }), "zone");
+  assert.equal(icon({ "person.a": person("a", "unavailable") }), "unknown");
+  assert.equal(icon({ "person.a": person("a", "not_home") }), "away");
+  assert.equal(icon({ "person.a": person("a", "not_home") }, { illustration: false }), "away");
+});
+
+test("illustrated header: night from illustration_theme, else sun.sun below the horizon or the dark theme", () => {
+  const states = { ...HOME, "person.a": person("a", "home") };
+  const night = (config, extra = {}, hass = {}) => {
+    const el = new PresenceCard();
+    el._config = config;
+    el._hass = { states: { ...states, ...extra }, language: "en", ...hass };
+    return /class="banner night"/.test(el._render());
+  };
+  const sun = (state) => ({ "sun.sun": { entity_id: "sun.sun", state } });
+  assert.equal(night({}), false);
+  assert.equal(night({}, sun("below_horizon")), true);
+  assert.equal(night({}, sun("above_horizon"), { themes: { darkMode: true } }), true);
+  assert.equal(night({}, sun("above_horizon"), { themes: { darkMode: false } }), false);
+  assert.equal(night({ illustration_theme: "day" }, sun("above_horizon"), { themes: { darkMode: true } }), false);
+  assert.equal(night({}, {}, { themes: { darkMode: true } }), true);
+  assert.equal(night({ illustration_theme: "day" }, sun("below_horizon")), false);
+  assert.equal(night({ illustration_theme: "night" }, sun("above_horizon")), true);
+});
+
+test("editor: illustration toggle and theme, defaults kept out of the YAML", () => {
+  assert.equal(PresenceCardEditor.toggles[0], "illustration");
+  const editor = new PresenceCardEditor();
+  editor.setConfig({});
+  editor.hass = { language: "en", states: {} };
+  const names = editor._form.schema.map((s) => s.name);
+  assert.ok(names.includes("illustration_theme"));
+  assert.equal(editor._form.data.illustration, true);
+  assert.equal(editor._form.data.illustration_theme, "auto");
+  const changed = [];
+  editor.dispatchEvent = (ev) => changed.push(ev.detail.config);
+  editor._form.listeners["value-changed"]({ stopPropagation() {}, detail: { value: { illustration: true, illustration_theme: "auto" } } });
+  editor._form.listeners["value-changed"]({ stopPropagation() {}, detail: { value: { illustration: false, illustration_theme: "night" } } });
+  assert.equal(JSON.stringify(changed), JSON.stringify([{}, { illustration: false, illustration_theme: "night" }]));
+});
+
+test("illustration strings in every language", () => {
+  for (const [l, s] of Object.entries(STRINGS))
+    for (const k of ["illustration", "illustration_theme", "theme_auto", "theme_day", "theme_night"]) assert.ok(s[k], `${l}.${k}`);
 });

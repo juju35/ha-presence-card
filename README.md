@@ -23,7 +23,8 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 ## Features
 
 - Two cards: a full **Presence Card** and a compact **Presence Mini Card**
-- Mini card on a single row, like the Alarm mini card: logo, title, summary in color and round avatars (name and place on hover); the avatars go under the title as soon as the title and summary would no longer fit in full next to them
+- Animated illustrated header (90 px, both cards): the house on its lawn, one window lit per person at home (with a silhouette), the car in front while someone is home, someone walking in through the door — or walking away from it when nobody is home; a round home icon colored by status (green someone home, blue someone in a zone, orange unknown, grey nobody); night picture after sunset (`sun.sun`) or in a dark theme, or forced with `illustration_theme`; `illustration: false` keeps the classic header
+- Mini card: the illustrated header with the round avatars under it (name and place on hover); with `illustration: false`, a single row like the Alarm mini card: logo, title, summary in color and avatars, which go under the title as soon as the title and summary would no longer fit in full next to them
 - Zoom button at the top right of the mini card: it switches to the full card and back; a click anywhere outside the card brings the compact view back
 - All `person` entities by default, or a chosen list, with an optional name or picture per person
 - Person picture, or colored initials when the person has none
@@ -33,7 +34,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 - Direction of travel (arriving, leaving, stationary) for people away, from the core [Proximity](https://www.home-assistant.io/integrations/proximity/) integration's sensors, found automatically
 - Travel time home for people away, from a travel time sensor you give each person (Waze, Google Maps)
 - Phone battery, found automatically: battery sensor of the tracker's device (Companion app) or the tracker's battery attribute; orange at 40 %, red at 20 %
-- Header summary: "2 of 4 at home", "Everyone is home", "Nobody home"
+- Header summary: the count at home in the pill ("2/4", "2 of 4 at home" on hover) and who is away in the subtitle ("Away: Sam, Charlie", "Everyone is home", "Nobody home")
 - People at home first, by name, or as listed
 - **Last 24 hours**: a folded section under the people with their movements of the day — arrivals home, departures, arrivals in and departures from a zone, with the time — read from the history when unfolded; it folds back on a click elsewhere
 - Click a person or a battery to open its more-info dialog
@@ -100,6 +101,8 @@ entities:
     proximity_distance: sensor.home_sam_distance
     travel_time: sensor.sam_to_home
 title: Family
+illustration: true
+illustration_theme: auto
 sort: presence
 show_since: true
 show_distance: true
@@ -128,6 +131,8 @@ language: fr
 |---|---|---|---|
 | `entities` | both | All people | People to show: `person` entity ids, or objects with `entity` and an optional `name`, `picture`, `proximity_direction` and `proximity_distance` (the person's Proximity sensors, when not found automatically), and `travel_time` (a travel time sensor home, such as [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time/)) |
 | `title` | both | Presence | Card title |
+| `illustration` | both | `true` | Animated illustrated header (house, lit windows, car, someone walking in or out); `false` keeps the classic header |
+| `illustration_theme` | both | `auto` | Picture of the illustration: `auto` (night when `sun.sun` is below the horizon or with a dark theme, even with the sun up), `day` or `night` |
 | `show_title` | both | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
 | `show_subtitle` | both | `true` | Show the subtitle under the title |
 | `sort` | both | `presence` | Order: `presence` (at home, then in a zone, then away), `name`, or `config` (as listed) |
@@ -146,6 +151,30 @@ language: fr
 Note for the sections view: Lovelace sizes the cell when the dashboard loads and offers no way for a card to ask for a resize afterwards, so the zoomed-in mini card keeps the compact card's cell and simply grows taller inside it.
 
 ## Screenshots
+
+### Animated captures
+
+The header of the full card in its states, in a loop of 6 seconds (with `prefers-reduced-motion`, everything stays still).
+
+Somebody home: someone walks in through the door, one window lit per person at home, the cloud drifts:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-home.gif" alt="somebody home animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-home-dark.gif" alt="somebody home animation, dark theme" width="400"> |
+
+Nobody home: someone walks away from the dark house:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-away.gif" alt="nobody home animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-away-dark.gif" alt="nobody home animation, dark theme" width="400"> |
+
+Night picture: the stars twinkle over the glowing windows:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-night.gif" alt="night animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-night-dark.gif" alt="night animation, dark theme" width="400"> |
+
+### Stills
 
 | Light | Dark |
 |---|---|
@@ -169,7 +198,7 @@ npm install
 npm run build        # bundles src/presence-card.js into dist/presence-card.js
 npm run check        # builds and checks the card (run in CI)
 npm test             # unit and browser tests
-npm run screenshots  # renders the cards with mock data (scripts/mock-states.mjs) into screenshots/
+npm run screenshots  # renders the cards with mock data (scripts/mock-states.mjs) into screenshots/, and the animated GIFs (needs ffmpeg)
 ```
 
 `dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where the Marketplace installs it from.

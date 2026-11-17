@@ -41,6 +41,7 @@ const STRINGS = {
     away: "Away",
     unknown: "Unknown",
     at_home: "{n} of {total} at home",
+    away_names: "Away: {names}",
     all_home: "Everyone is home",
     nobody_home: "Nobody home",
     for: "for",
@@ -84,6 +85,11 @@ const STRINGS = {
     zoom_helper: "Switches the mini card to the full card and back",
     language: "Language",
     lang_auto: "Automatic",
+    illustration: "Animated illustration",
+    illustration_theme: "Illustration theme",
+    theme_auto: "Automatic (sun or dark theme)",
+    theme_day: "Day",
+    theme_night: "Night",
   },
   fr: {
     title: "Présence",
@@ -91,6 +97,7 @@ const STRINGS = {
     away: "Absent",
     unknown: "Inconnu",
     at_home: "{n} sur {total} à la maison",
+    away_names: "Absents : {names}",
     all_home: "Tout le monde est là",
     nobody_home: "Personne à la maison",
     for: "depuis",
@@ -133,6 +140,11 @@ const STRINGS = {
     zoom_helper: "Bascule la mini-carte en carte complète, et inversement",
     language: "Langue",
     lang_auto: "Automatique",
+    illustration: "Illustration animée",
+    illustration_theme: "Thème de l’illustration",
+    theme_auto: "Automatique (soleil ou thème sombre)",
+    theme_day: "Jour",
+    theme_night: "Nuit",
   },
   de: {
     title: "Anwesenheit",
@@ -140,6 +152,7 @@ const STRINGS = {
     away: "Abwesend",
     unknown: "Unbekannt",
     at_home: "{n} von {total} zu Hause",
+    away_names: "Abwesend: {names}",
     all_home: "Alle sind zu Hause",
     nobody_home: "Niemand zu Hause",
     for: "seit",
@@ -182,6 +195,11 @@ const STRINGS = {
     zoom_helper: "Wechselt von der Mini-Karte zur vollständigen Karte und zurück",
     language: "Sprache",
     lang_auto: "Automatisch",
+    illustration: "Animierte Illustration",
+    illustration_theme: "Thema der Illustration",
+    theme_auto: "Automatisch (Sonne oder dunkles Design)",
+    theme_day: "Tag",
+    theme_night: "Nacht",
   },
   es: {
     title: "Presencia",
@@ -189,6 +207,7 @@ const STRINGS = {
     away: "Fuera",
     unknown: "Desconocido",
     at_home: "{n} de {total} en casa",
+    away_names: "Fuera: {names}",
     all_home: "Todos están en casa",
     nobody_home: "No hay nadie en casa",
     for: "desde hace",
@@ -231,6 +250,11 @@ const STRINGS = {
     zoom_helper: "Cambia la minitarjeta a la tarjeta completa y viceversa",
     language: "Idioma",
     lang_auto: "Automático",
+    illustration: "Ilustración animada",
+    illustration_theme: "Tema de la ilustración",
+    theme_auto: "Automático (sol o tema oscuro)",
+    theme_day: "Día",
+    theme_night: "Noche",
   },
   sr: {
     title: "Присутност",
@@ -238,6 +262,7 @@ const STRINGS = {
     away: "Одсутан",
     unknown: "Непознато",
     at_home: "{n} од {total} код куће",
+    away_names: "Одсутни: {names}",
     all_home: "Сви су код куће",
     nobody_home: "Нико није код куће",
     for: "већ",
@@ -281,6 +306,11 @@ const STRINGS = {
     zoom_helper: "Пребацује мини картицу на пун приказ и назад",
     language: "Језик",
     lang_auto: "Аутоматски",
+    illustration: "Анимирана илустрација",
+    illustration_theme: "Тема илустрације",
+    theme_auto: "Аутоматски (сунце или тамна тема)",
+    theme_day: "Дан",
+    theme_night: "Ноћ",
   },
   "sr-Latn": {
     title: "Prisutnost",
@@ -288,6 +318,7 @@ const STRINGS = {
     away: "Odsutan",
     unknown: "Nepoznato",
     at_home: "{n} od {total} kod kuće",
+    away_names: "Odsutni: {names}",
     all_home: "Svi su kod kuće",
     nobody_home: "Niko nije kod kuće",
     for: "već",
@@ -331,6 +362,11 @@ const STRINGS = {
     zoom_helper: "Prebacuje mini karticu na pun prikaz i nazad",
     language: "Jezik",
     lang_auto: "Automatski",
+    illustration: "Animirana ilustracija",
+    illustration_theme: "Tema ilustracije",
+    theme_auto: "Automatski (sunce ili tamna tema)",
+    theme_day: "Dan",
+    theme_night: "Noć",
   },
   it: {
     title: "Presenza",
@@ -338,6 +374,7 @@ const STRINGS = {
     away: "Fuori",
     unknown: "Sconosciuto",
     at_home: "{n} su {total} a casa",
+    away_names: "Fuori: {names}",
     all_home: "Sono tutti a casa",
     nobody_home: "Nessuno in casa",
     for: "da",
@@ -381,6 +418,11 @@ const STRINGS = {
     zoom_helper: "Passa dalla mini scheda alla scheda completa e viceversa",
     language: "Lingua",
     lang_auto: "Automatica",
+    illustration: "Illustrazione animata",
+    illustration_theme: "Tema dell’illustrazione",
+    theme_auto: "Automatico (sole o tema scuro)",
+    theme_day: "Giorno",
+    theme_night: "Notte",
   },
   nl: {
     title: "Aanwezigheid",
@@ -388,6 +430,7 @@ const STRINGS = {
     away: "Afwezig",
     unknown: "Onbekend",
     at_home: "{n} van {total} thuis",
+    away_names: "Weg: {names}",
     all_home: "Iedereen is thuis",
     nobody_home: "Niemand thuis",
     for: "al",
@@ -431,6 +474,11 @@ const STRINGS = {
     zoom_helper: "Schakelt tussen de minikaart en de volledige kaart",
     language: "Taal",
     lang_auto: "Automatisch",
+    illustration: "Geanimeerde illustratie",
+    illustration_theme: "Thema van de illustratie",
+    theme_auto: "Automatisch (zon of donker thema)",
+    theme_day: "Dag",
+    theme_night: "Nacht",
   },
   pt: {
     title: "Presença",
@@ -438,6 +486,7 @@ const STRINGS = {
     away: "Fora",
     unknown: "Desconhecido",
     at_home: "{n} de {total} em casa",
+    away_names: "Fora: {names}",
     all_home: "Estão todos em casa",
     nobody_home: "Ninguém em casa",
     for: "há",
@@ -481,6 +530,11 @@ const STRINGS = {
     zoom_helper: "Alterna entre o minicartão e o cartão completo",
     language: "Idioma",
     lang_auto: "Automático",
+    illustration: "Ilustração animada",
+    illustration_theme: "Tema da ilustração",
+    theme_auto: "Automático (sol ou tema escuro)",
+    theme_day: "Dia",
+    theme_night: "Noite",
   },
   pl: {
     title: "Obecność",
@@ -488,6 +542,7 @@ const STRINGS = {
     away: "Poza domem",
     unknown: "Nieznany",
     at_home: "W domu: {n} z {total}",
+    away_names: "Poza domem: {names}",
     all_home: "Wszyscy są w domu",
     nobody_home: "Nikogo nie ma w domu",
     for: "od",
@@ -531,6 +586,11 @@ const STRINGS = {
     zoom_helper: "Przełącza minikartę na pełną kartę i z powrotem",
     language: "Język",
     lang_auto: "Automatycznie",
+    illustration: "Animowana ilustracja",
+    illustration_theme: "Motyw ilustracji",
+    theme_auto: "Automatycznie (słońce lub ciemny motyw)",
+    theme_day: "Dzień",
+    theme_night: "Noc",
   },
   ro: {
     title: "Prezență",
@@ -538,6 +598,7 @@ const STRINGS = {
     away: "Plecat",
     unknown: "Necunoscut",
     at_home: "{n} din {total} acasă",
+    away_names: "Plecați: {names}",
     all_home: "Toți sunt acasă",
     nobody_home: "Nimeni acasă",
     for: "de",
@@ -581,6 +642,11 @@ const STRINGS = {
     zoom_helper: "Comută mini-cardul la cardul complet și înapoi",
     language: "Limbă",
     lang_auto: "Automat",
+    illustration: "Ilustrație animată",
+    illustration_theme: "Tema ilustrației",
+    theme_auto: "Automat (soare sau temă întunecată)",
+    theme_day: "Zi",
+    theme_night: "Noapte",
   },
   da: {
     title: "Til stede",
@@ -588,6 +654,7 @@ const STRINGS = {
     away: "Ude",
     unknown: "Ukendt",
     at_home: "{n} af {total} hjemme",
+    away_names: "Ude: {names}",
     all_home: "Alle er hjemme",
     nobody_home: "Ingen hjemme",
     for: "i",
@@ -631,6 +698,11 @@ const STRINGS = {
     zoom_helper: "Skifter mellem minikortet og hele kortet",
     language: "Sprog",
     lang_auto: "Automatisk",
+    illustration: "Animeret illustration",
+    illustration_theme: "Illustrationens tema",
+    theme_auto: "Automatisk (sol eller mørkt tema)",
+    theme_day: "Dag",
+    theme_night: "Nat",
   },
   sv: {
     title: "Närvaro",
@@ -638,6 +710,7 @@ const STRINGS = {
     away: "Borta",
     unknown: "Okänd",
     at_home: "{n} av {total} hemma",
+    away_names: "Borta: {names}",
     all_home: "Alla är hemma",
     nobody_home: "Ingen hemma",
     for: "i",
@@ -681,6 +754,11 @@ const STRINGS = {
     zoom_helper: "Växlar mellan minikortet och hela kortet",
     language: "Språk",
     lang_auto: "Automatiskt",
+    illustration: "Animerad illustration",
+    illustration_theme: "Illustrationens tema",
+    theme_auto: "Automatiskt (sol eller mörkt tema)",
+    theme_day: "Dag",
+    theme_night: "Natt",
   },
   bg: {
     title: "Присъствие",
@@ -688,6 +766,7 @@ const STRINGS = {
     away: "Отсъства",
     unknown: "Неизвестно",
     at_home: "{n} от {total} вкъщи",
+    away_names: "Навън: {names}",
     all_home: "Всички са вкъщи",
     nobody_home: "Никой вкъщи",
     for: "от",
@@ -731,6 +810,11 @@ const STRINGS = {
     zoom_helper: "Превключва мини картата към пълната карта и обратно",
     language: "Език",
     lang_auto: "Автоматично",
+    illustration: "Анимирана илюстрация",
+    illustration_theme: "Тема на илюстрацията",
+    theme_auto: "Автоматично (слънце или тъмна тема)",
+    theme_day: "Ден",
+    theme_night: "Нощ",
   },
   ru: {
     title: "Присутствие",
@@ -738,6 +822,7 @@ const STRINGS = {
     away: "Не дома",
     unknown: "Неизвестно",
     at_home: "Дома: {n} из {total}",
+    away_names: "Не дома: {names}",
     all_home: "Все дома",
     nobody_home: "Никого дома",
     for: "уже",
@@ -781,6 +866,11 @@ const STRINGS = {
     zoom_helper: "Переключает мини-карточку на полную карточку и обратно",
     language: "Язык",
     lang_auto: "Автоматически",
+    illustration: "Анимированная иллюстрация",
+    illustration_theme: "Тема иллюстрации",
+    theme_auto: "Автоматически (солнце или тёмная тема)",
+    theme_day: "День",
+    theme_night: "Ночь",
   },
   uk: {
     title: "Присутність",
@@ -788,6 +878,7 @@ const STRINGS = {
     away: "Не вдома",
     unknown: "Невідомо",
     at_home: "Вдома: {n} з {total}",
+    away_names: "Не вдома: {names}",
     all_home: "Усі вдома",
     nobody_home: "Нікого вдома",
     for: "уже",
@@ -831,6 +922,11 @@ const STRINGS = {
     zoom_helper: "Перемикає міні-картку на повну картку й назад",
     language: "Мова",
     lang_auto: "Автоматично",
+    illustration: "Анімована ілюстрація",
+    illustration_theme: "Тема ілюстрації",
+    theme_auto: "Автоматично (сонце або темна тема)",
+    theme_day: "День",
+    theme_night: "Ніч",
   },
   hu: {
     title: "Jelenlét",
@@ -838,6 +934,7 @@ const STRINGS = {
     away: "Távol",
     unknown: "Ismeretlen",
     at_home: "{total} közül {n} otthon",
+    away_names: "Távol: {names}",
     all_home: "Mindenki otthon",
     nobody_home: "Senki otthon",
     for: "már",
@@ -881,6 +978,11 @@ const STRINGS = {
     zoom_helper: "Vált a mini kártya és a teljes kártya között",
     language: "Nyelv",
     lang_auto: "Automatikus",
+    illustration: "Animált illusztráció",
+    illustration_theme: "Az illusztráció témája",
+    theme_auto: "Automatikus (nap vagy sötét téma)",
+    theme_day: "Nappal",
+    theme_night: "Éjszaka",
   },
   sk: {
     title: "Prítomnosť",
@@ -888,6 +990,7 @@ const STRINGS = {
     away: "Preč",
     unknown: "Neznámy",
     at_home: "Doma: {n} z {total}",
+    away_names: "Mimo domu: {names}",
     all_home: "Všetci sú doma",
     nobody_home: "Nikto doma",
     for: "už",
@@ -931,6 +1034,11 @@ const STRINGS = {
     zoom_helper: "Prepína mini kartu na celú kartu a späť",
     language: "Jazyk",
     lang_auto: "Automaticky",
+    illustration: "Animovaná ilustrácia",
+    illustration_theme: "Téma ilustrácie",
+    theme_auto: "Automaticky (slnko alebo tmavá téma)",
+    theme_day: "Deň",
+    theme_night: "Noc",
   },
   cs: {
     title: "Přítomnost",
@@ -938,6 +1046,7 @@ const STRINGS = {
     away: "Pryč",
     unknown: "Neznámý",
     at_home: "Doma: {n} z {total}",
+    away_names: "Mimo domov: {names}",
     all_home: "Všichni jsou doma",
     nobody_home: "Nikdo doma",
     for: "už",
@@ -981,6 +1090,11 @@ const STRINGS = {
     zoom_helper: "Přepíná mini kartu na celou kartu a zpět",
     language: "Jazyk",
     lang_auto: "Automaticky",
+    illustration: "Animovaná ilustrace",
+    illustration_theme: "Motiv ilustrace",
+    theme_auto: "Automaticky (slunce nebo tmavý motiv)",
+    theme_day: "Den",
+    theme_night: "Noc",
   },
   sl: {
     title: "Prisotnost",
@@ -988,6 +1102,7 @@ const STRINGS = {
     away: "Odsoten",
     unknown: "Neznano",
     at_home: "Doma: {n} od {total}",
+    away_names: "Odsotni: {names}",
     all_home: "Vsi so doma",
     nobody_home: "Nikogar doma",
     for: "že",
@@ -1031,6 +1146,11 @@ const STRINGS = {
     zoom_helper: "Preklaplja med mini kartico in celotno kartico",
     language: "Jezik",
     lang_auto: "Samodejno",
+    illustration: "Animirana ilustracija",
+    illustration_theme: "Tema ilustracije",
+    theme_auto: "Samodejno (sonce ali temna tema)",
+    theme_day: "Dan",
+    theme_night: "Noč",
   },
   lv: {
     title: "Klātbūtne",
@@ -1038,6 +1158,7 @@ const STRINGS = {
     away: "Prom",
     unknown: "Nezināms",
     at_home: "Mājās: {n} no {total}",
+    away_names: "Prom: {names}",
     all_home: "Visi ir mājās",
     nobody_home: "Neviena mājās",
     for: "jau",
@@ -1081,6 +1202,11 @@ const STRINGS = {
     zoom_helper: "Pārslēdz mini karti uz pilno karti un atpakaļ",
     language: "Valoda",
     lang_auto: "Automātiski",
+    illustration: "Animēta ilustrācija",
+    illustration_theme: "Ilustrācijas motīvs",
+    theme_auto: "Automātiski (saule vai tumšā tēma)",
+    theme_day: "Diena",
+    theme_night: "Nakts",
   },
   el: {
     title: "Παρουσία",
@@ -1088,6 +1214,7 @@ const STRINGS = {
     away: "Εκτός",
     unknown: "Άγνωστο",
     at_home: "{n} από {total} στο σπίτι",
+    away_names: "Εκτός: {names}",
     all_home: "Όλοι στο σπίτι",
     nobody_home: "Κανείς στο σπίτι",
     for: "εδώ και",
@@ -1131,6 +1258,11 @@ const STRINGS = {
     zoom_helper: "Εναλλάσσει τη μίνι κάρτα με την πλήρη κάρτα",
     language: "Γλώσσα",
     lang_auto: "Αυτόματα",
+    illustration: "Κινούμενη εικονογράφηση",
+    illustration_theme: "Θέμα εικονογράφησης",
+    theme_auto: "Αυτόματο (ήλιος ή σκοτεινό θέμα)",
+    theme_day: "Ημέρα",
+    theme_night: "Νύχτα",
   },
 };
 
@@ -1239,11 +1371,154 @@ const avatarColor = (id) => {
 
 // Card logo: a house sheltering two people, drawn in the accent color on a round tinted badge like the other
 // ha-* cards.
-const logo = (label) => `<div class="logo"><svg class="icon" viewBox="6 6 36 36" role="img" aria-label="${esc(label)}">
+const logo = (label, status = "") => `<div class="logo${status ? ` ${status}` : ""}"><svg class="icon" viewBox="6 6 36 36" role="img" aria-label="${esc(label)}">
   <path d="M24 9 8 22.5h4.5V38h23V22.5H40Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
   <circle cx="19.5" cy="25" r="3.2"/><path d="M13.5 37c0-4 2.7-6.6 6-6.6s6 2.6 6 6.6Z"/>
   <circle cx="29" cy="26.5" r="2.7" opacity=".85"/><path d="M24.6 37c0-3.3 2-5.4 4.4-5.4s4.4 2.1 4.4 5.4Z" opacity=".85"/>
 </svg></div>`;
+
+// ---------------------------------------------------------------------------
+// Illustrated header
+// ---------------------------------------------------------------------------
+
+// Night picture: forced by illustration_theme, else the sun below the horizon OR Home Assistant's dark mode (the dark
+// theme wins even while the sun is up; with no usable sun.sun the dark mode alone decides).
+const isNight = (hass, config) => {
+  const theme = config?.illustration_theme;
+  if (theme === "night") return true;
+  if (theme === "day") return false;
+  const sun = hass?.states?.["sun.sun"]?.state;
+  if (sun === "below_horizon" || sun === "above_horizon") return sun === "below_horizon" || !!hass?.themes?.darkMode;
+  return !!hass?.themes?.darkMode;
+};
+
+// Sky positions of the stars (night).
+const STARS = [
+  [12, 8],
+  [44, 18],
+  [96, 6],
+  [132, 24],
+  [168, 10],
+  [188, 30],
+  [70, 30],
+];
+
+// One window of the house: lit (someone home behind it, with their silhouette) or dark.
+const sceneWindow = (x, y, lit) =>
+  `<rect class="pr-win${lit ? " lit" : ""}" x="${x}" y="${y}" width="14" height="11" rx=".6"/>${
+    lit ? `<g class="pr-shadow"><circle cx="${x + 7}" cy="${y + 4.6}" r="2.2"/><path d="M${x + 3} ${y + 11}c0-3 1.8-4.2 4-4.2s4 1.2 4 4.2Z"/></g>` : ""
+  }`;
+
+// A person walking (head and body), feet at y 0.
+const scenePerson = `<circle class="pr-skin" cx="0" cy="-9" r="2.6"/><rect class="pr-coat" x="-2.6" y="-6.4" width="5.2" height="7" rx="2"/>`;
+
+// The banner picture (200 × 80, drawn at the right of the banner, on the 10 px lawn strip): the house front,
+// its four windows lit one per person at home (with a silhouette), the car in front of it while someone is home,
+// and someone walking in through the door (somebody home) or walking away from it (nobody home).
+// No ids: several cards on one page never clash.
+const presenceScene = (home) => {
+  const stars = STARS.map(([x, y], i) => `<circle class="pr-star${i % 3 ? "" : " tw"}" cx="${x}" cy="${y}" r=".6"/>`).join("");
+  const windows = [
+    [8, 8],
+    [52, 8],
+    [8, 28],
+    [52, 28],
+  ]
+    .map(([x, y], i) => sceneWindow(x, y, i < home))
+    .join("");
+  const car = home
+    ? `<g transform="translate(178 79.2) scale(-.6 .6)"><path class="pr-car" d="M0 -6 Q1 -11 8 -12 L14 -16 H26 L33 -12 Q40 -11 40 -6 V-2 H0Z"/><path class="pr-glass" d="M15 -15 H25 L30 -12 H11Z"/><circle class="pr-tyre" cx="9" cy="-2" r="3.4"/><circle class="pr-tyre" cx="31" cy="-2" r="3.4"/><path class="pr-beam" d="M40 -8 L58 -12 V-2Z"/></g>`
+    : "";
+  return `<svg class="pr-scene" viewBox="0 0 200 80" preserveAspectRatio="xMaxYMax meet" aria-hidden="true" focusable="false">
+    <g class="pr-day"><circle class="pr-sun halo" cx="40" cy="16" r="9"/><circle class="pr-sun" cx="40" cy="16" r="6"/></g>
+    <g class="pr-night">${stars}<circle class="pr-moon" cx="40" cy="16" r="5.5"/><circle class="pr-moon-cut" cx="42.5" cy="14" r="4.5"/></g>
+    <path class="pr-cloud" transform="translate(80 14)" d="M-14,4 C-17,4 -18,0 -14.5,-1 C-14,-5 -8,-6 -6,-3 C-4,-8 4,-8 5,-2 C9,-3 12,0 10,4 Z"/>
+    <path class="pr-hill far" d="M0,80 C30,70 60,64 100,66 C140,68 170,60 200,62 L200,80Z"/>
+    <path class="pr-hill" d="M0,80 C40,74 90,75 200,72 L200,80Z"/>
+    <g transform="translate(100 34)">
+      <rect class="pr-wall" width="74" height="46"/><path class="pr-roof" d="M-6 1 L37 -20 L80 1Z"/>
+      ${windows}
+      <rect class="pr-door" x="30" y="26" width="14" height="20"/><circle class="pr-knob" cx="41" cy="37" r=".9"/>
+      <circle class="pr-lamp${home ? " on" : ""}" cx="47.5" cy="24" r="1.3"/>
+    </g>
+    <g class="pr-walk ${home ? "in" : "out"}"><g transform="translate(80 80)">${scenePerson}</g></g>
+    ${car}
+  </svg><div class="pr-ground" aria-hidden="true"></div>`;
+};
+
+// The illustration's colours and animations, day and night (taken from the house scene of the validated mock).
+const BANNER_STYLE = `
+  .banner { position: relative; overflow: hidden; height: 90px; --pr-g: 10px; container: pr-banner / inline-size; color: #0d2a45;
+            background: linear-gradient(90deg, #f1f8ff 0%, #e2f1fd 34%, #b9def8 70%, #9fd0f3 100%); }
+  .banner.night { color: #fff; background: linear-gradient(90deg, #1b2f52 0%, #15284a 36%, #0f1f3d 72%, #0a1830 100%); }
+  .pr-scene { position: absolute; right: 0; bottom: 10px; width: min(200px, 56%); height: 80px; overflow: hidden; }
+  /* The 10 px lawn strip under the whole banner, edge to edge. */
+  .pr-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 10px;
+               background: repeating-linear-gradient(90deg, #5aa83d 0 22px, #6cbb4c 22px 44px); }
+  .night .pr-ground { background: repeating-linear-gradient(90deg, #1f4a2a 0 22px, #245433 22px 44px); }
+  /* The round icon and the title on the sky at the left, up to where the scene starts. */
+  .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(min(200px, 56%) + 4px);
+           display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .banner .logo { align-self: center; background: rgba(255,255,255,.62); box-shadow: inset 0 0 0 1px rgba(47,125,225,.18); }
+  .banner.night .logo { color: color-mix(in srgb, var(--c) 72%, #fff); background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+  .banner .titles { display: flex; flex-direction: column; gap: 1px; }
+  .banner .name { font-size: 18px; font-weight: 500; }
+  /* A long summary ("Nikogo nie ma w domu") wraps between words on a narrow card rather than being cut. */
+  .banner .sub { font-size: 13px; line-height: 16px; color: #3b5b78; white-space: normal; }
+  .banner.night .sub { color: rgba(255,255,255,.8); }
+  .banner .titles { flex: 1 1 0; min-width: 0; }
+  .banner .chip.st { color: color-mix(in srgb, var(--c) 45%, #0d2a45); background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); }
+  .banner.night .chip.st { color: color-mix(in srgb, var(--c) 35%, #ffffff); background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); }
+  .banner .chip.st .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+  @container pr-banner (max-width: 200px) {
+    .banner .chip.st { padding: 0; width: 16px; height: 16px; justify-content: center; }
+    .banner .chip.st .txt { display: none; }
+  }
+  /* Detail button (mini card): a small frosted round button in the banner's top right corner. */
+  .banner .zoom { position: absolute; z-index: 2; top: 5px; right: 5px; margin: 0; width: 24px; height: 24px; color: #33506b;
+                  background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
+  .banner.night .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .banner .zoom:hover { color: #33506b; background: rgba(255,255,255,.75); }
+  .banner.night .zoom:hover { color: #fff; background: rgba(255,255,255,.22); }
+  /* Narrow card: no room for the scene beside the text, the sky and the lawn stay. */
+  @container pr-banner (max-width: 300px) { .pr-scene { display: none; } .htext { right: 36px; } }
+  /* Very narrow (a phone's 6 columns): the icon goes too, like the classic header's, the title keeps its room. */
+  @container pr-banner (max-width: 224px) { .htext > .logo { display: none; } }
+  /* The card keeps a natural width in a box sized by its content (see the full card's same rule). */
+  :host::before { content: ""; display: grid; grid-template-columns: minmax(0, 360px); height: 0; }
+  .pr-night, .night .pr-day { display: none; }
+  .night .pr-night { display: inline; }
+  .pr-sun { fill: #ffd65a; } .pr-sun.halo { opacity: .28; }
+  .pr-star { fill: #fff; opacity: .8; } .pr-star.tw { animation: pr-twinkle 3.2s ease-in-out infinite alternate; }
+  .pr-moon { fill: #f3eed2; } .pr-moon-cut { fill: #13254a; }
+  .pr-cloud { fill: #fff; opacity: .92; animation: pr-drift 4s ease-in-out infinite alternate; }
+  .night .pr-cloud { opacity: .1; }
+  .pr-hill.far { fill: #a7d39f; } .pr-hill { fill: #86c27f; }
+  .night .pr-hill.far { fill: #1d3a4a; } .night .pr-hill { fill: #17303d; }
+  .pr-wall { fill: #f3e6d3; } .night .pr-wall { fill: #2a3646; }
+  .pr-roof { fill: #c0603a; } .night .pr-roof { fill: #3a2a2a; }
+  .pr-win { fill: #86b9de; } .night .pr-win { fill: #3b4b5e; }
+  .pr-win.lit { fill: #ffe9a8; } .night .pr-win.lit { fill: #ffcf6e; filter: drop-shadow(0 0 1.6px #ffb347); }
+  .pr-shadow { fill: #5f6b7a; opacity: .7; } .night .pr-shadow { fill: #7a5a2a; opacity: .75; }
+  .pr-door { fill: #8a5a3a; } .pr-knob { fill: #e8c46a; }
+  .pr-lamp { fill: #7d8793; } .pr-lamp.on { fill: #ffd27a; }
+  .night .pr-lamp.on { filter: drop-shadow(0 0 1.6px #ffd27a); }
+  .pr-skin { fill: #f2c9a0; } .pr-coat { fill: #d4537e; }
+  .pr-car { fill: #e5484d; } .pr-glass { fill: #cfe6f7; } .night .pr-glass { fill: #3b4b5e; } .pr-tyre { fill: #22262b; }
+  .pr-beam { display: none; fill: #ffe9a8; opacity: .35; } .night .pr-beam { display: inline; }
+  /* Someone walking home through the door, or (nobody home) walking away from it. */
+  .pr-walk.in { animation: pr-walk-in 6s linear infinite; }
+  .pr-walk.out { animation: pr-walk-out 6s linear infinite; }
+  @keyframes pr-walk-in { 0% { transform: translateX(-30px); opacity: 0; } 10%, 86% { opacity: 1; } 100% { transform: translateX(57px); opacity: 0; } }
+  @keyframes pr-walk-out { 0% { transform: translateX(57px); opacity: 0; } 12%, 84% { opacity: 1; } 100% { transform: translateX(-36px); opacity: 0; } }
+  @keyframes pr-drift { from { transform: translate(78px, 14px); } to { transform: translate(84px, 14px); } }
+  @keyframes pr-twinkle { from { opacity: .3; } to { opacity: .9; } }
+  @media (prefers-reduced-motion: reduce) {
+    .pr-walk, .pr-cloud, .pr-star.tw { animation: none !important; }
+    .pr-walk.in { transform: translateX(40px); }
+    .pr-walk.out { transform: translateX(-10px); }
+  }
+`;
 
 // ---------------------------------------------------------------------------
 // People
@@ -1559,14 +1834,28 @@ const BASE_STYLE = `
      A zero basis (not auto): in the mini card's wrapping header, a basis at the text's width would push the
      zoom button onto a second line at narrow widths. */
   .titles { flex: 1 1 0%; min-width: 6ch; }
-  :host([hide-title]) .titles > .name, :host([hide-subtitle]) .titles > .sub { display: none; }
+  :host([hide-title]) .titles .name, :host([hide-subtitle]) .titles > .sub { display: none; }
   .logo { --c: var(--pr-accent); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; align-self: flex-start;
           background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
   .logo .icon { width: 24px; height: 24px; }
+  /* The header icon's color follows the house's status: someone home, someone in a zone, unknown, nobody. */
+  .logo.home { --c: var(--pr-home); } .logo.zone { --c: var(--pr-zone); } .logo.away { --c: var(--pr-away); } .logo.unknown { --c: var(--pr-unknown); }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  /* The count chip shrinks before the title (never past half the header) and cuts its text. */
-  .header > .chip { align-self: flex-start; margin-top: 2px; flex: 0 1 auto; min-width: 0; max-width: 50%; box-sizing: border-box; overflow: hidden; }
+  /* Title row (both headers): the name, then the status pill right after it, only when the whole name and the whole
+     label fit there (measured by the card, see _fitPill); else the pill takes a line of its own under the subtitle
+     (the subtitle then on one line, its whole text in its tooltip), and when even that does not fit, only its dot or
+     icon stays (the summary in its title and for screen readers). */
+  .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .trow > .name { flex: 0 1 auto; min-width: 4ch; }
+  .trow > .chip { flex: none; max-width: none; margin: 0; line-height: 16px; white-space: nowrap; overflow: hidden; box-sizing: border-box; }
+  .titles.below { display: flex; flex-direction: column; }
+  .titles.below .trow { display: contents; }
+  .titles.below > .sub { order: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .titles.below .trow > .chip { order: 2; align-self: flex-start; max-width: 100%; margin-top: 2px; }
+  .titles.dot-only .trow > .chip { padding: 1px 4px; }
+  .titles.dot-only .trow > .chip .txt { display: none; }
+  .banner .titles.dot-only .chip.st { padding: 0; width: 16px; height: 16px; justify-content: center; }
   .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); overflow-wrap: anywhere; }
   .warning + .warning { padding-top: 0; }
   .avatar { position: relative; flex: none; width: var(--size, 40px); height: var(--size, 40px); }
@@ -1585,6 +1874,9 @@ const BASE_STYLE = `
   .zoom .icon { width: 16px; height: 16px; }
   .zoom:hover { background: color-mix(in srgb, var(--secondary-text-color) 16%, transparent); color: var(--primary-text-color); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 1px; }
+  /* Classic header: the detail button in the card's top right corner, out of the title row. */
+  .header:has(> .zoom), .mini .header:has(> .zoom) { position: relative; padding-right: 40px; }
+  .header > .zoom, .mini .header > .zoom { position: absolute; top: 10px; right: 10px; margin: 0; box-shadow: inset 0 0 0 1px var(--divider-color, rgba(127,127,127,.3)); }
   @media (prefers-reduced-motion: reduce) { .avatar .pic { transition: none; } }
 `;
 // A click inside a dialog (more-info opened from the card, say) is not a click outside the card.
@@ -1648,6 +1940,18 @@ class PresenceBase extends HTMLElement {
 
   connectedCallback() {
     this._startTimer();
+    // A new width (or the web font loaded): the status pill is fitted again, in the next frame.
+    if (typeof ResizeObserver === "function") {
+      this._pillResize ??= new ResizeObserver((entries) => {
+        const w = Math.round(entries.at(-1).contentRect.width);
+        if (w === this._fitWidth) return;
+        this._fitWidth = w;
+        cancelAnimationFrame(this._fitFrame);
+        this._fitFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._pillResize.observe(this);
+    }
+    document.fonts?.ready?.then(() => this._fitPill());
   }
 
   // "Since" durations move on with the clock: a render check every minute, no state change needed.
@@ -1662,6 +1966,8 @@ class PresenceBase extends HTMLElement {
 
   disconnectedCallback() {
     clearInterval(this._timer);
+    this._pillResize?.disconnect();
+    this._fitWidth = null;
   }
 
   set hass(hass) {
@@ -1702,7 +2008,7 @@ class PresenceBase extends HTMLElement {
   // people, their trackers, their battery sensors and the home zone.
   _signature() {
     const h = this._hass;
-    const sig = [h.language, h.locale?.language, h.locale?.time_format, h.themes?.darkMode, h.config?.unit_system?.length, h.entities, h.states["zone.home"]];
+    const sig = [h.language, h.locale?.language, h.locale?.time_format, h.themes?.darkMode, h.config?.unit_system?.length, h.entities, h.states["zone.home"], h.states["sun.sun"]?.state];
     if (this._config.show_since !== false) sig.push(Math.floor(Date.now() / 60000));
     // Unfolded movements: dropped once older than 24 hours, read again each hour.
     if (this._movesOpen) sig.push(Math.floor(Date.now() / 60000));
@@ -1730,6 +2036,48 @@ class PresenceBase extends HTMLElement {
       this._html = html;
       morph(this.shadowRoot, html);
     }
+    this._fitPill();
+  }
+
+  // The status pill goes right after the title only when the whole title and the whole label fit there; otherwise it
+  // takes a line of its own under the subtitle (.below, the subtitle kept to one line, its whole text in its tooltip).
+  // When the label does not fit that line either, or the banner has no room for the lines above its ground strip, the
+  // pill keeps its dot only (.dot-only, back beside the title when the dot fits there). Measured after render, so that
+  // it holds in every language.
+  _fitPill() {
+    const root = this.shadowRoot;
+    if (!root?.querySelectorAll || typeof getComputedStyle !== "function") return;
+    for (const t of root.querySelectorAll(".titles")) {
+      const chip = t.querySelector(".trow > .chip");
+      t.classList.remove("below", "dot-only");
+      if (!chip?.getClientRects().length) continue;
+      const row = chip.parentElement;
+      const name = row.querySelector(".name");
+      const fits = () => {
+        let title = 0;
+        if (name && getComputedStyle(name).display !== "none") {
+          const range = document.createRange();
+          range.selectNodeContents(name);
+          const cs = getComputedStyle(name);
+          title = Math.max(name.scrollWidth, range.getBoundingClientRect().width) + (parseFloat(cs.marginLeft) || 0) + (parseFloat(cs.marginRight) || 0) +
+            (parseFloat(getComputedStyle(row).columnGap) || 0);
+        }
+        return title + chip.getBoundingClientRect().width <= row.getBoundingClientRect().width + 0.5;
+      };
+      if (fits()) continue;
+      t.classList.add("below");
+      for (const sub of t.querySelectorAll(".sub")) sub.title = sub.scrollWidth > sub.clientWidth ? sub.textContent.trim() : "";
+      const text = chip.querySelector(".txt");
+      const banner = t.closest(".banner");
+      const tb = t.getBoundingClientRect();
+      const bb = banner?.getBoundingClientRect();
+      const ground = banner ? parseFloat(getComputedStyle(banner).getPropertyValue("--pr-g")) || 0 : 0;
+      const tall = !!bb && (tb.top < bb.top - 0.5 || tb.bottom > bb.bottom - ground + 0.5);
+      if (!tall && !(text && text.scrollWidth > text.clientWidth + 0.5)) continue;
+      t.classList.add("dot-only");
+      t.classList.remove("below");
+      if (!fits()) t.classList.add("below");
+    }
   }
 
   _people() {
@@ -1745,16 +2093,49 @@ class PresenceBase extends HTMLElement {
     return { n, text: this._t("at_home").replace("{n}", n).replace("{total}", people.length) };
   }
 
+  // The header's subtitle beside the count pill ("2/4"): who is away, rather than the count again; everyone home or
+  // nobody home as the summary says it.
+  _subtitle(people) {
+    const { n, text } = this._summary(people);
+    if (n === 0 || n === people.length) return text;
+    const away = people.filter((p) => p.kind !== "home").map((p) => p.name);
+    return this._t("away_names").replace("{names}", away.join(", "));
+  }
+
+  // The house's status, for the header icon's color: someone home, else someone in a zone, else someone unknown,
+  // else nobody (grey).
+  _status(people) {
+    for (const kind of ["home", "zone", "unknown"]) if (people.some((p) => p.kind === kind)) return kind;
+    return "away";
+  }
+
+  _illustrated() {
+    return this._config.illustration !== false;
+  }
+
+  // The illustrated header: the house scene on its sky, the round mdi:home icon and the title at its left.
+  _banner(people) {
+    const { n, text } = this._summary(people);
+    const title = esc(this._config.title || this._t("title"));
+    const status = this._status(people);
+    // The status pill: a dot in the header icon's colour and the count at home, the summary in its title.
+    const pill = `<span class="chip st ${status}" role="img" title="${esc(text)}" aria-label="${esc(text)}"><span class="dot"></span><span class="txt">${n}/${people.length}</span></span>`;
+    return `<div class="banner${isNight(this._hass, this._config) ? " night" : ""}">${presenceScene(n)}<div class="htext">
+        <div class="logo ${status}" role="img" aria-label="${esc(this._t("title"))}">${svgIcon(ICONS.home)}</div>
+        <div class="titles"><div class="trow"><div class="name"><span>${title}</span></div>${pill}</div><div class="sub"><span>${esc(this._subtitle(people))}</span></div></div>
+      </div>${this._zoomButton()}</div>`;
+  }
+
   _header(people) {
+    if (this._illustrated()) return this._banner(people);
     const { n, text } = this._summary(people);
     return `
       <div class="header">
-        ${logo(this._t("title"))}
+        ${logo(this._t("title"), this._status(people))}
         <div class="titles">
-          <div class="name">${esc(this._config.title || this._t("title"))}</div>
-          <div class="sub">${esc(text)}</div>
+          <div class="trow"><div class="name">${esc(this._config.title || this._t("title"))}</div><span class="chip ${n ? "home" : "away"}" role="img" title="${esc(text)}" aria-label="${esc(text)}">${svgIcon(ICONS.home)}<span class="txt">${n}/${people.length}</span></span></div>
+          <div class="sub">${esc(this._subtitle(people))}</div>
         </div>
-        <span class="chip ${n ? "home" : "away"}" role="img" title="${esc(text)}" aria-label="${esc(text)}">${svgIcon(ICONS.home)}<span class="txt">${n}/${people.length}</span></span>
         ${this._zoomButton()}
       </div>`;
   }
@@ -1808,7 +2189,7 @@ const FULL_STYLE = `
   .header { container: pr-head / inline-size; }
   /* The summary ("Nikogo nie ma w domu") wraps between words rather than being cut next to the chip. */
   .header .sub { white-space: normal; }
-  @container pr-head (max-width: 180px) { .header > .chip .txt { display: none; } .header > .chip { padding: 1px 4px; } }
+  @container pr-head (max-width: 200px) { .trow > .chip .txt { display: none; } .trow > .chip { padding: 1px 4px; } }
   /* A small gap before the facts column: the name and place already stretch up to it, and at a phone's 9
      columns (about 234 px) every pixel goes to the zone or state chip ("Poza domem"). */
   .person { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 12px;
@@ -2006,7 +2387,7 @@ class PresenceCard extends PresenceBase {
     if (!people.length) return this._noPeople(all);
     const c = this._config;
     const shown = c.show_away === false ? people.filter((p) => p.kind === "home" || p.kind === "zone") : people;
-    return `<style>${BASE_STYLE}${FULL_STYLE}</style>
+    return `<style>${BASE_STYLE}${FULL_STYLE}${this._illustrated() ? BANNER_STYLE : ""}</style>
       <ha-card>
         ${this._header(people)}
         <div class="content">${shown.map((p) => this._row(p)).join("")}${this._missing(all)}${this._movesSection(people)}</div>
@@ -2084,6 +2465,9 @@ const MINI_STYLE = `
   .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 1px; }
   .faces { order: 9; flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: ${FACE_GAP}px; }
   .mini.row .faces { order: 0; flex: none; }
+  /* Under the illustrated header, the avatars on their own row. */
+  .mini.illustrated > .faces { padding: 10px 12px 12px; }
+  .mini.illustrated > .warning { padding-top: 10px; }
   .faces .avatar .badge { width: 14px; height: 14px; right: -2px; bottom: -2px; }
   .faces .avatar .badge .icon { width: 10px; height: 10px; }
 `;
@@ -2206,6 +2590,15 @@ class PresenceMiniCard extends PresenceCard {
         [p.name, this._place(p), this._direction(p)].filter(Boolean).join(" · ")
       )}">${this._avatar(p, FACE)}</div>`
     );
+    if (this._illustrated())
+      return `<style>${BASE_STYLE}${MINI_STYLE}${BANNER_STYLE}</style>
+      <ha-card>
+        <div class="mini illustrated">
+          ${this._banner(people)}
+          ${faces.length ? `<div class="faces">${faces.join("")}</div>` : ""}
+          ${this._missing(all)}
+        </div>
+      </ha-card>`;
     return `<style>${BASE_STYLE}${MINI_STYLE}</style>
       <ha-card>
         <div class="mini${this._inline ? " row" : ""}${this._tight ? " tight" : ""}">
@@ -2258,6 +2651,10 @@ class PresenceEditorBase extends HTMLElement {
         },
       },
       { type: "grid", name: "", schema: this.constructor.toggles.map((name) => ({ name, selector: { boolean: {} } })) },
+      {
+        name: "illustration_theme",
+        selector: { select: { mode: "dropdown", options: ["auto", "day", "night"].map((v) => ({ value: v, label: tr(`theme_${v}`) })) } },
+      },
       {
         name: "language",
         selector: {
@@ -2314,7 +2711,7 @@ class PresenceEditorBase extends HTMLElement {
         for (const [k, v] of Object.entries(config)) {
           // Keep the YAML minimal: drop empty values, defaults and toggles left on (their default).
           const empty = v === "" || v === undefined || v === null || (Array.isArray(v) && !v.length);
-          if (empty || (k === "sort" && v === "presence") || (this.constructor.toggles.includes(k) && v === true)) delete config[k];
+          if (empty || (k === "sort" && v === "presence") || (k === "illustration_theme" && v === "auto") || (this.constructor.toggles.includes(k) && v === true)) delete config[k];
         }
         this._config = config;
         this.dispatchEvent(new CustomEvent("config-changed", { detail: { config }, bubbles: true, composed: true }));
@@ -2328,7 +2725,7 @@ class PresenceEditorBase extends HTMLElement {
     if (this._formConfig === this._config && this._formLang === l) return;
     this._formConfig = this._config;
     this._formLang = l;
-    const data = { sort: "presence", ...this._config, entities: normalize(this._config.entities).map((e) => e.entity) };
+    const data = { sort: "presence", illustration_theme: "auto", ...this._config, entities: normalize(this._config.entities).map((e) => e.entity) };
     for (const name of this.constructor.toggles) if (data[name] === undefined) data[name] = true;
     this._schemas ??= {};
     this._schemas[l] ??= this._schema();
@@ -2339,13 +2736,13 @@ class PresenceEditorBase extends HTMLElement {
 
 class PresenceCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_title", "show_subtitle", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_away", "show_moves"];
+    return ["illustration", "show_title", "show_subtitle", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_away", "show_moves"];
   }
 }
 
 class PresenceMiniCardEditor extends PresenceEditorBase {
   static get toggles() {
-    return ["show_title", "show_subtitle", "show_away", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_moves", "zoom"];
+    return ["illustration", "show_title", "show_subtitle", "show_away", "show_since", "show_distance", "show_direction", "show_travel", "show_battery", "show_moves", "zoom"];
   }
 }
 

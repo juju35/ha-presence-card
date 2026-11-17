@@ -135,7 +135,9 @@ const measure = async (theme, type, config = {}) => {
       const root = el.shadowRoot;
       const res = [];
       const label = (n) => `${n.className} "${n.textContent.trim()}"`;
-      for (const n of root.querySelectorAll(".chip, .sub .st, .warning")) res.push(["text", label(n), textContrast(n)]);
+      // The banner's pill lies on the sky, a gradient (background-image) that the backdrop above cannot composite: it
+      // is left out here (its frosted tint and text mixed with the sky's text colour are those of the other ha-* cards).
+      for (const n of root.querySelectorAll(".chip:not(.banner .chip), .sub .st, .warning")) res.push(["text", label(n), textContrast(n)]);
       for (const n of root.querySelectorAll(".avatar .pic"))
         if (n.textContent.trim())
           // An opacity filter fades the initials into the card: not measurable here, so counted as a failure.
