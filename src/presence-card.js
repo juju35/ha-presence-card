@@ -1443,10 +1443,36 @@ const BANNER_STYLE = `
   /* A long summary ("Nikogo nie ma w domu") wraps between words on a narrow card rather than being cut. */
   .banner .sub { font-size: 13px; line-height: 16px; color: #3b5b78; white-space: normal; }
   .banner.night .sub { color: rgba(255,255,255,.8); }
-  .banner .zoom { position: absolute; top: 6px; right: 6px; margin: 0; color: #10283f; background: rgba(255,255,255,.55); }
-  .banner.night .zoom { color: #fff; background: rgba(10,20,40,.45); }
-  .banner .zoom:hover { color: #10283f; background: rgba(255,255,255,.8); }
-  .banner.night .zoom:hover { color: #fff; background: rgba(10,20,40,.7); }
+  /* Title row: the name, then the status pill right after it (the name gives way first, down to four characters).
+     When the row is too narrow for both, the pill takes a line of its own under the subtitle; on the narrowest
+     cards only its dot stays (the summary in its title and for screen readers). */
+  .banner .titles { flex: 1 1 0; min-width: 0; container: pr-titles / inline-size; }
+  .banner .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .banner .trow > .name { flex: 0 1 auto; min-width: 4ch; }
+  .banner .chip.st { flex: none; max-width: 51%; margin: 0; line-height: 16px; white-space: nowrap; overflow: hidden; box-sizing: border-box;
+                     color: color-mix(in srgb, var(--c) 45%, #0d2a45); background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); }
+  .banner.night .chip.st { color: color-mix(in srgb, var(--c) 35%, #ffffff); background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); }
+  .banner .chip.st .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+  @container pr-titles (max-width: 110px) {
+    .banner .trow { display: contents; }
+    .banner .titles > .sub { order: 1; }
+    .banner .trow > .chip { order: 2; align-self: flex-start; max-width: 100%; margin-top: 2px; }
+  }
+  @container pr-banner (max-width: 260px) {
+    .banner .trow { display: contents; }
+    .banner .titles > .sub { order: 1; }
+    .banner .trow > .chip { order: 2; align-self: flex-start; max-width: 100%; margin-top: 2px; }
+  }
+  @container pr-banner (max-width: 200px) {
+    .banner .chip.st { padding: 0; width: 16px; height: 16px; justify-content: center; }
+    .banner .chip.st .txt { display: none; }
+  }
+  /* Detail button (mini card): a small frosted round button in the banner's top right corner. */
+  .banner .zoom { position: absolute; z-index: 2; top: 5px; right: 5px; margin: 0; width: 24px; height: 24px; color: #33506b;
+                  background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
+  .banner.night .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .banner .zoom:hover { color: #33506b; background: rgba(255,255,255,.75); }
+  .banner.night .zoom:hover { color: #fff; background: rgba(255,255,255,.22); }
   /* Narrow card: no room for the scene beside the text, the sky and the lawn stay. */
   @container pr-banner (max-width: 300px) { .pr-scene { display: none; } .htext { right: 36px; } }
   /* Very narrow (a phone's 6 columns): the icon goes too, like the classic header's, the title keeps its room. */
@@ -1829,6 +1855,9 @@ const BASE_STYLE = `
   .zoom .icon { width: 16px; height: 16px; }
   .zoom:hover { background: color-mix(in srgb, var(--secondary-text-color) 16%, transparent); color: var(--primary-text-color); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, #03a9f4); outline-offset: 1px; }
+  /* Classic header: the detail button in the card's top right corner, out of the title row. */
+  .header:has(> .zoom), .mini .header:has(> .zoom) { position: relative; padding-right: 40px; }
+  .header > .zoom, .mini .header > .zoom { position: absolute; top: 10px; right: 10px; margin: 0; box-shadow: inset 0 0 0 1px var(--divider-color, rgba(127,127,127,.3)); }
   @media (prefers-reduced-motion: reduce) { .avatar .pic { transition: none; } }
 `;
 // A click inside a dialog (more-info opened from the card, say) is not a click outside the card.
@@ -2004,9 +2033,12 @@ class PresenceBase extends HTMLElement {
   _banner(people) {
     const { n, text } = this._summary(people);
     const title = esc(this._config.title || this._t("title"));
+    const status = this._status(people);
+    // The status pill: a dot in the header icon's colour and the count at home, the summary in its title.
+    const pill = `<span class="chip st ${status}" role="img" title="${esc(text)}" aria-label="${esc(text)}"><span class="dot"></span><span class="txt">${n}/${people.length}</span></span>`;
     return `<div class="banner${isNight(this._hass, this._config) ? " night" : ""}">${presenceScene(n)}<div class="htext">
-        <div class="logo ${this._status(people)}" role="img" aria-label="${esc(this._t("title"))}">${svgIcon(ICONS.home)}</div>
-        <div class="titles"><div class="name"><span>${title}</span></div><div class="sub"><span>${esc(text)}</span></div></div>
+        <div class="logo ${status}" role="img" aria-label="${esc(this._t("title"))}">${svgIcon(ICONS.home)}</div>
+        <div class="titles"><div class="trow"><div class="name"><span>${title}</span></div>${pill}</div><div class="sub"><span>${esc(text)}</span></div></div>
       </div>${this._zoomButton()}</div>`;
   }
 

@@ -6,6 +6,7 @@
 - Animated illustrated header, 90 px on the full card and the mini card: the house on a lawn strip, one window lit per person at home (with a silhouette), the car in front of it while someone is home, and someone walking in through the door — or walking away from it when nobody is home. The title and the summary sit on the sky at its left, by a round home icon whose color follows the status (green someone home, blue someone in a zone, orange unknown, grey nobody).
 - Night picture (stars, moon, glowing windows, headlights) after sunset (`sun.sun`), or in a dark theme without `sun.sun`; `illustration_theme: day | night` forces one. `illustration: false` keeps the classic header (its logo now colored by status too). Both options are in the visual editors, in every language. Animations stop under `prefers-reduced-motion`.
 - The mini card shows its avatars under the illustrated header.
+- **Status pill on the illustrated header**: a dot in the header icon's colour and the count at home ("2/4", the summary in its tooltip) right after the title, under the subtitle when the title row is too narrow, its dot alone on the narrowest cards. The mini card's detail button is a small frosted round button in the banner's top right corner (in the card's corner with the classic header, never in the title row).
 - README: **animated captures** (GIF, light and dark) of the header: somebody home, nobody home and night.
 
 ## 1.12.1 - 2026-11-13
