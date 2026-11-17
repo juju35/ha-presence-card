@@ -48,11 +48,13 @@ jobs:
       # the one time-boxed, retried step below and a hung mirror can never stall an unguarded install.
       - run: npx playwright install chromium
         timeout-minutes: 5
-      # Roboto + gh (re-run step) + the browser's apt deps, each apt call time-boxed and retried so a flaky mirror is
-      # abandoned and retried instead of hanging.
-      - name: Install Roboto and browser deps
+      # ffmpeg (animated GIFs, not preinstalled) + Roboto + gh (re-run step) + the browser's apt deps, each apt call
+      # time-boxed and retried so a flaky mirror is abandoned and retried instead of hanging; fail loudly without ffmpeg.
+      - name: Install ffmpeg, Roboto and browser deps
         timeout-minutes: 12
-        run: .github/scripts/install-chromium-deps.sh fonts-roboto gh
+        run: |
+          .github/scripts/install-chromium-deps.sh ffmpeg fonts-roboto gh
+          ffmpeg -version > /dev/null
       - run: npm run build
       - name: Render screenshots
         run: |

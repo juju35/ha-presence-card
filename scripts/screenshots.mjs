@@ -1,7 +1,11 @@
 // Renders the cards with mock people and saves the README screenshots.
 // Usage: npm run build && npm run screenshots
+// Then records the header animations into screenshots/*.gif, light and dark (needs ffmpeg).
+import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { NOW, states } from "./mock-states.mjs";
 
@@ -100,7 +104,8 @@ const samePixels = async (file, png) => {
   await page.close();
   return same;
 };
-for (const s of shots) {
+// Opens a fresh page and mounts shot `s` on it, settled; returns the page ready to capture.
+const mount = async (s) => {
   // A fresh page for each capture: the card script declares its classes and custom elements once per page.
   // Fixed clock, time zone and locale: the "for 3 h" durations and any date do not depend on when or where it runs.
   const page = await browser.newPage({
@@ -134,7 +139,7 @@ for (const s of shots) {
           .querySelector(".zoom")
           .dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 1 }));
     },
-    { type: s.type, config: s.config, states, dark: s.theme === "dark", zoom: !!s.zoom, moves: s.moves ? MOVES : null }
+    { type: s.type, config: s.config, states: s.states || states, dark: s.theme === "dark", zoom: !!s.zoom, moves: s.moves ? MOVES : null }
   );
   // Deterministic render signal instead of a fixed wait: fonts loaded, then two frame pairs so the
   // mini card's ResizeObserver `_fit` pass (which can re-render once) has settled before the capture.
@@ -142,6 +147,11 @@ for (const s of shots) {
     await document.fonts.ready;
     for (let i = 0; i < 2; i++) await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   });
+  return page;
+};
+
+for (const s of shots) {
+  const page = await mount(s);
   const box = await page.locator("#root").boundingBox();
   const png = await page.screenshot({
     clip: { x: 0, y: 0, width: s.width + 32, height: Math.ceil(box.height) + 32 },
@@ -155,5 +165,72 @@ for (const s of shots) {
   }
   writeFileSync(file, png);
   console.log(`screenshots/${s.file}.png`);
+}
+// Animated captures: the full card's header, one GIF per state, light and dark. The CSS animations are paused and
+// stepped frame by frame over a 6 s loop (one walk); each animation runs a whole number of its cycles in it (there and
+// back for the alternating ones), so every GIF loops seamlessly whatever the machine's speed.
+const FPS = 15;
+const LOOP = 6000;
+const away = Object.fromEntries(Object.entries(states).map(([id, st]) => [id, id.startsWith("person.") ? { ...st, state: "not_home" } : st]));
+const GIFS = [
+  // Somebody home: someone walks in through the door, the cloud drifts.
+  { name: "anim-home", config: { illustration_theme: "day" } },
+  // Nobody home: someone walks away from the house, the windows dark and no car.
+  { name: "anim-away", config: { illustration_theme: "day" }, states: away },
+  // Night picture: the stars twinkle.
+  { name: "anim-night", config: { illustration_theme: "night" } },
+];
+
+// Pauses every CSS animation of the page (shadow trees walked by hand) at `frac` of the loop.
+const freeze = (page, frac) =>
+  page.evaluate(
+    ({ f, loop }) => {
+      const walk = (node) => [...node.querySelectorAll("*")].flatMap((el) => [...el.getAnimations(), ...(el.shadowRoot ? walk(el.shadowRoot) : [])]);
+      for (const a of walk(document)) {
+        const { duration, direction } = a.effect.getTiming();
+        const cycle = direction.startsWith("alternate") ? 2 * duration : duration;
+        a.pause();
+        a.currentTime = (10 + f * Math.max(1, Math.round(loop / cycle))) * cycle;
+      }
+    },
+    { f: frac, loop: LOOP }
+  );
+
+// Every decoded frame (RGBA) as ffmpeg's per-frame MD5 list: equal lists, same animation.
+const decodedFrames = (file) =>
+  execFileSync("ffmpeg", ["-loglevel", "error", "-i", file, "-pix_fmt", "rgba", "-f", "framemd5", "-"], { encoding: "utf8" })
+    .split("\n")
+    .filter((line) => line && !line.startsWith("#"))
+    .join("\n");
+
+for (const g of GIFS) {
+  for (const theme of ["light", "dark"]) {
+    const file = `${g.name}${theme === "dark" ? "-dark" : ""}`;
+    const s = { file, type: "presence-card", theme, width: 460, config: g.config, states: g.states };
+    const page = await mount(s);
+    // The header with the 16 px of theme background around the card.
+    const bottom = await page.evaluate(() => document.querySelector("#root > *").shadowRoot.querySelector(".banner").getBoundingClientRect().bottom);
+    const clip = { x: 0, y: 0, width: s.width + 32, height: Math.ceil(bottom) };
+    const dir = mkdtempSync(join(tmpdir(), "pr-frames-"));
+    const frames = Math.round((FPS * LOOP) / 1000);
+    for (let i = 0; i < frames; i++) {
+      await freeze(page, i / frames);
+      await page.screenshot({ path: join(dir, `f${String(i).padStart(3, "0")}.png`), clip });
+    }
+    await page.close();
+    // A deterministic GIF (palette from the frames only, ordered dithering, bit-exact muxing), replacing the file in
+    // place only when its decoded frames differ.
+    const gif = join(dir, "out.gif");
+    execFileSync("ffmpeg", [
+      "-y", "-loglevel", "error", "-framerate", String(FPS), "-i", join(dir, "f%03d.png"),
+      "-vf", `scale=${s.width + 32}:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=4`,
+      "-fflags", "+bitexact", "-flags", "+bitexact", "-loop", "0", gif,
+    ]);
+    const target = `${root}screenshots/${file}.gif`;
+    const same = existsSync(target) && decodedFrames(target) === decodedFrames(gif);
+    if (!same) copyFileSync(gif, target);
+    console.log(`screenshots/${file}.gif${same ? " unchanged" : ""}`);
+    rmSync(dir, { recursive: true });
+  }
 }
 await browser.close();

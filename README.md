@@ -152,6 +152,30 @@ Note for the sections view: Lovelace sizes the cell when the dashboard loads and
 
 ## Screenshots
 
+### Animated captures
+
+The header of the full card in its states, in a loop of 6 seconds (with `prefers-reduced-motion`, everything stays still).
+
+Somebody home: someone walks in through the door, one window lit per person at home, the cloud drifts:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-home.gif" alt="somebody home animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-home-dark.gif" alt="somebody home animation, dark theme" width="400"> |
+
+Nobody home: someone walks away from the dark house:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-away.gif" alt="nobody home animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-away-dark.gif" alt="nobody home animation, dark theme" width="400"> |
+
+Night picture: the stars twinkle over the glowing windows:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-night.gif" alt="night animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/anim-night-dark.gif" alt="night animation, dark theme" width="400"> |
+
+### Stills
+
 | Light | Dark |
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card.png" alt="card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-presence-card/main/screenshots/card-dark.png" alt="card dark" width="400"> |
@@ -174,7 +198,7 @@ npm install
 npm run build        # bundles src/presence-card.js into dist/presence-card.js
 npm run check        # builds and checks the card (run in CI)
 npm test             # unit and browser tests
-npm run screenshots  # renders the cards with mock data (scripts/mock-states.mjs) into screenshots/
+npm run screenshots  # renders the cards with mock data (scripts/mock-states.mjs) into screenshots/, and the animated GIFs (needs ffmpeg)
 ```
 
 `dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where the Marketplace installs it from.
