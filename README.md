@@ -23,7 +23,7 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 ## Features
 
 - Two cards: a full **Presence Card** and a compact **Presence Mini Card**
-- Animated illustrated header (90 px, both cards): the house on its lawn, one window lit per person at home (with a silhouette), the car in front while someone is home, someone walking in through the door — or walking away from it when nobody is home; a round home icon colored by status (green someone home, blue someone in a zone, orange unknown, grey nobody); night picture after sunset (`sun.sun`) or in a dark theme, or forced with `illustration_theme`; `illustration: false` keeps the classic header
+- Animated illustrated header (90 px, both cards): the house on its lawn, one window lit per person at home (with a silhouette), the car in front while someone is home, someone walking in through the door — or walking away from it when nobody is home; a round home icon colored by status (green someone home, blue someone in a zone, orange unknown, grey nobody); night picture in a dark theme (a light theme keeps the day picture after sunset), or forced with `illustration_theme`; `illustration: false` keeps the classic header
 - Mini card: the illustrated header with the round avatars under it (name and place on hover); with `illustration: false`, a single row like the Alarm mini card: logo, title, summary in color and avatars, which go under the title as soon as the title and summary would no longer fit in full next to them
 - Zoom button at the top right of the mini card: it switches to the full card and back; a click anywhere outside the card brings the compact view back
 - All `person` entities by default, or a chosen list, with an optional name or picture per person
@@ -132,7 +132,7 @@ language: fr
 | `entities` | both | All people | People to show: `person` entity ids, or objects with `entity` and an optional `name`, `picture`, `proximity_direction` and `proximity_distance` (the person's Proximity sensors, when not found automatically), and `travel_time` (a travel time sensor home, such as [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time/)) |
 | `title` | both | Presence | Card title |
 | `illustration` | both | `true` | Animated illustrated header (house, lit windows, car, someone walking in or out); `false` keeps the classic header |
-| `illustration_theme` | both | `auto` | Picture of the illustration: `auto` (night when `sun.sun` is below the horizon or with a dark theme, even with the sun up), `day` or `night` |
+| `illustration_theme` | both | `auto` | Picture of the illustration: `auto` (follows the Home Assistant theme: night with a dark theme, day with a light theme), `day` or `night` |
 | `show_title` | both | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
 | `show_subtitle` | both | `true` | Show the subtitle under the title |
 | `sort` | both | `presence` | Order: `presence` (at home, then in a zone, then away), `name`, or `config` (as listed) |

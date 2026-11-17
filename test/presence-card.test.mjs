@@ -752,7 +752,7 @@ test("illustrated header: the icon's color follows the house's status", () => {
   assert.equal(icon({ "person.a": person("a", "not_home") }, { illustration: false }), "away");
 });
 
-test("illustrated header: night from illustration_theme, else sun.sun below the horizon or the dark theme", () => {
+test("illustrated header: night from illustration_theme, else the dark theme alone", () => {
   const states = { ...HOME, "person.a": person("a", "home") };
   const night = (config, extra = {}, hass = {}) => {
     const el = new PresenceCard();
@@ -762,7 +762,8 @@ test("illustrated header: night from illustration_theme, else sun.sun below the 
   };
   const sun = (state) => ({ "sun.sun": { entity_id: "sun.sun", state } });
   assert.equal(night({}), false);
-  assert.equal(night({}, sun("below_horizon")), true);
+  assert.equal(night({}, sun("below_horizon")), false, "light theme after sunset: day");
+  assert.equal(night({}, sun("below_horizon"), { themes: { darkMode: true } }), true);
   assert.equal(night({}, sun("above_horizon"), { themes: { darkMode: true } }), true);
   assert.equal(night({}, sun("above_horizon"), { themes: { darkMode: false } }), false);
   assert.equal(night({ illustration_theme: "day" }, sun("above_horizon"), { themes: { darkMode: true } }), false);
