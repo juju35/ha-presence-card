@@ -132,7 +132,7 @@ language: fr
 | `entities` | both | All people | People to show: `person` entity ids, or objects with `entity` and an optional `name`, `picture`, `proximity_direction` and `proximity_distance` (the person's Proximity sensors, when not found automatically), and `travel_time` (a travel time sensor home, such as [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time/)) |
 | `title` | both | Presence | Card title |
 | `illustration` | both | `true` | Animated illustrated header (house, lit windows, car, someone walking in or out); `false` keeps the classic header |
-| `illustration_theme` | both | `auto` | Picture of the illustration: `auto` (night when `sun.sun` is below the horizon, else following the dark theme), `day` or `night` |
+| `illustration_theme` | both | `auto` | Picture of the illustration: `auto` (night when `sun.sun` is below the horizon or with a dark theme, even with the sun up), `day` or `night` |
 | `show_title` | both | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
 | `show_subtitle` | both | `true` | Show the subtitle under the title |
 | `sort` | both | `presence` | Order: `presence` (at home, then in a zone, then away), `name`, or `config` (as listed) |
