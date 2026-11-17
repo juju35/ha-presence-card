@@ -87,7 +87,7 @@ const STRINGS = {
     lang_auto: "Automatic",
     illustration: "Animated illustration",
     illustration_theme: "Illustration theme",
-    theme_auto: "Automatic (sun or dark theme)",
+    theme_auto: "Automatic (follows the theme)",
     theme_day: "Day",
     theme_night: "Night",
   },
@@ -142,7 +142,7 @@ const STRINGS = {
     lang_auto: "Automatique",
     illustration: "Illustration animée",
     illustration_theme: "Thème de l’illustration",
-    theme_auto: "Automatique (soleil ou thème sombre)",
+    theme_auto: "Automatique (suit le thème)",
     theme_day: "Jour",
     theme_night: "Nuit",
   },
@@ -197,7 +197,7 @@ const STRINGS = {
     lang_auto: "Automatisch",
     illustration: "Animierte Illustration",
     illustration_theme: "Thema der Illustration",
-    theme_auto: "Automatisch (Sonne oder dunkles Design)",
+    theme_auto: "Automatisch (folgt dem Design)",
     theme_day: "Tag",
     theme_night: "Nacht",
   },
@@ -252,7 +252,7 @@ const STRINGS = {
     lang_auto: "Automático",
     illustration: "Ilustración animada",
     illustration_theme: "Tema de la ilustración",
-    theme_auto: "Automático (sol o tema oscuro)",
+    theme_auto: "Automático (sigue el tema)",
     theme_day: "Día",
     theme_night: "Noche",
   },
@@ -308,7 +308,7 @@ const STRINGS = {
     lang_auto: "Аутоматски",
     illustration: "Анимирана илустрација",
     illustration_theme: "Тема илустрације",
-    theme_auto: "Аутоматски (сунце или тамна тема)",
+    theme_auto: "Аутоматски (прати тему)",
     theme_day: "Дан",
     theme_night: "Ноћ",
   },
@@ -364,7 +364,7 @@ const STRINGS = {
     lang_auto: "Automatski",
     illustration: "Animirana ilustracija",
     illustration_theme: "Tema ilustracije",
-    theme_auto: "Automatski (sunce ili tamna tema)",
+    theme_auto: "Automatski (prati temu)",
     theme_day: "Dan",
     theme_night: "Noć",
   },
@@ -420,7 +420,7 @@ const STRINGS = {
     lang_auto: "Automatica",
     illustration: "Illustrazione animata",
     illustration_theme: "Tema dell’illustrazione",
-    theme_auto: "Automatico (sole o tema scuro)",
+    theme_auto: "Automatico (segue il tema)",
     theme_day: "Giorno",
     theme_night: "Notte",
   },
@@ -476,7 +476,7 @@ const STRINGS = {
     lang_auto: "Automatisch",
     illustration: "Geanimeerde illustratie",
     illustration_theme: "Thema van de illustratie",
-    theme_auto: "Automatisch (zon of donker thema)",
+    theme_auto: "Automatisch (volgt het thema)",
     theme_day: "Dag",
     theme_night: "Nacht",
   },
@@ -532,7 +532,7 @@ const STRINGS = {
     lang_auto: "Automático",
     illustration: "Ilustração animada",
     illustration_theme: "Tema da ilustração",
-    theme_auto: "Automático (sol ou tema escuro)",
+    theme_auto: "Automático (segue o tema)",
     theme_day: "Dia",
     theme_night: "Noite",
   },
@@ -588,7 +588,7 @@ const STRINGS = {
     lang_auto: "Automatycznie",
     illustration: "Animowana ilustracja",
     illustration_theme: "Motyw ilustracji",
-    theme_auto: "Automatycznie (słońce lub ciemny motyw)",
+    theme_auto: "Automatycznie (według motywu)",
     theme_day: "Dzień",
     theme_night: "Noc",
   },
@@ -644,7 +644,7 @@ const STRINGS = {
     lang_auto: "Automat",
     illustration: "Ilustrație animată",
     illustration_theme: "Tema ilustrației",
-    theme_auto: "Automat (soare sau temă întunecată)",
+    theme_auto: "Automat (urmează tema)",
     theme_day: "Zi",
     theme_night: "Noapte",
   },
@@ -700,7 +700,7 @@ const STRINGS = {
     lang_auto: "Automatisk",
     illustration: "Animeret illustration",
     illustration_theme: "Illustrationens tema",
-    theme_auto: "Automatisk (sol eller mørkt tema)",
+    theme_auto: "Automatisk (følger temaet)",
     theme_day: "Dag",
     theme_night: "Nat",
   },
@@ -756,7 +756,7 @@ const STRINGS = {
     lang_auto: "Automatiskt",
     illustration: "Animerad illustration",
     illustration_theme: "Illustrationens tema",
-    theme_auto: "Automatiskt (sol eller mörkt tema)",
+    theme_auto: "Automatiskt (följer temat)",
     theme_day: "Dag",
     theme_night: "Natt",
   },
@@ -812,7 +812,7 @@ const STRINGS = {
     lang_auto: "Автоматично",
     illustration: "Анимирана илюстрация",
     illustration_theme: "Тема на илюстрацията",
-    theme_auto: "Автоматично (слънце или тъмна тема)",
+    theme_auto: "Автоматично (следва темата)",
     theme_day: "Ден",
     theme_night: "Нощ",
   },
@@ -868,7 +868,7 @@ const STRINGS = {
     lang_auto: "Автоматически",
     illustration: "Анимированная иллюстрация",
     illustration_theme: "Тема иллюстрации",
-    theme_auto: "Автоматически (солнце или тёмная тема)",
+    theme_auto: "Автоматически (по теме)",
     theme_day: "День",
     theme_night: "Ночь",
   },
@@ -924,7 +924,7 @@ const STRINGS = {
     lang_auto: "Автоматично",
     illustration: "Анімована ілюстрація",
     illustration_theme: "Тема ілюстрації",
-    theme_auto: "Автоматично (сонце або темна тема)",
+    theme_auto: "Автоматично (за темою)",
     theme_day: "День",
     theme_night: "Ніч",
   },
@@ -980,7 +980,7 @@ const STRINGS = {
     lang_auto: "Automatikus",
     illustration: "Animált illusztráció",
     illustration_theme: "Az illusztráció témája",
-    theme_auto: "Automatikus (nap vagy sötét téma)",
+    theme_auto: "Automatikus (a témát követi)",
     theme_day: "Nappal",
     theme_night: "Éjszaka",
   },
@@ -1036,7 +1036,7 @@ const STRINGS = {
     lang_auto: "Automaticky",
     illustration: "Animovaná ilustrácia",
     illustration_theme: "Téma ilustrácie",
-    theme_auto: "Automaticky (slnko alebo tmavá téma)",
+    theme_auto: "Automaticky (podľa témy)",
     theme_day: "Deň",
     theme_night: "Noc",
   },
@@ -1092,7 +1092,7 @@ const STRINGS = {
     lang_auto: "Automaticky",
     illustration: "Animovaná ilustrace",
     illustration_theme: "Motiv ilustrace",
-    theme_auto: "Automaticky (slunce nebo tmavý motiv)",
+    theme_auto: "Automaticky (podle motivu)",
     theme_day: "Den",
     theme_night: "Noc",
   },
@@ -1148,7 +1148,7 @@ const STRINGS = {
     lang_auto: "Samodejno",
     illustration: "Animirana ilustracija",
     illustration_theme: "Tema ilustracije",
-    theme_auto: "Samodejno (sonce ali temna tema)",
+    theme_auto: "Samodejno (sledi temi)",
     theme_day: "Dan",
     theme_night: "Noč",
   },
@@ -1204,7 +1204,7 @@ const STRINGS = {
     lang_auto: "Automātiski",
     illustration: "Animēta ilustrācija",
     illustration_theme: "Ilustrācijas motīvs",
-    theme_auto: "Automātiski (saule vai tumšā tēma)",
+    theme_auto: "Automātiski (atbilstoši tēmai)",
     theme_day: "Diena",
     theme_night: "Nakts",
   },
@@ -1260,7 +1260,7 @@ const STRINGS = {
     lang_auto: "Αυτόματα",
     illustration: "Κινούμενη εικονογράφηση",
     illustration_theme: "Θέμα εικονογράφησης",
-    theme_auto: "Αυτόματο (ήλιος ή σκοτεινό θέμα)",
+    theme_auto: "Αυτόματο (ακολουθεί το θέμα)",
     theme_day: "Ημέρα",
     theme_night: "Νύχτα",
   },
@@ -1381,14 +1381,12 @@ const logo = (label, status = "") => `<div class="logo${status ? ` ${status}` : 
 // Illustrated header
 // ---------------------------------------------------------------------------
 
-// Night picture: forced by illustration_theme, else the sun below the horizon OR Home Assistant's dark mode (the dark
-// theme wins even while the sun is up; with no usable sun.sun the dark mode alone decides).
+// Night picture: forced by illustration_theme, else Home Assistant's dark mode alone (a light theme keeps the day
+// picture after sunset).
 const isNight = (hass, config) => {
   const theme = config?.illustration_theme;
   if (theme === "night") return true;
   if (theme === "day") return false;
-  const sun = hass?.states?.["sun.sun"]?.state;
-  if (sun === "below_horizon" || sun === "above_horizon") return sun === "below_horizon" || !!hass?.themes?.darkMode;
   return !!hass?.themes?.darkMode;
 };
 
@@ -2008,7 +2006,7 @@ class PresenceBase extends HTMLElement {
   // people, their trackers, their battery sensors and the home zone.
   _signature() {
     const h = this._hass;
-    const sig = [h.language, h.locale?.language, h.locale?.time_format, h.themes?.darkMode, h.config?.unit_system?.length, h.entities, h.states["zone.home"], h.states["sun.sun"]?.state];
+    const sig = [h.language, h.locale?.language, h.locale?.time_format, h.themes?.darkMode, h.config?.unit_system?.length, h.entities, h.states["zone.home"]];
     if (this._config.show_since !== false) sig.push(Math.floor(Date.now() / 60000));
     // Unfolded movements: dropped once older than 24 hours, read again each hour.
     if (this._movesOpen) sig.push(Math.floor(Date.now() / 60000));
