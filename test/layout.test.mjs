@@ -126,7 +126,7 @@ const header = (el) => {
   range.setStart(span.firstChild, 0);
   range.setEnd(span.firstChild, Math.min(4, span.firstChild.length));
   const four = range.getBoundingClientRect().width;
-  const chip = hd.querySelector(":scope > .chip");
+  const chip = hd.querySelector(".trow > .chip");
   const zoom = root.querySelector(".zoom");
   return {
     out,
@@ -167,7 +167,7 @@ for (const type of ["presence-card", "presence-mini-card"])
 test("full card at a narrow width: the header chip keeps only its icon, its count stays in its label", async (t) => {
   if (skip) return t.skip(skip);
   const read = (el) => {
-    const chip = el.shadowRoot.querySelector(".header > .chip");
+    const chip = el.shadowRoot.querySelector(".header .trow > .chip");
     const txt = chip.querySelector(".txt");
     return { shown: txt.getBoundingClientRect().width > 0, title: chip.getAttribute("title") };
   };
@@ -205,7 +205,7 @@ for (const lang of ["en", "pl", "sr-Latn", "uk", "hu", "el"])
     test(`full card ${lang} at ${width}px: the header chip shows its whole count`, async (t) => {
       if (skip) return t.skip(skip);
       const r = await inPage({ type: "presence-card", width, lang, config: { illustration: false } }, (el) => {
-        const txt = el.shadowRoot.querySelector(".header > .chip .txt");
+        const txt = el.shadowRoot.querySelector(".header .trow > .chip .txt");
         return { shown: txt.getBoundingClientRect().width > 0, cut: txt.scrollWidth > txt.clientWidth + 1 };
       });
       assert.deepEqual(r, { shown: true, cut: false });
@@ -274,10 +274,12 @@ const fit = (el) => {
   const values = [
     ...root.querySelectorAll(".person .where .chip .txt, .person .facts > span, .header .sub, .htext .sub"),
   ].filter((n) => n.textContent.trim());
+  // With the status pill on a line of its own, the header's subtitle keeps one line: cut, its whole text in its tooltip.
+  const kept = (n) => n.matches(".sub") && !!n.closest(".titles.below") && n.title === n.textContent.trim();
   return {
     out,
     title: name.clientWidth >= Math.ceil(range.getBoundingClientRect().width),
-    cut: values.filter(isCut).map((n) => n.textContent.trim()),
+    cut: values.filter((n) => isCut(n) && !kept(n)).map((n) => n.textContent.trim()),
   };
 };
 for (const [type, widths] of [

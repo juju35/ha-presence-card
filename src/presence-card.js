@@ -1448,7 +1448,7 @@ const presenceScene = (home) => {
 
 // The illustration's colours and animations, day and night (taken from the house scene of the validated mock).
 const BANNER_STYLE = `
-  .banner { position: relative; overflow: hidden; height: 90px; container: pr-banner / inline-size; color: #0d2a45;
+  .banner { position: relative; overflow: hidden; height: 90px; --pr-g: 10px; container: pr-banner / inline-size; color: #0d2a45;
             background: linear-gradient(90deg, #f1f8ff 0%, #e2f1fd 34%, #b9def8 70%, #9fd0f3 100%); }
   .banner.night { color: #fff; background: linear-gradient(90deg, #1b2f52 0%, #15284a 36%, #0f1f3d 72%, #0a1830 100%); }
   .pr-scene { position: absolute; right: 0; bottom: 10px; width: min(200px, 56%); height: 80px; overflow: hidden; }
@@ -1466,26 +1466,10 @@ const BANNER_STYLE = `
   /* A long summary ("Nikogo nie ma w domu") wraps between words on a narrow card rather than being cut. */
   .banner .sub { font-size: 13px; line-height: 16px; color: #3b5b78; white-space: normal; }
   .banner.night .sub { color: rgba(255,255,255,.8); }
-  /* Title row: the name, then the status pill right after it (the name gives way first, down to four characters).
-     When the row is too narrow for both, the pill takes a line of its own under the subtitle; on the narrowest
-     cards only its dot stays (the summary in its title and for screen readers). */
-  .banner .titles { flex: 1 1 0; min-width: 0; container: pr-titles / inline-size; }
-  .banner .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .banner .trow > .name { flex: 0 1 auto; min-width: 4ch; }
-  .banner .chip.st { flex: none; max-width: 51%; margin: 0; line-height: 16px; white-space: nowrap; overflow: hidden; box-sizing: border-box;
-                     color: color-mix(in srgb, var(--c) 45%, #0d2a45); background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); }
+  .banner .titles { flex: 1 1 0; min-width: 0; }
+  .banner .chip.st { color: color-mix(in srgb, var(--c) 45%, #0d2a45); background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); }
   .banner.night .chip.st { color: color-mix(in srgb, var(--c) 35%, #ffffff); background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); }
   .banner .chip.st .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
-  @container pr-titles (max-width: 110px) {
-    .banner .trow { display: contents; }
-    .banner .titles > .sub { order: 1; }
-    .banner .trow > .chip { order: 2; align-self: flex-start; max-width: 100%; margin-top: 2px; }
-  }
-  @container pr-banner (max-width: 260px) {
-    .banner .trow { display: contents; }
-    .banner .titles > .sub { order: 1; }
-    .banner .trow > .chip { order: 2; align-self: flex-start; max-width: 100%; margin-top: 2px; }
-  }
   @container pr-banner (max-width: 200px) {
     .banner .chip.st { padding: 0; width: 16px; height: 16px; justify-content: center; }
     .banner .chip.st .txt { display: none; }
@@ -1850,7 +1834,7 @@ const BASE_STYLE = `
      A zero basis (not auto): in the mini card's wrapping header, a basis at the text's width would push the
      zoom button onto a second line at narrow widths. */
   .titles { flex: 1 1 0%; min-width: 6ch; }
-  :host([hide-title]) .titles > .name, :host([hide-subtitle]) .titles > .sub { display: none; }
+  :host([hide-title]) .titles .name, :host([hide-subtitle]) .titles > .sub { display: none; }
   .logo { --c: var(--pr-accent); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; align-self: flex-start;
           background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); }
   .logo .icon { width: 24px; height: 24px; }
@@ -1858,8 +1842,20 @@ const BASE_STYLE = `
   .logo.home { --c: var(--pr-home); } .logo.zone { --c: var(--pr-zone); } .logo.away { --c: var(--pr-away); } .logo.unknown { --c: var(--pr-unknown); }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  /* The count chip shrinks before the title (never past half the header) and cuts its text. */
-  .header > .chip { align-self: flex-start; margin-top: 2px; flex: 0 1 auto; min-width: 0; max-width: 50%; box-sizing: border-box; overflow: hidden; }
+  /* Title row (both headers): the name, then the status pill right after it, only when the whole name and the whole
+     label fit there (measured by the card, see _fitPill); else the pill takes a line of its own under the subtitle
+     (the subtitle then on one line, its whole text in its tooltip), and when even that does not fit, only its dot or
+     icon stays (the summary in its title and for screen readers). */
+  .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .trow > .name { flex: 0 1 auto; min-width: 4ch; }
+  .trow > .chip { flex: none; max-width: none; margin: 0; line-height: 16px; white-space: nowrap; overflow: hidden; box-sizing: border-box; }
+  .titles.below { display: flex; flex-direction: column; }
+  .titles.below .trow { display: contents; }
+  .titles.below > .sub { order: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .titles.below .trow > .chip { order: 2; align-self: flex-start; max-width: 100%; margin-top: 2px; }
+  .titles.dot-only .trow > .chip { padding: 1px 4px; }
+  .titles.dot-only .trow > .chip .txt { display: none; }
+  .banner .titles.dot-only .chip.st { padding: 0; width: 16px; height: 16px; justify-content: center; }
   .warning { padding: 16px; color: color-mix(in srgb, var(--pr-warn) 40%, var(--primary-text-color, #212121)); overflow-wrap: anywhere; }
   .warning + .warning { padding-top: 0; }
   .avatar { position: relative; flex: none; width: var(--size, 40px); height: var(--size, 40px); }
@@ -1944,6 +1940,18 @@ class PresenceBase extends HTMLElement {
 
   connectedCallback() {
     this._startTimer();
+    // A new width (or the web font loaded): the status pill is fitted again, in the next frame.
+    if (typeof ResizeObserver === "function") {
+      this._pillResize ??= new ResizeObserver((entries) => {
+        const w = Math.round(entries.at(-1).contentRect.width);
+        if (w === this._fitWidth) return;
+        this._fitWidth = w;
+        cancelAnimationFrame(this._fitFrame);
+        this._fitFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._pillResize.observe(this);
+    }
+    document.fonts?.ready?.then(() => this._fitPill());
   }
 
   // "Since" durations move on with the clock: a render check every minute, no state change needed.
@@ -1958,6 +1966,8 @@ class PresenceBase extends HTMLElement {
 
   disconnectedCallback() {
     clearInterval(this._timer);
+    this._pillResize?.disconnect();
+    this._fitWidth = null;
   }
 
   set hass(hass) {
@@ -2026,6 +2036,48 @@ class PresenceBase extends HTMLElement {
       this._html = html;
       morph(this.shadowRoot, html);
     }
+    this._fitPill();
+  }
+
+  // The status pill goes right after the title only when the whole title and the whole label fit there; otherwise it
+  // takes a line of its own under the subtitle (.below, the subtitle kept to one line, its whole text in its tooltip).
+  // When the label does not fit that line either, or the banner has no room for the lines above its ground strip, the
+  // pill keeps its dot only (.dot-only, back beside the title when the dot fits there). Measured after render, so that
+  // it holds in every language.
+  _fitPill() {
+    const root = this.shadowRoot;
+    if (!root?.querySelectorAll || typeof getComputedStyle !== "function") return;
+    for (const t of root.querySelectorAll(".titles")) {
+      const chip = t.querySelector(".trow > .chip");
+      t.classList.remove("below", "dot-only");
+      if (!chip?.getClientRects().length) continue;
+      const row = chip.parentElement;
+      const name = row.querySelector(".name");
+      const fits = () => {
+        let title = 0;
+        if (name && getComputedStyle(name).display !== "none") {
+          const range = document.createRange();
+          range.selectNodeContents(name);
+          const cs = getComputedStyle(name);
+          title = Math.max(name.scrollWidth, range.getBoundingClientRect().width) + (parseFloat(cs.marginLeft) || 0) + (parseFloat(cs.marginRight) || 0) +
+            (parseFloat(getComputedStyle(row).columnGap) || 0);
+        }
+        return title + chip.getBoundingClientRect().width <= row.getBoundingClientRect().width + 0.5;
+      };
+      if (fits()) continue;
+      t.classList.add("below");
+      for (const sub of t.querySelectorAll(".sub")) sub.title = sub.scrollWidth > sub.clientWidth ? sub.textContent.trim() : "";
+      const text = chip.querySelector(".txt");
+      const banner = t.closest(".banner");
+      const tb = t.getBoundingClientRect();
+      const bb = banner?.getBoundingClientRect();
+      const ground = banner ? parseFloat(getComputedStyle(banner).getPropertyValue("--pr-g")) || 0 : 0;
+      const tall = !!bb && (tb.top < bb.top - 0.5 || tb.bottom > bb.bottom - ground + 0.5);
+      if (!tall && !(text && text.scrollWidth > text.clientWidth + 0.5)) continue;
+      t.classList.add("dot-only");
+      t.classList.remove("below");
+      if (!fits()) t.classList.add("below");
+    }
   }
 
   _people() {
@@ -2081,10 +2133,9 @@ class PresenceBase extends HTMLElement {
       <div class="header">
         ${logo(this._t("title"), this._status(people))}
         <div class="titles">
-          <div class="name">${esc(this._config.title || this._t("title"))}</div>
+          <div class="trow"><div class="name">${esc(this._config.title || this._t("title"))}</div><span class="chip ${n ? "home" : "away"}" role="img" title="${esc(text)}" aria-label="${esc(text)}">${svgIcon(ICONS.home)}<span class="txt">${n}/${people.length}</span></span></div>
           <div class="sub">${esc(this._subtitle(people))}</div>
         </div>
-        <span class="chip ${n ? "home" : "away"}" role="img" title="${esc(text)}" aria-label="${esc(text)}">${svgIcon(ICONS.home)}<span class="txt">${n}/${people.length}</span></span>
         ${this._zoomButton()}
       </div>`;
   }
@@ -2138,7 +2189,7 @@ const FULL_STYLE = `
   .header { container: pr-head / inline-size; }
   /* The summary ("Nikogo nie ma w domu") wraps between words rather than being cut next to the chip. */
   .header .sub { white-space: normal; }
-  @container pr-head (max-width: 180px) { .header > .chip .txt { display: none; } .header > .chip { padding: 1px 4px; } }
+  @container pr-head (max-width: 200px) { .trow > .chip .txt { display: none; } .trow > .chip { padding: 1px 4px; } }
   /* A small gap before the facts column: the name and place already stretch up to it, and at a phone's 9
      columns (about 234 px) every pixel goes to the zone or state chip ("Poza domem"). */
   .person { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 12px;
