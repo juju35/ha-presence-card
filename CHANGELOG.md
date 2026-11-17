@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.13.0 - 2026-11-17
+
+### Features
+- Animated illustrated header, 90 px on the full card and the mini card: the house on a lawn strip, one window lit per person at home (with a silhouette), the car in front of it while someone is home, and someone walking in through the door — or walking away from it when nobody is home. The title and the summary sit on the sky at its left, by a round home icon whose color follows the status (green someone home, blue someone in a zone, orange unknown, grey nobody).
+- Night picture (stars, moon, glowing windows, headlights) after sunset (`sun.sun`), or in a dark theme without `sun.sun`; `illustration_theme: day | night` forces one. `illustration: false` keeps the classic header (its logo now colored by status too). Both options are in the visual editors, in every language. Animations stop under `prefers-reduced-motion`.
+- The mini card shows its avatars under the illustrated header.
+
 ## 1.12.1 - 2026-11-13
 
 ### Fixes

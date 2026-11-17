@@ -38,7 +38,7 @@ const open = async (hostCss = "") => {
       attributes: { friendly_name: id },
     });
     window.card = document.createElement("presence-mini-card");
-    card.setConfig({ title: "Family" });
+    card.setConfig({ illustration: false, title: "Family" });
     card.hass = { states: { "person.ann": person("ann", "home"), "person.bob": person("bob", "not_home") }, language: "en" };
     document.getElementById("wrap").append(card);
   });
@@ -104,10 +104,10 @@ test("mini card: a title too long for the row still sends the avatars under it, 
     const frames = async () => {
       for (let i = 0; i < 3; i++) await new Promise((res) => requestAnimationFrame(res));
     };
-    card.setConfig({ title: "A very long dashboard title that cannot share its row with the avatars at all" });
+    card.setConfig({ illustration: false, title: "A very long dashboard title that cannot share its row with the avatars at all" });
     await frames();
     const long = card._inline;
-    card.setConfig({ title: "Family" });
+    card.setConfig({ illustration: false, title: "Family" });
     await frames();
     return { long, short: card._inline };
   });
@@ -129,7 +129,7 @@ const scaled = async (wrapCss) => {
     });
     const wrap = document.getElementById("wrap");
     wrap.style.cssText = `width:330px;${css}`;
-    card.setConfig({ title: "Family presence board" });
+    card.setConfig({ illustration: false, title: "Family presence board" });
     card.hass = {
       states: {
         "person.ann": person("ann", "home"),
