@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.14.0 - 2026-11-18
+
+### Features
+- **New illustrated header: the family's living room.** The house on its lawn gives way to a living room on a light blue-grey wall and a wooden floor: a window on the sky (sun and cloud by day, moon and stars at night), a shelf, a sofa with one seat per person (up to four). Everyone at home sits on it — two adults and two children, breathing gently — and each one away leaves an empty cushion; the cat lies on the rug wagging its tail. When nobody is home the sofa is empty, the cat asleep on it. At night the lamp lights the room while someone is home. Under `prefers-reduced-motion` everything stays still.
+
 ## 1.13.1 - 2026-11-18
 
 ### Fixes

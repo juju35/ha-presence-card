@@ -719,21 +719,21 @@ test("folding: a tap elsewhere (pointer) folds the movements and collapses the m
   mini.disconnectedCallback();
 });
 
-test("illustrated header: one lit window per person at home, car while someone is home, walking in or out", () => {
+test("illustrated header: one person on the sofa per person at home, an empty cushion per one away", () => {
   const two = { ...HOME, "person.a": person("a", "home"), "person.b": person("b", "home"), "person.c": person("c", "not_home") };
   const html = render(PresenceCard, {}, two);
   assert.match(html, /class="banner"/);
-  assert.equal(html.match(/class="pr-win lit"/g).length, 2);
-  assert.match(html, /class="pr-car"/);
-  assert.match(html, /class="pr-walk in"/);
+  assert.equal(html.match(/class="pr-sit"/g).length, 2);
+  assert.equal(html.match(/class="pr-cushion"/g).length, 1);
+  assert.match(html, /class="pr-lampg on"/);
   assert.match(html, /class="pr-ground"/);
+  // Nobody home: an empty sofa (the cat asleep on it), the lamp off.
   const none = render(PresenceCard, {}, { ...HOME, "person.a": person("a", "not_home") });
-  assert.doesNotMatch(none, /pr-win lit/);
-  assert.doesNotMatch(none, /class="pr-car"/);
-  assert.match(none, /class="pr-walk out"/);
-  // Never more than the four windows of the house.
+  assert.doesNotMatch(none, /class="pr-sit"/);
+  assert.match(none, /class="pr-lampg"/);
+  // Never more than the four seats of the sofa.
   const many = Object.fromEntries(["a", "b", "c", "d", "e", "f"].map((id) => [`person.${id}`, person(id, "home")]));
-  assert.equal(render(PresenceCard, {}, many).match(/class="pr-win lit"/g).length, 4);
+  assert.equal(render(PresenceCard, {}, many).match(/class="pr-sit"/g).length, 4);
   // The mini card has the same banner, its faces under it.
   const mini = render(PresenceMiniCard, {}, two);
   assert.match(mini, /class="banner"[\s\S]*class="faces"/);
