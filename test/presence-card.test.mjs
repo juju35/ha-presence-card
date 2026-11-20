@@ -802,3 +802,11 @@ test("mini card, classic header: the logo takes the house's status colour, the z
   assert.match(el._render(), /class="logo away"/);
   assert.match(el._render(), /class="zoom" title="[^"]+" aria-label="[^"]+"/);
 });
+
+test("mini card grid: auto rows, compact and zoomed, like its siblings", () => {
+  const mini = new PresenceMiniCard();
+  assert.deepEqual({ ...mini.getGridOptions() }, { columns: 6, min_columns: 6, rows: "auto" });
+  mini._zoomed = true;
+  assert.equal(mini.getGridOptions().rows, "auto");
+  assert.equal(mini.getGridOptions().columns, 12);
+});

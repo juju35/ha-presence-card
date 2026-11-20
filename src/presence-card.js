@@ -2577,7 +2577,7 @@ class PresenceMiniCard extends PresenceCard {
   }
 
   getGridOptions() {
-    return this._zoomed ? super.getGridOptions() : { columns: 6, min_columns: 6 };
+    return { ...(this._zoomed ? super.getGridOptions() : { columns: 6, min_columns: 6 }), rows: "auto" };
   }
 
   _setZoom(zoomed) {
