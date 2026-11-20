@@ -792,3 +792,21 @@ test("illustration strings in every language", () => {
   for (const [l, s] of Object.entries(STRINGS))
     for (const k of ["illustration", "illustration_theme", "theme_auto", "theme_day", "theme_night"]) assert.ok(s[k], `${l}.${k}`);
 });
+
+test("mini card, classic header: the logo takes the house's status colour, the zoom button has a label", () => {
+  const el = new PresenceMiniCard();
+  el._config = { illustration: false };
+  el._hass = { states: { "person.a": person("a", "Work"), "person.b": person("b", "not_home") }, language: "en" };
+  assert.match(el._render(), /class="logo zone"/);
+  el._hass = { states: { "person.a": person("a", "not_home") }, language: "en" };
+  assert.match(el._render(), /class="logo away"/);
+  assert.match(el._render(), /class="zoom" title="[^"]+" aria-label="[^"]+"/);
+});
+
+test("mini card grid: auto rows, compact and zoomed, like its siblings", () => {
+  const mini = new PresenceMiniCard();
+  assert.deepEqual({ ...mini.getGridOptions() }, { columns: 6, min_columns: 6, rows: "auto" });
+  mini._zoomed = true;
+  assert.equal(mini.getGridOptions().rows, "auto");
+  assert.equal(mini.getGridOptions().columns, 12);
+});

@@ -1988,6 +1988,7 @@ class PresenceBase extends HTMLElement {
   disconnectedCallback() {
     clearInterval(this._timer);
     this._pillResize?.disconnect();
+    if (this._fitFrame) cancelAnimationFrame(this._fitFrame);
     this._fitWidth = null;
   }
 
@@ -2576,7 +2577,7 @@ class PresenceMiniCard extends PresenceCard {
   }
 
   getGridOptions() {
-    return this._zoomed ? super.getGridOptions() : { columns: 6, min_columns: 6 };
+    return { ...(this._zoomed ? super.getGridOptions() : { columns: 6, min_columns: 6 }), rows: "auto" };
   }
 
   _setZoom(zoomed) {
@@ -2596,7 +2597,8 @@ class PresenceMiniCard extends PresenceCard {
   _zoomButton() {
     if (this._config.zoom === false) return "";
     const z = this._zoomed;
-    return `<button class="zoom" title="${esc(this._t(z ? "zoom_out" : "zoom_in"))}">${svgIcon(z ? ICONS.collapse : ICONS.expand)}</button>`;
+    const label = esc(this._t(z ? "zoom_out" : "zoom_in"));
+    return `<button class="zoom" title="${label}" aria-label="${label}">${svgIcon(z ? ICONS.collapse : ICONS.expand)}</button>`;
   }
 
   _render() {
@@ -2624,7 +2626,7 @@ class PresenceMiniCard extends PresenceCard {
       <ha-card>
         <div class="mini${this._inline ? " row" : ""}${this._tight ? " tight" : ""}">
           <div class="header">
-            ${logo(this._t("title"))}
+            ${logo(this._t("title"), this._status(people))}
             <div class="titles">
               <div class="name"><span>${esc(c.title || this._t("title"))}</span></div>
               <div class="sub"><span class="st ${n ? "home" : "away"}"><span class="dot"></span>${esc(text)}</span></div>

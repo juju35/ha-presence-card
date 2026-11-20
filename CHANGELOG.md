@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.14.1 - 2026-11-20
+
+### Fixes
+- Mini card with the classic header (`illustration: false`): the logo now takes the house's status colour (green someone home, blue in a zone, orange unknown, grey nobody), as on the full card.
+- The mini card's detail button has an accessible label (screen readers), not only a tooltip.
+- Sections dashboards: the mini card asks for automatic rows (`rows: "auto"`), compact and expanded, like the other ha-* mini cards, so its height follows its content.
+
+### Maintenance
+- The commit-msg hook works again (the commitlint config is an ES module, as `package.json` declares).
+- The pending status pill frame is cancelled when the card leaves the page.
+- README: new **Supported integrations** section (Person, Zone, Proximity, Mobile App, travel time sensors, History).
+- New browser test: state updates leave the cards' DOM and height alone (no rewrite, nothing for entities the card does not show), with a frame stand-in that renders late like Home Assistant's.
+
 ## 1.14.0 - 2026-11-18
 
 ### Features
