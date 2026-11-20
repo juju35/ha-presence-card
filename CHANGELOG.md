@@ -10,6 +10,7 @@
 - The commit-msg hook works again (the commitlint config is an ES module, as `package.json` declares).
 - The pending status pill frame is cancelled when the card leaves the page.
 - README: new **Supported integrations** section (Person, Zone, Proximity, Mobile App, travel time sensors, History).
+- New browser test: state updates leave the cards' DOM and height alone (no rewrite, nothing for entities the card does not show), with a frame stand-in that renders late like Home Assistant's.
 
 ## 1.14.0 - 2026-11-18
 
