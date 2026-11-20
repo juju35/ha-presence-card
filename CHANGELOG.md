@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.14.1 - 2026-11-20
+
+### Fixes
+- Mini card with the classic header (`illustration: false`): the logo now takes the house's status colour (green someone home, blue in a zone, orange unknown, grey nobody), as on the full card.
+- The mini card's detail button has an accessible label (screen readers), not only a tooltip.
+
+### Maintenance
+- The commit-msg hook works again (the commitlint config is an ES module, as `package.json` declares).
+- The pending status pill frame is cancelled when the card leaves the page.
+- README: new **Supported integrations** section (Person, Zone, Proximity, Mobile App, travel time sensors, History).
+
 ## 1.14.0 - 2026-11-18
 
 ### Features
