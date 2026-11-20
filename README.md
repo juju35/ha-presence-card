@@ -42,6 +42,19 @@ The cards read the [`person`](https://www.home-assistant.io/integrations/person/
 - Light and dark mode, English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek
 - Single file, no external dependency
 
+## Supported integrations
+
+The cards sit on top of core Home Assistant integrations — nothing to install:
+
+| Integration | What the cards use |
+|---|---|
+| [Person](https://www.home-assistant.io/integrations/person/) | Every `person` entity: its state (home, zone, away), picture and last change |
+| [Zone](https://www.home-assistant.io/integrations/zone/) | `zone.home`, for the distance from home |
+| [Proximity](https://www.home-assistant.io/integrations/proximity/) | Its direction of travel and distance sensors, found automatically in the entity registry |
+| [Mobile App](https://www.home-assistant.io/integrations/mobile_app/) (Companion app) | The battery sensor of the person's tracker device (any tracker with a `battery_level` attribute works too) |
+| [Waze Travel Time](https://www.home-assistant.io/integrations/waze_travel_time/), [Google Maps Travel Time](https://www.home-assistant.io/integrations/google_travel_time/) | A travel time sensor home, given per person (`travel_time`) |
+| [History](https://www.home-assistant.io/integrations/history/) | The **Last 24 hours** movements, read when the section is unfolded |
+
 ## Prerequisites
 
 Home Assistant 2024.8 or later, with people set up in **Settings → People** (each with a device tracker for the location).
