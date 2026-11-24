@@ -4,11 +4,11 @@
 // (only when it could not fit beside the whole title); its label is whole or only its dot shows (always at 190 px);
 // nothing of the title block goes over the banner's ground strip or out of the banner.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { states } from "../scripts/mock-states.mjs";
+import { source } from "./source.mjs";
 
-const source0 = readFileSync(new URL("../src/presence-card.js", import.meta.url), "utf8");
+const source0 = source;
 
 let chromium;
 try {

@@ -5,11 +5,11 @@
 // on the full card and the mini card (compact and zoomed). Skipped when Playwright or Chromium is not installed,
 // except in CI, where it must run. CHROMIUM_PATH points to a local Chromium if needed.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { after, before, test } from "node:test";
 import { NOW, states } from "../scripts/mock-states.mjs";
+import { source } from "./source.mjs";
 
-const SRC = readFileSync(new URL("../src/presence-card.js", import.meta.url), "utf8");
+const SRC = source;
 // Home Assistant's <ha-card> is a Lit element: it renders its slot a few microtasks after it is attached, so that a
 // card rewritten from scratch measured its header (the status pill) in an empty frame. A plain stand-in hides that;
 // this one renders late, like Lit.

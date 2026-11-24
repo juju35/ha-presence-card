@@ -3,10 +3,10 @@
 // Skipped when Playwright or Chromium is not installed, except in CI, where it must run. CHROMIUM_PATH
 // points to a local Chromium if needed.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { after, before, test } from "node:test";
+import { source } from "./source.mjs";
 
-const SRC = readFileSync(new URL("../src/presence-card.js", import.meta.url), "utf8");
+const SRC = source;
 
 let browser;
 let skip = false;
