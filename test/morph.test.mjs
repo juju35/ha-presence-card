@@ -3,12 +3,10 @@
 // data, and the patched DOM always matches a fresh render. Skipped when Playwright or Chromium is not
 // installed, except in CI, where it must run. CHROMIUM_PATH points to a local Chromium if needed.
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync } from "node:fs";
 import { after, before, test } from "node:test";
+import { source } from "./source.mjs";
 
-const dir = new URL("../src/", import.meta.url);
-const file = readdirSync(dir).find((f) => f.endsWith("-card.js"));
-const src = readFileSync(new URL(file, dir), "utf8");
+const src = source;
 const start = src.indexOf("// Patch the shadow DOM in place");
 const end = src.indexOf("patchChildren(root, tpl.content);\n};\n", start);
 const MORPH = `${src.slice(start, end)}patchChildren(root, tpl.content);\n};\nwindow.morph = morph;`;

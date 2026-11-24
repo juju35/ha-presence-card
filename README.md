@@ -214,6 +214,8 @@ npm test             # unit and browser tests
 npm run screenshots  # renders the cards with mock data (scripts/mock-states.mjs) into screenshots/, and the animated GIFs (needs ffmpeg)
 ```
 
+The source is split into ES modules under `src/` (entry `src/index.js`); `npm run build` assembles them (`scripts/bundle.mjs`) into the single file the Marketplace serves.
+
 `dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where the Marketplace installs it from.
 
 ### Releasing
